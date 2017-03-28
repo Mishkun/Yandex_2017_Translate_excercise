@@ -45,4 +45,6 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 
+    compile 'com.arello-mobile:moxy:1.4.6'
+    provided 'com.arello-mobile:moxy-compiler:1.4.6'
 }
