@@ -8,13 +8,13 @@ package com.mishkun.yandextestexercise.model.entities;
 public class HistoryItem {
     private String mOriginalText;
     private String mTranslatedText;
-    private String mFavored;
+    private boolean mFavored;
 
     public HistoryItem() {
 
     }
 
-    public HistoryItem(String mOriginalText, String mTranslatedText, String mFavored) {
+    public HistoryItem(String mOriginalText, String mTranslatedText, boolean mFavored) {
         this.mOriginalText = mOriginalText;
         this.mTranslatedText = mTranslatedText;
         this.mFavored = mFavored;
@@ -37,11 +37,11 @@ public class HistoryItem {
         this.mTranslatedText = translatedText;
     }
 
-    public String getFavored() {
+    public boolean getFavored() {
         return mFavored;
     }
 
-    public void setFavored(String favored) {
+    public void setFavored(boolean favored) {
         this.mFavored = favored;
     }
 }

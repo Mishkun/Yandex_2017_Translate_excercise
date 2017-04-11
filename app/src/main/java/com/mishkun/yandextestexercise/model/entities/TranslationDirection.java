@@ -8,6 +8,7 @@ public class TranslationDirection {
     private Language mFrom;
 
     private Language mTo;
+
     public TranslationDirection(Language from, Language to) {
         this.mFrom = from;
         this.mTo = to;
@@ -20,16 +21,16 @@ public class TranslationDirection {
     public TranslationDirection getReversedDirection() {
         if (mFrom != null) {
             return new TranslationDirection(mTo, mFrom);
-        }else{
+        } else {
             return null;
         }
     }
 
-    public Language getmFrom() {
+    public Language getTranslationFrom() {
         return mFrom;
     }
 
-    public Language getmTo() {
+    public Language getTranslationTo() {
         return mTo;
     }
 

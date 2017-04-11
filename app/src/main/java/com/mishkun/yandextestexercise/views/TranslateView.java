@@ -1,6 +1,5 @@
 package com.mishkun.yandextestexercise.views;
 
-import com.arellomobile.mvp.MvpView;
 import com.mishkun.yandextestexercise.model.entities.TranslationDirection;
 
 import io.reactivex.Flowable;
@@ -9,7 +8,7 @@ import io.reactivex.Flowable;
  * Created by Mishkun on 28.03.2017.
  */
 
-public interface TranslateView extends MvpView{
+public interface TranslateView{
     void setTranslationDirection(TranslationDirection direction);
     void setTranslation(String translation);
     void setExpandedTranslation(String expandedTranslation);

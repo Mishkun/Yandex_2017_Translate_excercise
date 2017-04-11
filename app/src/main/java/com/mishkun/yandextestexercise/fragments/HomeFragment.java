@@ -22,13 +22,13 @@ import butterknife.BindView;
 public class HomeFragment extends Fragment {
 
     @BindView(R.id.toTranslateEditText)
-    private EditText mSourceTextView;
+    public EditText mSourceTextView;
 
     @BindView(R.id.translatedTextView)
-    private TextView mTranslationTextView;
+    public TextView mTranslationTextView;
 
-    @BindView(R.id.extendedTranslateTextView)
-    private TextView mExpandedTranslationTextView;
+    @BindView(R.id.extendedTranslatedTextView)
+    public TextView mExpandedTranslationTextView;
 
     public HomeFragment() {
         // Required empty public constructor
