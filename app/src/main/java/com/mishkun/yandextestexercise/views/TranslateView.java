@@ -12,8 +12,6 @@ public interface TranslateView{
     void setTranslationDirection(TranslationDirection direction);
     void setTranslation(String translation);
     void setExpandedTranslation(String expandedTranslation);
-    void showFromLanguageDialog();
-    void showToLanguageDialog();
     void showError(String errorMessage);
     void hideError();
     Flowable<String> getTextToTranslateStream();

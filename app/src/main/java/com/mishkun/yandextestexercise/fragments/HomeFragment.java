@@ -10,8 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mishkun.yandextestexercise.R;
+import com.mishkun.yandextestexercise.model.entities.TranslationDirection;
+import com.mishkun.yandextestexercise.views.TranslateView;
 
 import butterknife.BindView;
+import io.reactivex.Flowable;
 
 
 /**
@@ -19,7 +22,7 @@ import butterknife.BindView;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements TranslateView {
 
     @BindView(R.id.toTranslateEditText)
     public EditText mSourceTextView;
@@ -71,5 +74,35 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void setTranslationDirection(TranslationDirection direction) {
+        
+    }
+
+    @Override
+    public void setTranslation(String translation) {
+
+    }
+
+    @Override
+    public void setExpandedTranslation(String expandedTranslation) {
+
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+
+    }
+
+    @Override
+    public void hideError() {
+
+    }
+
+    @Override
+    public Flowable<String> getTextToTranslateStream() {
+        return null;
     }
 }
