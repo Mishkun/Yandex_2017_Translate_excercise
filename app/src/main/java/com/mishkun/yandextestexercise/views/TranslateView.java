@@ -2,6 +2,8 @@ package com.mishkun.yandextestexercise.views;
 
 import com.mishkun.yandextestexercise.model.entities.TranslationDirection;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 
 /**
@@ -9,7 +11,9 @@ import io.reactivex.Flowable;
  */
 
 public interface TranslateView{
-    void setTranslationDirection(TranslationDirection direction);
+    void setTranslationTo(String To);
+    void setTranslationFrom(String From);
+    void setSupportedLanguages(List<String> supportedLanguages);
     void setTranslation(String translation);
     void setExpandedTranslation(String expandedTranslation);
     void showError(String errorMessage);

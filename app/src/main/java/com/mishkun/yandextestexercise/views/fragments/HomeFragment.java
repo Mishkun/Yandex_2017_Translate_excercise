@@ -1,8 +1,8 @@
-package com.mishkun.yandextestexercise.fragments;
+package com.mishkun.yandextestexercise.views.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,28 +10,38 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mishkun.yandextestexercise.R;
-import com.mishkun.yandextestexercise.model.entities.TranslationDirection;
+import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
+import com.mishkun.yandextestexercise.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.views.TranslateView;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import io.reactivex.Flowable;
 
 
 /**
- * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements TranslateView {
+public class HomeFragment extends BaseFragment implements TranslateView {
 
+    private static final String TAG = HomeFragment.class.getSimpleName();
     @BindView(R.id.toTranslateEditText)
-    public EditText mSourceTextView;
+    public EditText sourceTextView;
 
     @BindView(R.id.translatedTextView)
-    public TextView mTranslationTextView;
+    public TextView translationTextView;
 
     @BindView(R.id.extendedTranslatedTextView)
-    public TextView mExpandedTranslationTextView;
+    public TextView expandedTranslationTextView;
+
+    @Inject
+    public TranslatePresenter translatePresenter;
+
+    //private static final String ARG_TEXT_CONTENT = "text-content";
 
     public HomeFragment() {
         // Required empty public constructor
@@ -56,12 +66,19 @@ public class HomeFragment extends Fragment implements TranslateView {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        this.getComponent(MainActivityComponent.class).inject(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        if (translatePresenter != null) {
+            translatePresenter.attachView(this);
+            translatePresenter.OnReverseTranslationButtonClicked();
+        }else {
+            Log.d(TAG, "Presenter is null");
+        }
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -77,8 +94,18 @@ public class HomeFragment extends Fragment implements TranslateView {
     }
 
     @Override
-    public void setTranslationDirection(TranslationDirection direction) {
-        
+    public void setTranslationTo(String To) {
+
+    }
+
+    @Override
+    public void setTranslationFrom(String From) {
+
+    }
+
+    @Override
+    public void setSupportedLanguages(List<String> supportedLanguages) {
+
     }
 
     @Override

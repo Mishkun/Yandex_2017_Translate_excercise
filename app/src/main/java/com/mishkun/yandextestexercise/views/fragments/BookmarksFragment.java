@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.fragments;
+package com.mishkun.yandextestexercise.views.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.mishkun.yandextestexercise.adapters.BookmarksRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.dummy.DummyContent;
-import com.mishkun.yandextestexercise.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.

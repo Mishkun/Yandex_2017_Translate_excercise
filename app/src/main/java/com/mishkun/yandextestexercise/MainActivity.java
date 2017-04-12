@@ -1,22 +1,28 @@
 package com.mishkun.yandextestexercise;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import com.mishkun.yandextestexercise.fragments.BookmarksFragment;
-import com.mishkun.yandextestexercise.fragments.HistoryFragment;
-import com.mishkun.yandextestexercise.fragments.HomeFragment;
-import com.mishkun.yandextestexercise.fragments.SettingsFragment;
+import com.mishkun.yandextestexercise.di.HasComponent;
+import com.mishkun.yandextestexercise.di.components.DaggerMainActivityComponent;
+import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
+import com.mishkun.yandextestexercise.di.modules.MainActivityModule;
+import com.mishkun.yandextestexercise.views.fragments.BookmarksFragment;
+import com.mishkun.yandextestexercise.views.fragments.HistoryFragment;
+import com.mishkun.yandextestexercise.views.fragments.HomeFragment;
+import com.mishkun.yandextestexercise.views.fragments.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity {
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements HasComponent<MainActivityComponent>{
 
     Fragment fragment;
+
+    private MainActivityComponent mainActivityComponent;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -35,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = HistoryFragment.newInstance();
                     break;
                 case R.id.navigation_settings:
-                    fragment =  new SettingsFragment();
+                    fragment = new SettingsFragment();
                     break;
                 default:
                     return false;
@@ -49,11 +55,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
         setContentView(R.layout.activity_main);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.content, fragment).commit();
+        setupComponent();
     }
 
+    private void setupComponent() {
+        mainActivityComponent = DaggerMainActivityComponent
+                .builder()
+                .applicationComponent(((AndroidApplication) getApplication()).getApplicationComponent())
+                .mainActivityModule(new MainActivityModule(this))
+                .build();
+    }
+
+    @Override
+    public MainActivityComponent getComponent() {
+        return mainActivityComponent;
+    }
 }
