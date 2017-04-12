@@ -4,7 +4,7 @@ import com.mishkun.yandextestexercise.model.entities.TranslationDirection;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 /**
  * Created by Mishkun on 28.03.2017.
@@ -18,5 +18,5 @@ public interface TranslateView{
     void setExpandedTranslation(String expandedTranslation);
     void showError(String errorMessage);
     void hideError();
-    Flowable<String> getTextToTranslateStream();
+    Observable<String> getTextToTranslateStream();
 }

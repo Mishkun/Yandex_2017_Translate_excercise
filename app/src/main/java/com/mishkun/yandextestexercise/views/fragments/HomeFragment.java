@@ -2,13 +2,13 @@ package com.mishkun.yandextestexercise.views.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.presenters.TranslatePresenter;
@@ -16,10 +16,14 @@ import com.mishkun.yandextestexercise.views.TranslateView;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import io.reactivex.Observable;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 
 
 /**
@@ -29,6 +33,7 @@ import io.reactivex.Flowable;
 public class HomeFragment extends BaseFragment implements TranslateView {
 
     private static final String TAG = HomeFragment.class.getSimpleName();
+
     @BindView(R.id.toTranslateEditText)
     public EditText sourceTextView;
 
@@ -73,13 +78,10 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if (translatePresenter != null) {
-            translatePresenter.attachView(this);
-            translatePresenter.OnReverseTranslationButtonClicked();
-        }else {
-            Log.d(TAG, "Presenter is null");
-        }
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        ButterKnife.bind(this, view);
+        translatePresenter.attachView(this);
+        return view;
     }
 
 
@@ -110,7 +112,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
     @Override
     public void setTranslation(String translation) {
-
+        translationTextView.setText(translation);
     }
 
     @Override
@@ -129,7 +131,12 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     }
 
     @Override
-    public Flowable<String> getTextToTranslateStream() {
-        return null;
+    public Observable<String> getTextToTranslateStream() {
+        return RxTextView.textChanges(sourceTextView).map(new Function<CharSequence, String>() {
+            @Override
+            public String apply(CharSequence text) throws Exception {
+                return text.toString();
+            }
+        });
     }
 }

@@ -40,6 +40,7 @@ dependencies {
 
     compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
 
+
     compile "com.jakewharton:butterknife:$butter_knife_version"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butter_knife_version"
 
