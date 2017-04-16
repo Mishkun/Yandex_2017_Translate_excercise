@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".views.fragments.BookmarksFragment"
+    tools:context=".presentation.views.fragments.BookmarksFragment"
     tools:listitem="@layout/fragment_bookmarks" />

@@ -3,7 +3,7 @@ package com.mishkun.yandextestexercise.di.components;
 import com.mishkun.yandextestexercise.MainActivity;
 import com.mishkun.yandextestexercise.di.modules.MainActivityModule;
 import com.mishkun.yandextestexercise.di.PerActivity;
-import com.mishkun.yandextestexercise.views.fragments.HomeFragment;
+import com.mishkun.yandextestexercise.presentation.views.fragments.HomeFragment;
 
 import dagger.Component;
 

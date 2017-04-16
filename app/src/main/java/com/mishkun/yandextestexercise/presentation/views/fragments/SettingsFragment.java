@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.views.fragments;
+package com.mishkun.yandextestexercise.presentation.views.fragments;
 
 import android.support.v4.app.Fragment;
 

@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.views;
+package com.mishkun.yandextestexercise.presentation.views;
 
 /**
  * Created by Mishkun on 29.03.2017.

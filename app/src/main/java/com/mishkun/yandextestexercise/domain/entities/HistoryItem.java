@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.model.entities;
+package com.mishkun.yandextestexercise.domain.entities;
 
 /**
  * Created by Mishkun on 28.03.2017.
@@ -9,6 +9,9 @@ public class HistoryItem {
     private String mOriginalText;
     private String mTranslatedText;
     private boolean mFavored;
+
+    private Language mFromLanguage;
+    private Language mToLanguage;
 
     public HistoryItem() {
 
@@ -43,5 +46,21 @@ public class HistoryItem {
 
     public void setFavored(boolean favored) {
         this.mFavored = favored;
+    }
+
+    public Language getToLanguage() {
+        return mToLanguage;
+    }
+
+    public void setToLanguage(Language ToLanguage) {
+        this.mToLanguage = ToLanguage;
+    }
+
+    public Language getFromLanguage() {
+        return mFromLanguage;
+    }
+
+    public void setFromLanguage(Language FromLanguage) {
+        this.mFromLanguage = FromLanguage;
     }
 }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".views.fragments.HomeFragment">
+    tools:context=".presentation.views.fragments.HomeFragment">
 
     <android.support.v7.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -28,17 +28,20 @@
             android:orientation="horizontal">
 
             <Spinner
+                android:id="@+id/from_translation_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5" />
 
             <ImageButton
+                android:id="@+id/reverse_translation_direction_btn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_swap_horiz_black_24dp" />
 
             <Spinner
+                android:id="@+id/to_translation_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5" />
@@ -81,7 +84,8 @@
             android:id="@+id/translatedTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
+            android:layout_margin="@dimen/translation_card_margin"
+            android:textSize="@dimen/translationTextSize"/>
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
@@ -93,6 +97,7 @@
             android:id="@+id/extendedTranslatedTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
+            android:layout_margin="@dimen/translation_card_margin"
+            android:textSize="@dimen/translationTextSize" />
     </android.support.v7.widget.CardView>
 </LinearLayout>

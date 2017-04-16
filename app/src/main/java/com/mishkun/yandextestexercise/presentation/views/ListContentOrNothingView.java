@@ -1,6 +1,6 @@
-package com.mishkun.yandextestexercise.views;
+package com.mishkun.yandextestexercise.presentation.views;
 
-import com.mishkun.yandextestexercise.model.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.presenters;
+package com.mishkun.yandextestexercise.presentation.presenters;
 
 /**
  * Created by Mishkun on 11.04.2017.

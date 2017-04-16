@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.model.entities;
+package com.mishkun.yandextestexercise.domain.entities;
 
 /**
  * Created by Mishkun on 28.03.2017.
@@ -14,9 +14,7 @@ public class TranslationDirection {
         this.mTo = to;
     }
 
-    public TranslationDirection(Language to) {
-        this.mTo = to;
-    }
+
 
     public TranslationDirection getReversedDirection() {
         if (mFrom != null) {

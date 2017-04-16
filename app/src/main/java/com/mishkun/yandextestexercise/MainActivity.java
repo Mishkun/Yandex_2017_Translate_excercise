@@ -11,16 +11,20 @@ import com.mishkun.yandextestexercise.di.HasComponent;
 import com.mishkun.yandextestexercise.di.components.DaggerMainActivityComponent;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.di.modules.MainActivityModule;
-import com.mishkun.yandextestexercise.views.fragments.BookmarksFragment;
-import com.mishkun.yandextestexercise.views.fragments.HistoryFragment;
-import com.mishkun.yandextestexercise.views.fragments.HomeFragment;
-import com.mishkun.yandextestexercise.views.fragments.SettingsFragment;
+import com.mishkun.yandextestexercise.presentation.views.fragments.BookmarksFragment;
+import com.mishkun.yandextestexercise.presentation.views.fragments.HistoryFragment;
+import com.mishkun.yandextestexercise.presentation.views.fragments.HomeFragment;
+import com.mishkun.yandextestexercise.presentation.views.fragments.SettingsFragment;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements HasComponent<MainActivityComponent>{
 
     Fragment fragment;
+
+    @BindView(R.id.navigation)
+    BottomNavigationView navigation;
 
     private MainActivityComponent mainActivityComponent;
 
@@ -55,9 +59,8 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
         setContentView(R.layout.activity_main);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        ButterKnife.bind(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.content, fragment).commit();

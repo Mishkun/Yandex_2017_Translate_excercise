@@ -3,7 +3,6 @@ package com.mishkun.yandextestexercise.di.modules;
 import android.content.Context;
 
 import com.mishkun.yandextestexercise.AndroidApplication;
-import com.mishkun.yandextestexercise.presenters.TranslatePresenter;
 
 import javax.inject.Singleton;
 

@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.model.entities;
+package com.mishkun.yandextestexercise.domain.entities;
 
 /**
  * Created by Mishkun on 28.03.2017.
