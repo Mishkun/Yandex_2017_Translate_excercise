@@ -18,7 +18,7 @@ import io.reactivex.functions.Function;
  * Created by Mishkun on 16.04.2017.
  */
 
-public class GetFavoritesInteractor extends Interactor<List<HistoryItem>, Void> {
+public class GetFavoritesInteractor extends ParameterlessInteractor<List<HistoryItem>> {
     private HistoryProvider historyProvider;
 
     @Inject
@@ -29,7 +29,7 @@ public class GetFavoritesInteractor extends Interactor<List<HistoryItem>, Void> 
     }
 
     @Override
-    Observable<List<HistoryItem>> buildUseCaseObservable(Void params) {
+    Observable<List<HistoryItem>> buildUseCaseObservable() {
         return historyProvider.getHistoryItems().map(new Function<List<HistoryItem>, List<HistoryItem>>() {
             @Override
             public List<HistoryItem> apply(List<HistoryItem> historyItems) throws Exception {

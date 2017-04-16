@@ -33,6 +33,7 @@ public class MainActivityModule {
     @Provides
     @PerActivity
     public TranslatePresenter provideTranslationPresenter(){
-        return new TranslatePresenter(new TranslationInteractor(), new GetSupportedLanguagesInteractor());
+        return new TranslatePresenter(new TranslationInteractor(), translationDirectionInteractor, new GetSupportedLanguagesInteractor(),
+                                      swapTranslationDirectionInteractor);
     }
 }

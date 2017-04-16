@@ -32,7 +32,8 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
 
     @Inject
     TranslationInteractor(@Named(DomainModule.JOB) Scheduler threadExecutor, @Named(DomainModule.UI) Scheduler postExecutionThread,
-                          ShortTranslationProvider shortTranslationProvider, ExpandedTranslationProvider expandedTranslationProvider, TranslationDirectionProvider translationDirectionProvider,
+                          ShortTranslationProvider shortTranslationProvider, ExpandedTranslationProvider expandedTranslationProvider,
+                          TranslationDirectionProvider translationDirectionProvider,
                           TranslationDirectionGuessProvider translationDirectionGuessProvider) {
         super(threadExecutor, postExecutionThread);
         this.shortTranslationProvider = shortTranslationProvider;
@@ -89,7 +90,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
         }
     }
 
-    public class TranslationQuery {
+    public static class TranslationQuery {
         private String string;
         private TranslationDirection direction;
 

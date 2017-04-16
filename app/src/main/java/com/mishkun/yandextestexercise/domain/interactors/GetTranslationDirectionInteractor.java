@@ -14,7 +14,7 @@ import io.reactivex.Scheduler;
  * Created by Mishkun on 16.04.2017.
  */
 
-public class GetTranslationDirectionInteractor extends Interactor<TranslationDirection, Void> {
+public class GetTranslationDirectionInteractor extends ParameterlessInteractor<TranslationDirection> {
 
     private TranslationDirectionProvider translationDirectionProvider;
 
@@ -25,7 +25,7 @@ public class GetTranslationDirectionInteractor extends Interactor<TranslationDir
     }
 
     @Override
-    Observable<TranslationDirection> buildUseCaseObservable(Void params) {
+    Observable<TranslationDirection> buildUseCaseObservable() {
         return translationDirectionProvider.getTranslationDirection();
     }
 }

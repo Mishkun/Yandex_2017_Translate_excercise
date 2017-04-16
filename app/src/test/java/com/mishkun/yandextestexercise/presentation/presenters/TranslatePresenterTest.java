@@ -32,7 +32,8 @@ public class TranslatePresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        presenter = new TranslatePresenter(translationInteractor, supportedLanguagesInteractor);
+        presenter = new TranslatePresenter(translationInteractor, translationDirectionInteractor, supportedLanguagesInteractor,
+                                           swapTranslationDirectionInteractor);
 
         presenter.attachView(translationView);
     }

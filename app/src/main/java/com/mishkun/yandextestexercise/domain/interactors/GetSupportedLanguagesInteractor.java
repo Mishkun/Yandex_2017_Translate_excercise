@@ -18,7 +18,7 @@ import io.reactivex.Scheduler;
  * Created by Mishkun on 12.04.2017.
  */
 
-public class GetSupportedLanguagesInteractor extends Interactor<List<Language>, Void> {
+public class GetSupportedLanguagesInteractor extends ParameterlessInteractor<List<Language>> {
 
 
     private final SupportedLanguagesProvider supportedLanguagesProvider;
@@ -32,7 +32,7 @@ public class GetSupportedLanguagesInteractor extends Interactor<List<Language>, 
 
 
     @Override
-    Observable<List<Language>> buildUseCaseObservable(Void params) {
+    Observable<List<Language>> buildUseCaseObservable() {
         return supportedLanguagesProvider.getSupportedLanguages();
     }
 }

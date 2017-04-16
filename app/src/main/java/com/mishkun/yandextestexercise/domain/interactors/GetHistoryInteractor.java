@@ -16,7 +16,7 @@ import io.reactivex.Scheduler;
  * Created by Mishkun on 16.04.2017.
  */
 
-public class GetHistoryInteractor extends Interactor<List<HistoryItem>, Void> {
+public class GetHistoryInteractor extends ParameterlessInteractor<List<HistoryItem>> {
     private HistoryProvider historyProvider;
 
     @Inject
@@ -27,7 +27,7 @@ public class GetHistoryInteractor extends Interactor<List<HistoryItem>, Void> {
     }
 
     @Override
-    Observable<List<HistoryItem>> buildUseCaseObservable(Void params) {
+    Observable<List<HistoryItem>> buildUseCaseObservable() {
         return historyProvider.getHistoryItems();
     }
 }

@@ -11,10 +11,14 @@ import io.reactivex.Observable;
 public interface TranslateView{
     void setTranslationTo(int To);
     void setTranslationFrom(int From);
+
+    int getTranslationTo();
+    int getTranslationFrom();
+
+    String getTextToTranslate();
     void setSupportedLanguages(List<String> supportedLanguages);
     void setTranslation(String translation);
     void setExpandedTranslation(String expandedTranslation);
     void showError(String errorMessage);
     void hideError();
-    Observable<String> getTextToTranslateStream();
 }

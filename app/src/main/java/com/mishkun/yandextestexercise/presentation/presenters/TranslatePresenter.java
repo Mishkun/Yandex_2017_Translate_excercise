@@ -1,20 +1,23 @@
 package com.mishkun.yandextestexercise.presentation.presenters;
 
 import com.mishkun.yandextestexercise.di.PerActivity;
+import com.mishkun.yandextestexercise.domain.entities.Language;
+import com.mishkun.yandextestexercise.domain.entities.Translation;
+import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.interactors.GetSupportedLanguagesInteractor;
+import com.mishkun.yandextestexercise.domain.interactors.GetTranslationDirectionInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.TranslationInteractor;
+import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by Mishkun on 28.03.2017.
@@ -26,94 +29,105 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     private static final String TAG = TranslatePresenter.class.getSimpleName();
 
     private final TranslationInteractor translationInteractor;
+    private final GetTranslationDirectionInteractor translationDirectionInteractor;
     private final GetSupportedLanguagesInteractor supportedLanguagesInteractor;
 
+    private TranslationDirectionMapper translationDirectionMapper;
 
 
     @Inject
-    public TranslatePresenter(TranslationInteractor translationInteractor, GetSupportedLanguagesInteractor supportedLanguagesInteractor) {
+    public TranslatePresenter(TranslationInteractor translationInteractor,
+                              GetTranslationDirectionInteractor translationDirectionInteractor,
+                              GetSupportedLanguagesInteractor supportedLanguagesInteractor) {
         this.translationInteractor = translationInteractor;
+        this.translationDirectionInteractor = translationDirectionInteractor;
         this.supportedLanguagesInteractor = supportedLanguagesInteractor;
-    }
-
-    public void OnReverseTranslationButtonClicked() {
-
-    }
-
-
-    public void OnToDirectionButtonClicked(int position) {
-
-    }
-
-
-    public void OnFromDirectionButtonClicked(int position) {
-
-    }
-
-
-    public void OnFavoriteButtonClicked() {
-
-    }
-
-    @Override
-    public void attachView(TranslateView view) {
-        super.attachView(view);
-
-    }
-
-    public void setTranslationString(String translationString) {
-        attachedView.setTranslation(translationString);
-    }
-
-    public void setExpandedTranslationString(String expandedTranslationString){
-        attachedView.setExpandedTranslation(expandedTranslationString);
-    }
-
-    public void setTranslationTo(int To){
-        attachedView.setTranslationTo(To);
-    }
-
-    public void setTranslationFrom(int From){
-        attachedView.setTranslationTo(From);
     }
 
     @Override
     public void resume() {
-        subscribeToUserTextInput();
-
-        supportedLanguagesInteractor.getSupportedLanguages().subscribe(new Consumer<List<String>>() {
-            @Override
-            public void accept(List<String> supported) throws Exception {
-                attachedView.setSupportedLanguages(supported);
-            }
-        });
+        supportedLanguagesInteractor.execute(new SupportedLanguagesObserver());
+        translationDirectionInteractor.execute(new TranslationDirectionObserver());
     }
 
-    void subscribeToUserTextInput() {
-        attachedView.getTextToTranslateStream()
-                .observeOn(Schedulers.io())
-                .concatMap(new Function<String, Observable<String>>() {
-                    @Override
-                    public Observable<String> apply(String query) throws Exception {
-                        return translationInteractor.getTranslation(query);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String text) throws Exception {
-                        TranslatePresenter.this.setTranslationString(text);
-                    }
-                });
-    }
 
     @Override
     public void pause() {
 
     }
 
-    @Override
-    public void detachView() {
-        super.detachView();
+
+    private void setSupportedLanguages(List<Language> supportedLanguages) {
+        List<String> representedLanguages = new ArrayList<>(supportedLanguages.size());
+        for (Iterator<Language> iterator = supportedLanguages.iterator(); iterator.hasNext(); ) {
+            representedLanguages.add(iterator.next().getDisplayName());
+        }
+        attachedView.setSupportedLanguages(representedLanguages);
     }
+
+
+    public void OnReverseTranslationButtonClicked() {
+        int from = attachedView.getTranslationTo();
+        int to = attachedView.getTranslationFrom();
+        attachedView.setTranslationTo(to);
+        attachedView.setTranslationFrom(from);
+    }
+
+    public void onQueryChanged() {
+        translate();
+    }
+
+    private void translate() {
+        String queryString = attachedView.getTextToTranslate();
+        TranslationDirection direction = new TranslationDirection(translationDirectionMapper.transform(attachedView.getTranslationFrom()),
+                                                                  translationDirectionMapper.transform(attachedView.getTranslationTo()));
+        TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction, true);
+        translationInteractor.execute(new TranslationObserver(), query);
+    }
+
+    private void setTranslationString(String translationString) {
+        attachedView.setTranslation(translationString);
+    }
+
+    private void setExpandedTranslationString(String expandedTranslationString) {
+        attachedView.setExpandedTranslation(expandedTranslationString);
+    }
+
+    private void setTranslationTo(Language To) {
+        attachedView.setTranslationTo(translationDirectionMapper.transform(To));
+    }
+
+    private void setTranslationFrom(Language From) {
+        attachedView.setTranslationTo(translationDirectionMapper.transform(From));
+    }
+
+    private final class TranslationDirectionObserver extends MutedObserver<TranslationDirection> {
+
+        @Override
+        public void onNext(TranslationDirection translationDirection) {
+            setTranslationTo(translationDirection.getTranslationTo());
+            setTranslationFrom(translationDirection.getTranslationFrom());
+        }
+    }
+
+    private final class SupportedLanguagesObserver extends MutedObserver<List<Language>> {
+
+        @Override
+        public void onNext(List<Language> value) {
+            TranslatePresenter.this.translationDirectionMapper = new TranslationDirectionMapper(value);
+            setSupportedLanguages(value);
+        }
+    }
+
+    private final class TranslationObserver extends MutedObserver<Translation> {
+
+        @Override
+        public void onNext(Translation value) {
+            TranslatePresenter.this.setTranslationFrom(value.getDirection().getTranslationFrom());
+            TranslatePresenter.this.setTranslationTo(value.getDirection().getTranslationTo());
+            TranslatePresenter.this.setTranslationString(value.getShortTranslation());
+            TranslatePresenter.this.setExpandedTranslationString(value.getExpandedTranslation());
+        }
+    }
+
 }
