@@ -18,13 +18,14 @@ import io.reactivex.Scheduler;
  * Created by Mishkun on 12.04.2017.
  */
 
-public class SupportedLanguagesInteractor extends Interactor<List<Language>, Void> {
+public class GetSupportedLanguagesInteractor extends Interactor<List<Language>, Void> {
 
 
     private final SupportedLanguagesProvider supportedLanguagesProvider;
 
     @Inject
-    SupportedLanguagesInteractor(@Named(DomainModule.JOB) Scheduler threadExecutor, @Named(DomainModule.UI) Scheduler postExecutionThread, SupportedLanguagesProvider supportedLanguagesProvider) {
+    GetSupportedLanguagesInteractor(@Named(DomainModule.JOB) Scheduler threadExecutor, @Named(DomainModule.UI) Scheduler postExecutionThread,
+                                    SupportedLanguagesProvider supportedLanguagesProvider) {
         super(threadExecutor, postExecutionThread);
         this.supportedLanguagesProvider = supportedLanguagesProvider;
     }

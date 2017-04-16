@@ -1,8 +1,7 @@
 package com.mishkun.yandextestexercise.presentation.presenters;
 
 import com.mishkun.yandextestexercise.di.PerActivity;
-import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
-import com.mishkun.yandextestexercise.domain.interactors.SupportedLanguagesInteractor;
+import com.mishkun.yandextestexercise.domain.interactors.GetSupportedLanguagesInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.TranslationInteractor;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 
@@ -27,12 +26,12 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     private static final String TAG = TranslatePresenter.class.getSimpleName();
 
     private final TranslationInteractor translationInteractor;
-    private final SupportedLanguagesInteractor supportedLanguagesInteractor;
+    private final GetSupportedLanguagesInteractor supportedLanguagesInteractor;
 
 
 
     @Inject
-    public TranslatePresenter(TranslationInteractor translationInteractor, SupportedLanguagesInteractor supportedLanguagesInteractor) {
+    public TranslatePresenter(TranslationInteractor translationInteractor, GetSupportedLanguagesInteractor supportedLanguagesInteractor) {
         this.translationInteractor = translationInteractor;
         this.supportedLanguagesInteractor = supportedLanguagesInteractor;
     }

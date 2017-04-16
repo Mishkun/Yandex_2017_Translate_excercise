@@ -3,7 +3,7 @@ package com.mishkun.yandextestexercise.di.modules;
 import android.app.Activity;
 
 import com.mishkun.yandextestexercise.di.PerActivity;
-import com.mishkun.yandextestexercise.domain.interactors.SupportedLanguagesInteractor;
+import com.mishkun.yandextestexercise.domain.interactors.GetSupportedLanguagesInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.TranslationInteractor;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 
@@ -33,6 +33,6 @@ public class MainActivityModule {
     @Provides
     @PerActivity
     public TranslatePresenter provideTranslationPresenter(){
-        return new TranslatePresenter(new TranslationInteractor(), new SupportedLanguagesInteractor());
+        return new TranslatePresenter(new TranslationInteractor(), new GetSupportedLanguagesInteractor());
     }
 }

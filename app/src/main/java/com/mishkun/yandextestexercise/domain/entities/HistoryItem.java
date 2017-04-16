@@ -6,61 +6,27 @@ package com.mishkun.yandextestexercise.domain.entities;
 
 
 public class HistoryItem {
-    private String mOriginalText;
-    private String mTranslatedText;
-    private boolean mFavored;
+    private boolean favored;
+    private Translation translation;
 
-    private Language mFromLanguage;
-    private Language mToLanguage;
-
-    public HistoryItem() {
-
+    public HistoryItem(boolean favored, Translation translation) {
+        this.favored = favored;
+        this.translation = translation;
     }
 
-    public HistoryItem(String mOriginalText, String mTranslatedText, boolean mFavored) {
-        this.mOriginalText = mOriginalText;
-        this.mTranslatedText = mTranslatedText;
-        this.mFavored = mFavored;
-    }
-
-
-    public String getOriginalText() {
-        return mOriginalText;
-    }
-
-    public void setOriginalText(String originalText) {
-        this.mOriginalText = originalText;
-    }
-
-    public String getmTranslatedText() {
-        return mTranslatedText;
-    }
-
-    public void setTranslatedText(String translatedText) {
-        this.mTranslatedText = translatedText;
-    }
-
-    public boolean getFavored() {
-        return mFavored;
+    public boolean isFavored() {
+        return favored;
     }
 
     public void setFavored(boolean favored) {
-        this.mFavored = favored;
+        this.favored = favored;
     }
 
-    public Language getToLanguage() {
-        return mToLanguage;
+    public Translation getTranslation() {
+        return translation;
     }
 
-    public void setToLanguage(Language ToLanguage) {
-        this.mToLanguage = ToLanguage;
-    }
-
-    public Language getFromLanguage() {
-        return mFromLanguage;
-    }
-
-    public void setFromLanguage(Language FromLanguage) {
-        this.mFromLanguage = FromLanguage;
+    public void setTranslation(Translation translation) {
+        this.translation = translation;
     }
 }

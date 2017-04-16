@@ -1,34 +1,17 @@
 package com.mishkun.yandextestexercise.presentation.presenters;
 
-import com.mishkun.yandextestexercise.domain.interactors.SupportedLanguagesInteractor;
+import com.mishkun.yandextestexercise.domain.interactors.GetSupportedLanguagesInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.TranslationInteractor;
-import com.mishkun.yandextestexercise.presentation.viewmodels.TranslationViewModel;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
-import com.mishkun.yandextestexercise.presentation.views.fragments.HomeFragment;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.VoidMethodStubbable;
-
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.android.plugins.RxAndroidPlugins;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.Schedulers;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Mishkun on 14.04.2017.
@@ -42,7 +25,7 @@ public class TranslatePresenterTest {
     private TranslationInteractor translationInteractor;
 
     @Mock
-    private SupportedLanguagesInteractor supportedLanguagesInteractor;
+    private GetSupportedLanguagesInteractor supportedLanguagesInteractor;
 
     @Mock
     private TranslateView translationView;

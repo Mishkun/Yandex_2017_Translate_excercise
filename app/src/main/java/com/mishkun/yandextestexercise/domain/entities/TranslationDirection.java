@@ -16,14 +16,6 @@ public class TranslationDirection {
 
 
 
-    public TranslationDirection getReversedDirection() {
-        if (mFrom != null) {
-            return new TranslationDirection(mTo, mFrom);
-        } else {
-            return null;
-        }
-    }
-
     public Language getTranslationFrom() {
         return mFrom;
     }
@@ -39,14 +31,14 @@ public class TranslationDirection {
 
         TranslationDirection that = (TranslationDirection) o;
 
-        if (mFrom != null ? !mFrom.equals(that.mFrom) : that.mFrom != null) return false;
+        if (!mFrom.equals(that.mFrom)) return false;
         return mTo.equals(that.mTo);
 
     }
 
     @Override
     public int hashCode() {
-        int result = mFrom != null ? mFrom.hashCode() : 0;
+        int result = mFrom.hashCode();
         result = 31 * result + mTo.hashCode();
         return result;
     }
