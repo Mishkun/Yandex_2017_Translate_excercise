@@ -29,11 +29,4 @@ public class MainActivityModule {
     public Activity provideActivity() {
         return this.activity;
     }
-
-    @Provides
-    @PerActivity
-    public TranslatePresenter provideTranslationPresenter(){
-        return new TranslatePresenter(new TranslationInteractor(), translationDirectionInteractor, new GetSupportedLanguagesInteractor(),
-                                      swapTranslationDirectionInteractor);
-    }
 }
