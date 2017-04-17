@@ -1,5 +1,6 @@
 package com.mishkun.yandextestexercise.domain.providers;
 
+import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 
 import io.reactivex.Observable;
@@ -9,5 +10,5 @@ import io.reactivex.Observable;
  */
 
 public interface TranslationDirectionGuessProvider {
-    public Observable<TranslationDirection> getTranslationDirection(String query);
+    public Observable<Language> guessLanguage(String query);
 }

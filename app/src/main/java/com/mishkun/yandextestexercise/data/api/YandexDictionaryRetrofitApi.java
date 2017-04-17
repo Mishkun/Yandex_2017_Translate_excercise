@@ -12,6 +12,6 @@ import retrofit2.http.Query;
  */
 
 public interface YandexDictionaryRetrofitApi {
-    @GET("/lookup")
+    @GET("lookup")
     Observable<DictionaryResponse> getDictionaryTranslation(@Query("key") String key, @Query("lang") String direction, @Query("text") String text);
 }

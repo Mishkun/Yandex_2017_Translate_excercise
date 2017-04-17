@@ -2,6 +2,7 @@ package com.mishkun.yandextestexercise.domain.interactors;
 
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
+import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.providers.ExpandedTranslationProvider;
@@ -46,7 +47,13 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
     @Override
     Observable<Translation> buildUseCaseObservable(final TranslationQuery params) {
         if (params.shouldGuess()) {
-            return translationDirectionGuessProvider.getTranslationDirection(params.getString())
+            return translationDirectionGuessProvider.guessLanguage(params.getString())
+                                                    .map(new Function<Language, TranslationDirection>() {
+                                                        @Override
+                                                        public TranslationDirection apply(Language language) throws Exception {
+                                                            return new TranslationDirection(language, params.getDirection().getTranslationTo());
+                                                        }
+                                                    })
                                                     .doOnNext(new Consumer<TranslationDirection>() {
                                                         @Override
                                                         public void accept(TranslationDirection direction) throws Exception {

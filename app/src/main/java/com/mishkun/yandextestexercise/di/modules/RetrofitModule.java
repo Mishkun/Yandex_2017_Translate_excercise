@@ -18,8 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class RetrofitModule {
-    private static final String BASE_URL_TRANSLATE = "https://translate.yandex.net/api/v1.5/tr.json";
-    private static final String BASE_URL_DICTIONARY = "https://dictionary.yandex.net/api/v1/dicservice.json";
+    private static final String BASE_URL_TRANSLATE = "https://translate.yandex.net/api/v1.5/tr.json/";
+    private static final String BASE_URL_DICTIONARY = "https://dictionary.yandex.net/api/v1/dicservice.json/";
 
     @Provides
     @Singleton

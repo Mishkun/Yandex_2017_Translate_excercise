@@ -23,8 +23,8 @@ public class DataModule {
 
     @Provides
     @Singleton
-    TranslationDirectionHolder provideTranslationDirectionHolder() {
-        return new TranslationDirectionHolder();
+    TranslationDirectionProvider provideTranslationDirectionHolder(TranslationDirectionHolder holder) {
+        return holder;
     }
 
     @Provides
@@ -51,9 +51,4 @@ public class DataModule {
         return yandexApi;
     }
 
-    @Provides
-    @Singleton
-    TranslationDirectionProvider provideTranslationDirectionApi(TranslationDirectionHolder holder) {
-        return holder;
-    }
 }

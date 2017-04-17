@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
@@ -19,6 +20,7 @@ import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -26,6 +28,7 @@ import io.reactivex.Observable;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 
@@ -92,7 +95,17 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
         initializeReverseButton();
+        initializeTextObservable();
         return view;
+    }
+
+    private void initializeTextObservable() {
+        /*RxTextView.textChangeEvents(sourceTextView).debounce(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<TextViewTextChangeEvent>() {
+            @Override
+            public void accept(TextViewTextChangeEvent textViewTextChangeEvent) throws Exception {
+                translatePresenter.onQueryChanged();
+            }
+        });*/
     }
 
     @Override

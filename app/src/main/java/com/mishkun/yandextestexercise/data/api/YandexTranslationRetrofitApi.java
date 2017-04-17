@@ -14,12 +14,12 @@ import retrofit2.http.Query;
 
 public interface YandexTranslationRetrofitApi {
 
-    @GET("/getLangs")
+    @GET("getLangs")
     Observable<SupportedLanguagesResponse> getSupportedLanguages(@Query("key") String key, @Query("ui") String ui);
 
-    @GET("/detect")
+    @GET("detect")
     Observable<DetectionResponse> detectLanguage(@Query("key") String key, @Query("text") String text);
 
-    @GET("/translate")
+    @GET("translate")
     Observable<TranslationResponse> translate(@Query("key") String key, @Query("lang") String languageDirection, @Query("text") String text);
 }

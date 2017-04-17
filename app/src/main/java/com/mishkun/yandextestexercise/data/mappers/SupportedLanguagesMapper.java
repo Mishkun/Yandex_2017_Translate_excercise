@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class SupportedLanguagesMapper {
 
-    public List<Language> transform(SupportedLanguagesResponse response) {
+    public static List<Language> transform(SupportedLanguagesResponse response) {
         Map<String, String> languageMap = response.getLanguages();
         List<Language> languages = new ArrayList<>();
         for (String keycode : languageMap.keySet()) {

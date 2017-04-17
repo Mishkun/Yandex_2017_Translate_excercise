@@ -1,5 +1,7 @@
 package com.mishkun.yandextestexercise.data.mappers;
 
+import com.mishkun.yandextestexercise.data.responses.DetectionResponse;
+import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 
 /**
@@ -8,7 +10,7 @@ import com.mishkun.yandextestexercise.domain.entities.Language;
 
 public class DetectionResponseMapper {
 
-    public Language transform(String keyCode) {
-        return new Language(keyCode, null);
+    public static Language transform(DetectionResponse detectionResponse) {
+        return new Language(detectionResponse.getLanguageCode(), null);
     }
 }
