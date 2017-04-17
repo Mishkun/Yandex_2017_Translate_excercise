@@ -1,6 +1,7 @@
 package com.mishkun.yandextestexercise.presentation.views.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
+import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +32,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.subjects.BehaviorSubject;
 
 
 /**
@@ -61,6 +64,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @Inject
     public TranslatePresenter translatePresenter;
 
+    private BehaviorSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -82,9 +86,11 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        translationQueryViewModelBehaviorSubject = BehaviorSubject.createDefault(new TranslationQueryViewModel(0,1,""));
         this.getComponent(MainActivityComponent.class).inject(this);
     }
 
@@ -94,24 +100,27 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
+
+        translatePresenter.attachView(this);
         initializeReverseButton();
-        initializeTextObservable();
         return view;
     }
 
     private void initializeTextObservable() {
-        /*RxTextView.textChangeEvents(sourceTextView).debounce(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<TextViewTextChangeEvent>() {
+        RxTextView.textChanges(sourceTextView).debounce(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<CharSequence>() {
             @Override
-            public void accept(TextViewTextChangeEvent textViewTextChangeEvent) throws Exception {
-                translatePresenter.onQueryChanged();
+            public void accept(CharSequence charSequence) throws Exception {
+                translationQueryViewModelBehaviorSubject.onNext(new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(),
+                                                                                              fromTranslationSpinner.getSelectedItemPosition(),
+                                                                                              charSequence.toString()));
             }
-        });*/
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        translatePresenter.attachView(this);
+        translatePresenter.resume();
     }
 
     private void initializeReverseButton() {
@@ -143,23 +152,29 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         fromTranslationSpinner.setSelection(From);
     }
 
+
     @Override
-    public String getTextToTranslate() {
-        return sourceTextView.getText().toString();
+    public Observable<TranslationQueryViewModel> getQueries() {
+        return translationQueryViewModelBehaviorSubject;
     }
 
     @Override
     public void setSupportedLanguages(List<String> supportedLanguages) {
+        Log.d(TAG, "SetSupportedLanguages called");
         ArrayAdapter<String> spinnersAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, supportedLanguages);
 
         spinnersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         toTranslationSpinner.setAdapter(spinnersAdapter);
         fromTranslationSpinner.setAdapter(spinnersAdapter);
 
+        fromTranslationSpinner.setSelection(0);
+        toTranslationSpinner.setSelection(1);
         toTranslationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                translatePresenter.onQueryChanged();
+                translationQueryViewModelBehaviorSubject.onNext(
+                        new TranslationQueryViewModel(position, fromTranslationSpinner.getSelectedItemPosition(),
+                                                      sourceTextView.getText().toString()));
             }
 
             @Override
@@ -170,7 +185,8 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         fromTranslationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                translatePresenter.onQueryChanged();
+                translationQueryViewModelBehaviorSubject.onNext(
+                        new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(), position, sourceTextView.getText().toString()));
             }
 
             @Override
@@ -178,6 +194,8 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
             }
         });
+
+        initializeTextObservable();
     }
 
     @Override

@@ -11,5 +11,5 @@ import io.reactivex.Observable;
 public interface TranslationDirectionProvider {
     public Observable<TranslationDirection> getTranslationDirection();
 
-    public TranslationDirection setTranslationDirection(TranslationDirection translationDirection);
+    public void setTranslationDirection(TranslationDirection translationDirection);
 }

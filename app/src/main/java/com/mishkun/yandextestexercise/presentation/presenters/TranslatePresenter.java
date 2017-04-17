@@ -1,5 +1,8 @@
 package com.mishkun.yandextestexercise.presentation.presenters;
 
+import android.nfc.Tag;
+import android.util.Log;
+
 import com.mishkun.yandextestexercise.di.PerActivity;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Language;
@@ -10,6 +13,7 @@ import com.mishkun.yandextestexercise.domain.interactors.GetTranslationDirection
 import com.mishkun.yandextestexercise.domain.interactors.TranslationInteractor;
 import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
+import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
 
 
 import java.util.ArrayList;
@@ -18,6 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Module;
 import io.reactivex.observers.DisposableObserver;
 
 /**
@@ -48,7 +53,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     @Override
     public void resume() {
         supportedLanguagesInteractor.execute(new SupportedLanguagesObserver());
-        translationDirectionInteractor.execute(new TranslationDirectionObserver());
+        Log.d(TAG, "onResume called");
     }
 
 
@@ -74,18 +79,6 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         attachedView.setTranslationFrom(from);
     }
 
-    public void onQueryChanged() {
-        translate();
-    }
-
-    private void translate() {
-        String queryString = attachedView.getTextToTranslate();
-        TranslationDirection direction = new TranslationDirection(translationDirectionMapper.transform(attachedView.getTranslationFrom()),
-                                                                  translationDirectionMapper.transform(attachedView.getTranslationTo()));
-        TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction, true);
-        translationInteractor.execute(new TranslationObserver(), query);
-    }
-
     private void setTranslationString(String translationString) {
         attachedView.setTranslation(translationString);
     }
@@ -102,6 +95,19 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         attachedView.setTranslationTo(translationDirectionMapper.transform(From));
     }
 
+    private final class UserInputObserver extends MutedObserver<TranslationQueryViewModel> {
+
+        @Override
+        public void onNext(TranslationQueryViewModel value) {
+            String queryString = value.getQuery();
+            Log.d(TAG, value.getTranslationFrom() + " " + value.getTranslationTo());
+            TranslationDirection direction = new TranslationDirection(translationDirectionMapper.transform(value.getTranslationFrom()),
+                                                                      translationDirectionMapper.transform(value.getTranslationTo()));
+            TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction, true);
+            translationInteractor.execute(new TranslationObserver(), query);
+        }
+    }
+
     private final class TranslationDirectionObserver extends MutedObserver<TranslationDirection> {
 
         @Override
@@ -115,8 +121,16 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onNext(List<Language> value) {
+            Log.d(TAG, "SupportedLanguagesList arrived");
             TranslatePresenter.this.translationDirectionMapper = new TranslationDirectionMapper(value);
             setSupportedLanguages(value);
+            translationDirectionInteractor.execute(new TranslationDirectionObserver());
+            attachedView.getQueries().subscribe(new UserInputObserver());
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.d(TAG, e.getMessage());
         }
     }
 

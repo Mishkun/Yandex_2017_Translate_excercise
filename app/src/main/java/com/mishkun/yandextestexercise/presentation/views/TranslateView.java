@@ -17,7 +17,7 @@ public interface TranslateView{
     int getTranslationTo();
     int getTranslationFrom();
 
-    String getTextToTranslate();
+    Observable<TranslationQueryViewModel> getQueries();
     void setSupportedLanguages(List<String> supportedLanguages);
     void setTranslation(String translation);
     void setExpandedTranslation(Definition expandedTranslation);
