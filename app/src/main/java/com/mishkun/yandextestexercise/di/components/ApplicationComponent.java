@@ -5,6 +5,7 @@ import com.mishkun.yandextestexercise.MainActivity;
 import com.mishkun.yandextestexercise.di.modules.ApplicationModule;
 import com.mishkun.yandextestexercise.di.modules.DataModule;
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
+import com.mishkun.yandextestexercise.di.modules.RetrofitModule;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.providers.ExpandedTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.ShortTranslationProvider;
@@ -26,7 +27,7 @@ import static com.mishkun.yandextestexercise.di.modules.DomainModule.UI;
  */
 
 @Singleton
-@Component(modules = {ApplicationModule.class,  DomainModule.class, DataModule.class})
+@Component(modules = {ApplicationModule.class,  DomainModule.class, DataModule.class, RetrofitModule.class})
 public interface ApplicationComponent {
     void inject(AndroidApplication application);
 

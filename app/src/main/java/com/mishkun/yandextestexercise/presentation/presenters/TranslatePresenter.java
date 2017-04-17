@@ -1,6 +1,7 @@
 package com.mishkun.yandextestexercise.presentation.presenters;
 
 import com.mishkun.yandextestexercise.di.PerActivity;
+import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
@@ -59,8 +60,8 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
     private void setSupportedLanguages(List<Language> supportedLanguages) {
         List<String> representedLanguages = new ArrayList<>(supportedLanguages.size());
-        for (Iterator<Language> iterator = supportedLanguages.iterator(); iterator.hasNext(); ) {
-            representedLanguages.add(iterator.next().getDisplayName());
+        for (Language language : supportedLanguages) {
+            representedLanguages.add(language.getDisplayName());
         }
         attachedView.setSupportedLanguages(representedLanguages);
     }
@@ -89,7 +90,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         attachedView.setTranslation(translationString);
     }
 
-    private void setExpandedTranslationString(String expandedTranslationString) {
+    private void setExpandedTranslationString(Definition expandedTranslationString) {
         attachedView.setExpandedTranslation(expandedTranslationString);
     }
 

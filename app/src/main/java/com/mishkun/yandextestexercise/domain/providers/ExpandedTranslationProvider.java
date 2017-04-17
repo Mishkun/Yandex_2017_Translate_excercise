@@ -1,5 +1,6 @@
 package com.mishkun.yandextestexercise.domain.providers;
 
+import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 
 import io.reactivex.Observable;
@@ -10,5 +11,5 @@ import io.reactivex.Observable;
 
 public interface ExpandedTranslationProvider {
     // TODO - look how actually translation is provided
-    Observable<String> getExpandedTranslation(String query, TranslationDirection direction);
+    Observable<Definition> getExpandedTranslation(String query, TranslationDirection direction);
 }

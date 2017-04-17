@@ -6,11 +6,11 @@ package com.mishkun.yandextestexercise.domain.entities;
 
 public class Translation {
     private String shortTranslation;
-    private String expandedTranslation;
+    private Definition expandedTranslation;
     private String original;
     private TranslationDirection direction;
 
-    public Translation(String shortTranslation, String expandedTranslation, String original, TranslationDirection direction) {
+    public Translation(String shortTranslation, Definition expandedTranslation, String original, TranslationDirection direction) {
         this.shortTranslation = shortTranslation;
         this.expandedTranslation = expandedTranslation;
         this.original = original;
@@ -25,11 +25,11 @@ public class Translation {
         this.shortTranslation = shortTranslation;
     }
 
-    public String getExpandedTranslation() {
+    public Definition getExpandedTranslation() {
         return expandedTranslation;
     }
 
-    public void setExpandedTranslation(String expandedTranslation) {
+    public void setExpandedTranslation(Definition expandedTranslation) {
         this.expandedTranslation = expandedTranslation;
     }
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
+import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 
@@ -172,8 +173,8 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     }
 
     @Override
-    public void setExpandedTranslation(String expandedTranslation) {
-        expandedTranslationTextView.setText(expandedTranslation);
+    public void setExpandedTranslation(Definition expandedTranslation) {
+        expandedTranslationTextView.setText(expandedTranslation.getText());
     }
 
     @Override

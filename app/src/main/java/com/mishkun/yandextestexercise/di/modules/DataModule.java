@@ -20,17 +20,6 @@ import dagger.Provides;
 @Module
 public class DataModule {
 
-    @Provides
-    @Singleton
-    YandexTranslationApi provideYandexTranslationApi() {
-        return new YandexTranslationApi();
-    }
-
-    @Provides
-    @Singleton
-    YandexDictionaryApi provideYandexDictionaryApi() {
-        return new YandexDictionaryApi();
-    }
 
     @Provides
     @Singleton

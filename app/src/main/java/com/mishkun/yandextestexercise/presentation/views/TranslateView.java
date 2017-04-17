@@ -1,5 +1,7 @@
 package com.mishkun.yandextestexercise.presentation.views;
 
+import com.mishkun.yandextestexercise.domain.entities.Definition;
+
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -18,7 +20,7 @@ public interface TranslateView{
     String getTextToTranslate();
     void setSupportedLanguages(List<String> supportedLanguages);
     void setTranslation(String translation);
-    void setExpandedTranslation(String expandedTranslation);
+    void setExpandedTranslation(Definition expandedTranslation);
     void showError(String errorMessage);
     void hideError();
 }

@@ -1,6 +1,7 @@
 package com.mishkun.yandextestexercise.domain.interactors;
 
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
+import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.providers.ExpandedTranslationProvider;
@@ -72,9 +73,9 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
         if (query.string.matches(oneWordRegex)) {
             return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
                                   expandedTranslationProvider.getExpandedTranslation(query.getString(), query.getDirection()),
-                                  new BiFunction<String, String, Translation>() {
+                                  new BiFunction<String, Definition, Translation>() {
                                       @Override
-                                      public Translation apply(String shortTranslation, String expandedTranslation) throws Exception {
+                                      public Translation apply(String shortTranslation, Definition expandedTranslation) throws Exception {
                                           return new Translation(shortTranslation, expandedTranslation, query.getString(), query.getDirection());
                                       }
                                   });
@@ -84,7 +85,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
                     .map(new Function<String, Translation>() {
                         @Override
                         public Translation apply(String shortTranslation) throws Exception {
-                            return new Translation(shortTranslation, "", query.getString(), query.getDirection());
+                            return new Translation(shortTranslation, null, query.getString(), query.getDirection());
                         }
                     });
         }
