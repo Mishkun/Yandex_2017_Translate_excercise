@@ -11,5 +11,5 @@ import io.reactivex.Observable;
  */
 
 public interface SupportedLanguagesProvider {
-    public Observable<List<Language>> getSupportedLanguages();
+    Observable<List<Language>> getSupportedLanguages();
 }

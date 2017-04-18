@@ -5,10 +5,13 @@ import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
+import com.mishkun.yandextestexercise.domain.providers.DictionarySupportedLanguagesProvider;
 import com.mishkun.yandextestexercise.domain.providers.ExpandedTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.ShortTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.TranslationDirectionGuessProvider;
 import com.mishkun.yandextestexercise.domain.providers.TranslationDirectionProvider;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,30 +34,34 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
     private ExpandedTranslationProvider expandedTranslationProvider;
     private TranslationDirectionProvider translationDirectionProvider;
     private TranslationDirectionGuessProvider translationDirectionGuessProvider;
+    private DictionarySupportedLanguagesProvider dictionarySupportedLanguagesProvider;
 
     @Inject
     TranslationInteractor(@Named(DomainModule.JOB) Scheduler threadExecutor, @Named(DomainModule.UI) Scheduler postExecutionThread,
                           ShortTranslationProvider shortTranslationProvider, ExpandedTranslationProvider expandedTranslationProvider,
                           TranslationDirectionProvider translationDirectionProvider,
-                          TranslationDirectionGuessProvider translationDirectionGuessProvider) {
+                          TranslationDirectionGuessProvider translationDirectionGuessProvider,
+                          DictionarySupportedLanguagesProvider dictionarySupportedLanguagesProvider) {
         super(threadExecutor, postExecutionThread);
         this.shortTranslationProvider = shortTranslationProvider;
         this.expandedTranslationProvider = expandedTranslationProvider;
         this.translationDirectionProvider = translationDirectionProvider;
         this.translationDirectionGuessProvider = translationDirectionGuessProvider;
+        this.dictionarySupportedLanguagesProvider = dictionarySupportedLanguagesProvider;
     }
 
     @Override
     Observable<Translation> buildUseCaseObservable(final TranslationQuery params) {
         if (params.shouldGuess()) {
             // Yandex Translate can't into empty strings
-            return translationDirectionGuessProvider.guessLanguage(params.getString().length() > 0 ?  params.getString(): " " )
+            return translationDirectionGuessProvider.guessLanguage(params.getString().length() > 0 ? params.getString() : " ")
                                                     .map(new Function<Language, TranslationDirection>() {
                                                         @Override
                                                         public TranslationDirection apply(Language language) throws Exception {
-                                                            if(!language.getCode().equals("")){
-                                                            return new TranslationDirection(language, params.getDirection().getTranslationTo());}else{
-                                                                return  params.getDirection();
+                                                            if (!language.getCode().equals("")) {
+                                                                return new TranslationDirection(language, params.getDirection().getTranslationTo());
+                                                            } else {
+                                                                return params.getDirection();
                                                             }
                                                         }
                                                     })
@@ -79,12 +86,22 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
         }
     }
 
-    private Observable<Translation> getTranslation(TranslationQuery params) {
+    private Observable getTranslation(TranslationQuery params) {
         final TranslationQuery query = params.normalize();
-        if (false) {
-            //if (query.string.matches(oneWordRegex)) {
+        if (query.string.matches(oneWordRegex)) {
             return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
-                                  expandedTranslationProvider.getExpandedTranslation(query.getString(), query.getDirection()),
+                                  dictionarySupportedLanguagesProvider.getSupportedLanguages().concatMap(
+                                          new Function<List<TranslationDirection>, ObservableSource<Definition>>() {
+                                              @Override
+                                              public Observable<Definition> apply(List<TranslationDirection> directions) throws Exception {
+                                                    for (TranslationDirection supportedDirection: directions){
+                                                        if (supportedDirection.equals(query.direction)){
+                                                            return expandedTranslationProvider.getExpandedTranslation(query.getString(), query.getDirection());
+                                                        }
+                                                    }
+                                                  return Observable.just(new Definition(null, null, null));
+                                              }
+                                          }),
                                   new BiFunction<String, Definition, Translation>() {
                                       @Override
                                       public Translation apply(String shortTranslation, Definition expandedTranslation) throws Exception {
@@ -97,7 +114,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
                     .map(new Function<String, Translation>() {
                         @Override
                         public Translation apply(String shortTranslation) throws Exception {
-                            return new Translation(shortTranslation, null, query.getString(), query.getDirection());
+                            return new Translation(shortTranslation, new Definition(null, null, null), query.getString(), query.getDirection());
                         }
                     });
         }

@@ -196,7 +196,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
     @Override
     public void setExpandedTranslation(Definition expandedTranslation) {
-        if (expandedTranslation != null) {
+        if (expandedTranslation.getText() != null) {
             expandedTranslationTextView.setVisibility(View.VISIBLE);
             expandedTranslationTextView.setText(expandedTranslation.getText());
         } else {

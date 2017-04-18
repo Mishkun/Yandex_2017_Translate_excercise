@@ -52,7 +52,6 @@ public class YandexTranslationApi implements ShortTranslationProvider, Translati
 
     @Override
     public Observable<String> getShortTranslation(String query, TranslationDirection direction) {
-        Log.d(TAG, TranslationDirectionMapper.transform(direction) + " " + query);
         return yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query)
                                       .map(new Function<TranslationResponse, String>() {
                                           @Override
@@ -64,7 +63,6 @@ public class YandexTranslationApi implements ShortTranslationProvider, Translati
 
     @Override
     public Observable<Language> guessLanguage(String query) {
-        // Log.d(TAG, query);
         return yandexTranslateRetrofit.detectLanguage(API_KEY, query).map(new Function<DetectionResponse, Language>() {
             @Override
             public Language apply(DetectionResponse detectionResponse) throws Exception {

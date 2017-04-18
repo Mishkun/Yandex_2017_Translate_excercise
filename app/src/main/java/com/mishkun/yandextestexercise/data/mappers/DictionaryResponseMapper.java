@@ -1,5 +1,8 @@
 package com.mishkun.yandextestexercise.data.mappers;
 
+import android.util.Log;
+
+import com.mishkun.yandextestexercise.data.responses.DetectionResponse;
 import com.mishkun.yandextestexercise.data.responses.DictionaryResponse;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 
@@ -11,15 +14,18 @@ import java.util.List;
  */
 
 public class DictionaryResponseMapper {
+    private static final String TAG = DetectionResponseMapper.class.getSimpleName();
+
     static public Definition transform(DictionaryResponse dictionaryResponse) {
         String transcription = dictionaryResponse.definitions.get(0).transcription;
         String text = dictionaryResponse.definitions.get(0).original;
         List<Definition.DefinitionItem> definitionItems = new ArrayList<>();
         for (DictionaryResponse.DefinitionResponse definitionResponse : dictionaryResponse.definitions) {
-
-            for (DictionaryResponse.TranslationDefinitionResponse translationResponse : definitionResponse.translationDefinitionResponses)
-                definitionItems.add(new Definition.DefinitionItem(flattenTextResponse(translationResponse.synonyms),
-                                                                  flattenTextResponse(translationResponse.meanings)));
+            for (DictionaryResponse.TranslationDefinitionResponse translationResponse : definitionResponse.translationDefinitionResponses) {
+                definitionItems.add(
+                        new Definition.DefinitionItem(translationResponse.synonyms != null ? flattenTextResponse(translationResponse.synonyms) : null,
+                                                      translationResponse.meanings != null ? flattenTextResponse(translationResponse.meanings) : null));
+            }
         }
         return new Definition(text, transcription, definitionItems);
     }
