@@ -155,6 +155,10 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         fromTranslationSpinner.setSelection(From, false);
     }
 
+    @Override
+    public void reverseText() {
+        sourceTextView.setText(translationTextView.getText());
+    }
 
     @Override
     public Observable<TranslationQueryViewModel> getQueries() {
@@ -173,17 +177,21 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         fromTranslationSpinner.setSelection(0);
         toTranslationSpinner.setSelection(1);
         SpinnerInteractionListener listener = new SpinnerInteractionListener();
-        toTranslationSpinner.setOnItemSelectedListener(listener );
-        toTranslationSpinner.setOnTouchListener(listener );
+        toTranslationSpinner.setOnItemSelectedListener(listener);
+        toTranslationSpinner.setOnTouchListener(listener);
         fromTranslationSpinner.setOnItemSelectedListener(listener);
         fromTranslationSpinner.setOnTouchListener(listener);
-
 
         initializeTextObservable();
     }
 
     public void setTranslation(String translation) {
-        translationTextView.setText(translation);
+        if (!translation.equals("")) {
+            translationTextView.setVisibility(View.VISIBLE);
+            translationTextView.setText(translation);
+        } else {
+            translationTextView.setVisibility(View.GONE);
+        }
     }
 
     @Override

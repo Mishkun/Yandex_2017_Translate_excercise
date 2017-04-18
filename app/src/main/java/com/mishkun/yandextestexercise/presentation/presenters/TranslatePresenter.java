@@ -77,6 +77,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         int to = attachedView.getTranslationFrom();
         attachedView.setTranslationFrom(from);
         attachedView.setTranslationTo(to);
+        attachedView.reverseText();
     }
 
     private void setTranslationString(String translationString) {

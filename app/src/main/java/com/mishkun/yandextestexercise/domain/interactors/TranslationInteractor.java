@@ -47,11 +47,15 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
     @Override
     Observable<Translation> buildUseCaseObservable(final TranslationQuery params) {
         if (params.shouldGuess()) {
-            return translationDirectionGuessProvider.guessLanguage(params.getString())
+            // Yandex Translate can't into empty strings
+            return translationDirectionGuessProvider.guessLanguage(params.getString().length() > 0 ?  params.getString(): " " )
                                                     .map(new Function<Language, TranslationDirection>() {
                                                         @Override
                                                         public TranslationDirection apply(Language language) throws Exception {
-                                                            return new TranslationDirection(language, params.getDirection().getTranslationTo());
+                                                            if(!language.getCode().equals("")){
+                                                            return new TranslationDirection(language, params.getDirection().getTranslationTo());}else{
+                                                                return  params.getDirection();
+                                                            }
                                                         }
                                                     })
                                                     .doOnNext(new Consumer<TranslationDirection>() {
@@ -78,7 +82,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
     private Observable<Translation> getTranslation(TranslationQuery params) {
         final TranslationQuery query = params.normalize();
         if (false) {
-        //if (query.string.matches(oneWordRegex)) {
+            //if (query.string.matches(oneWordRegex)) {
             return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
                                   expandedTranslationProvider.getExpandedTranslation(query.getString(), query.getDirection()),
                                   new BiFunction<String, Definition, Translation>() {
@@ -124,7 +128,13 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
         }
 
         public TranslationQuery normalize() {
-            return new TranslationQuery(string.trim(), direction, shouldGuess);
+            String newQuery = string.trim();
+            // Yandex Translate can't into empty strings
+            if (!newQuery.equals("")) {
+                return new TranslationQuery(newQuery, direction, shouldGuess);
+            } else {
+                return new TranslationQuery(" ", direction, shouldGuess);
+            }
         }
     }
 }

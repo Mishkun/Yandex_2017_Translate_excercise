@@ -18,6 +18,7 @@ public interface TranslateView{
     int getTranslationFrom();
 
     Observable<TranslationQueryViewModel> getQueries();
+    void reverseText();
     void setSupportedLanguages(List<String> supportedLanguages);
     void setTranslation(String translation);
     void setExpandedTranslation(Definition expandedTranslation);

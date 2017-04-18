@@ -1,6 +1,7 @@
 package com.mishkun.yandextestexercise.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.domain.entities.Language;
@@ -17,7 +18,7 @@ import io.reactivex.subjects.BehaviorSubject;
  */
 
 public class TranslationDirectionHolder implements TranslationDirectionProvider {
-
+    private static final String TAG = TranslationDirectionHolder.class.getSimpleName();
 
     private BehaviorSubject<TranslationDirection> translationDirectionBehaviorSubject;
 
@@ -36,6 +37,7 @@ public class TranslationDirectionHolder implements TranslationDirectionProvider 
 
     @Override
     public void setTranslationDirection(TranslationDirection translationDirection) {
+        // Log.d(TAG, translationDirection.getTranslationFrom().getCode() + " " + translationDirection.getTranslationTo().getCode());
         translationDirectionBehaviorSubject.onNext(translationDirection);
     }
 }

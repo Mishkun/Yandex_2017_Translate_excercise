@@ -12,6 +12,7 @@ import com.mishkun.yandextestexercise.data.mappers.DetectionResponseMapper;
 import com.mishkun.yandextestexercise.data.mappers.SupportedLanguagesMapper;
 import com.mishkun.yandextestexercise.data.mappers.TranslationDirectionMapper;
 import com.mishkun.yandextestexercise.data.responses.DetectionResponse;
+import com.mishkun.yandextestexercise.data.responses.DictionaryResponse;
 import com.mishkun.yandextestexercise.data.responses.SupportedLanguagesResponse;
 import com.mishkun.yandextestexercise.data.responses.TranslationResponse;
 import com.mishkun.yandextestexercise.domain.entities.Language;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.subjects.BehaviorSubject;
+import retrofit2.HttpException;
 import retrofit2.Retrofit;
 
 /**
@@ -41,6 +43,7 @@ public class YandexTranslationApi implements ShortTranslationProvider, Translati
     private final YandexTranslationRetrofitApi yandexTranslateRetrofit;
     private final Context context;
     private final String TAG = YandexTranslationApi.class.getSimpleName();
+
     @Inject
     public YandexTranslationApi(YandexTranslationRetrofitApi yandexTranslateRetrofit, Context context) {
         this.yandexTranslateRetrofit = yandexTranslateRetrofit;
@@ -50,17 +53,18 @@ public class YandexTranslationApi implements ShortTranslationProvider, Translati
     @Override
     public Observable<String> getShortTranslation(String query, TranslationDirection direction) {
         Log.d(TAG, TranslationDirectionMapper.transform(direction) + " " + query);
-        return yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query).map(
-                new Function<TranslationResponse, String>() {
-                    @Override
-                    public String apply(TranslationResponse translationResponse) throws Exception {
-                        return translationResponse.getTranslation().get(0);
-                    }
-                });
+        return yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query)
+                                      .map(new Function<TranslationResponse, String>() {
+                                          @Override
+                                          public String apply(TranslationResponse translationResponse) throws Exception {
+                                              return translationResponse.getTranslation().get(0);
+                                          }
+                                      });
     }
 
     @Override
     public Observable<Language> guessLanguage(String query) {
+        // Log.d(TAG, query);
         return yandexTranslateRetrofit.detectLanguage(API_KEY, query).map(new Function<DetectionResponse, Language>() {
             @Override
             public Language apply(DetectionResponse detectionResponse) throws Exception {

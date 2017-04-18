@@ -23,4 +23,5 @@ public interface YandexTranslationRetrofitApi {
 
     @GET("translate")
     Observable<TranslationResponse> translate(@Query("key") String key, @Query("lang") String languageDirection, @Query("text") String text);
+
 }

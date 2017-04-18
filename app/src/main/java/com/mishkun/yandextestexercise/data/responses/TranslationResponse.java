@@ -13,6 +13,13 @@ public class TranslationResponse {
     @SerializedName("text")
     private List<String> translations;
 
+    public TranslationResponse() {
+    }
+
+    public TranslationResponse(List<String> translations) {
+        this.translations = translations;
+    }
+
     public List<String> getTranslation() {
         return translations;
     }
