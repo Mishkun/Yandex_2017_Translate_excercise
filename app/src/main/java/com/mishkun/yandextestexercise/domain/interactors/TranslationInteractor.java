@@ -77,7 +77,8 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
 
     private Observable<Translation> getTranslation(TranslationQuery params) {
         final TranslationQuery query = params.normalize();
-        if (query.string.matches(oneWordRegex)) {
+        if (false) {
+        //if (query.string.matches(oneWordRegex)) {
             return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
                                   expandedTranslationProvider.getExpandedTranslation(query.getString(), query.getDirection()),
                                   new BiFunction<String, Definition, Translation>() {

@@ -2,6 +2,8 @@ package com.mishkun.yandextestexercise.data.responses;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by Mishkun on 17.04.2017.
  */
@@ -9,9 +11,10 @@ import com.google.gson.annotations.SerializedName;
 public class TranslationResponse {
 
     @SerializedName("text")
-    private String translation;
+    private List<String> translations;
 
-    public String getTranslation() {
-        return translation;
+    public List<String> getTranslation() {
+        return translations;
     }
 }
+

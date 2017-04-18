@@ -9,7 +9,7 @@ public class TranslationQueryViewModel {
     private int translationFrom;
     private String query;
 
-    public TranslationQueryViewModel(int translationTo, int translationFrom, String query) {
+    public TranslationQueryViewModel( int translationFrom, int translationTo, String query) {
         this.translationTo = translationTo;
         this.translationFrom = translationFrom;
         this.query = query;
@@ -25,5 +25,26 @@ public class TranslationQueryViewModel {
 
     public String getQuery() {
         return query;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TranslationQueryViewModel that = (TranslationQueryViewModel) o;
+
+        if (translationTo != that.translationTo) return false;
+        if (translationFrom != that.translationFrom) return false;
+        return query.equals(that.query);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = translationTo;
+        result = 31 * result + translationFrom;
+        result = 31 * result + query.hashCode();
+        return result;
     }
 }

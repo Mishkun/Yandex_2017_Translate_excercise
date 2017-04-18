@@ -5,6 +5,7 @@ import com.mishkun.yandextestexercise.data.responses.SupportedLanguagesResponse;
 import com.mishkun.yandextestexercise.data.responses.TranslationResponse;
 
 import io.reactivex.Observable;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

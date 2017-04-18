@@ -75,8 +75,8 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     public void OnReverseTranslationButtonClicked() {
         int from = attachedView.getTranslationTo();
         int to = attachedView.getTranslationFrom();
-        attachedView.setTranslationTo(to);
         attachedView.setTranslationFrom(from);
+        attachedView.setTranslationTo(to);
     }
 
     private void setTranslationString(String translationString) {
@@ -96,11 +96,12 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     }
 
     private final class UserInputObserver extends MutedObserver<TranslationQueryViewModel> {
+        private final String TAG = UserInputObserver.class.getSimpleName();
 
         @Override
         public void onNext(TranslationQueryViewModel value) {
             String queryString = value.getQuery();
-            Log.d(TAG, value.getTranslationFrom() + " " + value.getTranslationTo());
+
             TranslationDirection direction = new TranslationDirection(translationDirectionMapper.transform(value.getTranslationFrom()),
                                                                       translationDirectionMapper.transform(value.getTranslationTo()));
             TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction, true);
@@ -110,14 +111,23 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
     private final class TranslationDirectionObserver extends MutedObserver<TranslationDirection> {
 
+        private final String TAG = TranslationDirectionObserver.class.getSimpleName();
+
         @Override
         public void onNext(TranslationDirection translationDirection) {
             setTranslationTo(translationDirection.getTranslationTo());
             setTranslationFrom(translationDirection.getTranslationFrom());
         }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.d(TAG, e.getMessage());
+        }
     }
 
     private final class SupportedLanguagesObserver extends MutedObserver<List<Language>> {
+
+        private final String TAG = SupportedLanguagesObserver.class.getSimpleName();
 
         @Override
         public void onNext(List<Language> value) {
@@ -125,7 +135,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
             TranslatePresenter.this.translationDirectionMapper = new TranslationDirectionMapper(value);
             setSupportedLanguages(value);
             translationDirectionInteractor.execute(new TranslationDirectionObserver());
-            attachedView.getQueries().subscribe(new UserInputObserver());
+            attachedView.getQueries().distinctUntilChanged().subscribe(new UserInputObserver());
         }
 
         @Override
@@ -135,13 +145,17 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     }
 
     private final class TranslationObserver extends MutedObserver<Translation> {
+        private final String TAG = TranslationObserver.class.getSimpleName();
 
         @Override
         public void onNext(Translation value) {
-            TranslatePresenter.this.setTranslationFrom(value.getDirection().getTranslationFrom());
-            TranslatePresenter.this.setTranslationTo(value.getDirection().getTranslationTo());
             TranslatePresenter.this.setTranslationString(value.getShortTranslation());
             TranslatePresenter.this.setExpandedTranslationString(value.getExpandedTranslation());
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.d(TAG, e.getMessage());
         }
     }
 

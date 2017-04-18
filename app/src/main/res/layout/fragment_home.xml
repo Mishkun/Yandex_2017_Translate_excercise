@@ -28,7 +28,7 @@
             android:orientation="horizontal">
 
             <Spinner
-                android:id="@+id/from_translation_spinner"
+                android:id="@+id/to_translation_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5" />
@@ -41,7 +41,7 @@
                 android:src="@drawable/ic_swap_horiz_black_24dp" />
 
             <Spinner
-                android:id="@+id/to_translation_spinner"
+                android:id="@+id/from_translation_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5" />

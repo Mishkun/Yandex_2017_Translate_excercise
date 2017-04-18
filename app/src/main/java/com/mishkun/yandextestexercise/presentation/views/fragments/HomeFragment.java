@@ -3,6 +3,7 @@ package com.mishkun.yandextestexercise.presentation.views.fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.widget.RxTextSwitcher;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.mishkun.yandextestexercise.R;
@@ -33,6 +35,7 @@ import butterknife.BindView;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 
 /**
@@ -64,7 +67,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @Inject
     public TranslatePresenter translatePresenter;
 
-    private BehaviorSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
+    private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -90,7 +93,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
-        translationQueryViewModelBehaviorSubject = BehaviorSubject.createDefault(new TranslationQueryViewModel(0,1,""));
+        translationQueryViewModelBehaviorSubject = PublishSubject.create();
         this.getComponent(MainActivityComponent.class).inject(this);
     }
 
@@ -139,7 +142,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
     @Override
     public void setTranslationTo(int To) {
-        toTranslationSpinner.setSelection(To);
+        toTranslationSpinner.setSelection(To, false);
     }
 
     @Override
@@ -149,7 +152,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
     @Override
     public void setTranslationFrom(int From) {
-        fromTranslationSpinner.setSelection(From);
+        fromTranslationSpinner.setSelection(From, false);
     }
 
 
@@ -169,43 +172,28 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
         fromTranslationSpinner.setSelection(0);
         toTranslationSpinner.setSelection(1);
-        toTranslationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                translationQueryViewModelBehaviorSubject.onNext(
-                        new TranslationQueryViewModel(position, fromTranslationSpinner.getSelectedItemPosition(),
-                                                      sourceTextView.getText().toString()));
-            }
+        SpinnerInteractionListener listener = new SpinnerInteractionListener();
+        toTranslationSpinner.setOnItemSelectedListener(listener );
+        toTranslationSpinner.setOnTouchListener(listener );
+        fromTranslationSpinner.setOnItemSelectedListener(listener);
+        fromTranslationSpinner.setOnTouchListener(listener);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        fromTranslationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                translationQueryViewModelBehaviorSubject.onNext(
-                        new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(), position, sourceTextView.getText().toString()));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         initializeTextObservable();
     }
 
-    @Override
     public void setTranslation(String translation) {
         translationTextView.setText(translation);
     }
 
     @Override
     public void setExpandedTranslation(Definition expandedTranslation) {
-        expandedTranslationTextView.setText(expandedTranslation.getText());
+        if (expandedTranslation != null) {
+            expandedTranslationTextView.setVisibility(View.VISIBLE);
+            expandedTranslationTextView.setText(expandedTranslation.getText());
+        } else {
+            expandedTranslationTextView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -216,5 +204,35 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @Override
     public void hideError() {
 
+    }
+
+    /**
+     * Simple class to tell whether user clicked on spinner or it was set programmatically
+     */
+    private class SpinnerInteractionListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener {
+
+        private boolean userSelected = false;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            userSelected = true;
+            return false;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if (userSelected) {
+                translationQueryViewModelBehaviorSubject.onNext(
+                        new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(),
+                                                      fromTranslationSpinner.getSelectedItemPosition(),
+                                                      sourceTextView.getText().toString()));
+                userSelected = false;
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
     }
 }

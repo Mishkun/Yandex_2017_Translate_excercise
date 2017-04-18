@@ -20,7 +20,6 @@ public class MutedObserver<T> extends DisposableObserver<T> {
     }
 
     @Override
-    public void onComplete() {
-        Log.d("MUTED OBSERVER", "onComplete");
+    public void onComplete(){
     }
 }
