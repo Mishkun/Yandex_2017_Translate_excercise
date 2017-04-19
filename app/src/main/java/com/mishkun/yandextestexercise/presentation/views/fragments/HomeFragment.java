@@ -3,6 +3,8 @@ package com.mishkun.yandextestexercise.presentation.views.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,9 +23,11 @@ import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
+import com.mishkun.yandextestexercise.presentation.views.ExpandedTranslationAdapter;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -71,10 +75,17 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @BindView(R.id.guess_toogle)
     public ToggleButton guessToogle;
 
+    @BindView(R.id.transcription)
+    public TextView transcriptionTextView;
+
     @BindView(R.id.expanded_translation_card)
     public CardView expandedTranslationCard;
 
+    @BindView(R.id.expanded_translation_list)
+    public RecyclerView expandedTranslationRecyclerView;
+
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
+    private ExpandedTranslationAdapter expandedTranslationAdapter;
 
 
     public HomeFragment() {
@@ -114,8 +125,17 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
         expandedTranslationCard.setVisibility(View.GONE);
         translationCard.setVisibility(View.GONE);
+        expandedTranslationAdapter = new ExpandedTranslationAdapter(new ArrayList<Definition.DefinitionItem>());
+        expandedTranslationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        expandedTranslationRecyclerView.setAdapter(expandedTranslationAdapter);
         translatePresenter.attachView(this);
         initializeReverseButton();
+
         return view;
     }
 
@@ -218,6 +238,9 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         if (expandedTranslation.getText() != null) {
             expandedTranslationCard.setVisibility(View.VISIBLE);
             expandedTranslationTextView.setText(expandedTranslation.getText());
+            expandedTranslationAdapter.update(expandedTranslation.getDefinitionItems());
+            expandedTranslationAdapter.notifyDataSetChanged();
+            transcriptionTextView.setText(expandedTranslation.getTranscription() == null ? null : "[" + expandedTranslation.getTranscription() + "]");
         } else {
             expandedTranslationCard.setVisibility(View.GONE);
         }

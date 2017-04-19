@@ -5,7 +5,7 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="textSize">24sp</dimen>
     <dimen name="translationTextSize">20sp</dimen>
-    <dimen name="translation_box_height">160dp</dimen>
+    <dimen name="translation_box_height">128dp</dimen>
     <dimen name="card_padding_horizontal">12dp</dimen>
     <dimen name="card_padding_vertical">12dp</dimen>
     <dimen name="translation_card_margin">8dp</dimen>

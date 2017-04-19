@@ -17,7 +17,7 @@ public class DictionaryResponseMapper {
     private static final String TAG = DetectionResponseMapper.class.getSimpleName();
 
     static public Definition transform(DictionaryResponse dictionaryResponse) {
-        // If
+        // If dictionary response is not supported, return nothing
         if (dictionaryResponse.definitions.size() == 0)
             return new Definition(null, null, null);
         String transcription = dictionaryResponse.definitions.get(0).transcription;
@@ -25,9 +25,11 @@ public class DictionaryResponseMapper {
         List<Definition.DefinitionItem> definitionItems = new ArrayList<>();
         for (DictionaryResponse.DefinitionResponse definitionResponse : dictionaryResponse.definitions) {
             for (DictionaryResponse.TranslationDefinitionResponse translationResponse : definitionResponse.translationDefinitionResponses) {
-                definitionItems.add(
-                        new Definition.DefinitionItem(translationResponse.synonyms != null ? flattenTextResponse(translationResponse.synonyms) : null,
-                                                      translationResponse.meanings != null ? flattenTextResponse(translationResponse.meanings) : null));
+                Definition.DefinitionItem definitionItem = new Definition.DefinitionItem(
+                        translationResponse.synonyms != null ? flattenTextResponse(translationResponse.synonyms) : new ArrayList<String>(),
+                        translationResponse.meanings != null ? flattenTextResponse(translationResponse.meanings) : null);
+                definitionItem.getSynonyms().add(translationResponse.translation);
+                definitionItems.add(definitionItem);
             }
         }
         return new Definition(text, transcription, definitionItems);
@@ -38,6 +40,7 @@ public class DictionaryResponseMapper {
         for (DictionaryResponse.TextResponse textResponse : textResponses) {
             texts.add(textResponse.text);
         }
+
         return texts;
     }
 }

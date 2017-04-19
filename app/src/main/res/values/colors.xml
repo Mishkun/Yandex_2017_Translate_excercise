@@ -6,6 +6,7 @@
   <color name="Accent">#03A9F4</color>
   <color name="colorPrimaryText">#212121</color>
   <color name="colorSecondaryText">#757575</color>
+  <color name="colorTernaryText">#a0a0a0</color>
   <color name="icons">#212121</color>
   <color name="divider">#DADADA</color>
 </resources>
