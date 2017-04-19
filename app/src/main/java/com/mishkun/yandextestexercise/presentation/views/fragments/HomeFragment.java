@@ -213,8 +213,8 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         toTranslationSpinner.setAdapter(spinnersAdapter);
         fromTranslationSpinner.setAdapter(spinnersAdapter);
 
-        fromTranslationSpinner.setSelection(0);
-        toTranslationSpinner.setSelection(1);
+        fromTranslationSpinner.setSelection(spinnersAdapter.getPosition("Английский"));
+        toTranslationSpinner.setSelection(spinnersAdapter.getPosition("Русский"));
         SpinnerInteractionListener listener = new SpinnerInteractionListener();
         toTranslationSpinner.setOnItemSelectedListener(listener);
         toTranslationSpinner.setOnTouchListener(listener);
