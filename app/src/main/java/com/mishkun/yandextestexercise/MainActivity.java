@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
         mainActivityComponent = DaggerMainActivityComponent
                 .builder()
                 .applicationComponent(((AndroidApplication) getApplication()).getApplicationComponent())
-                .mainActivityModule(new MainActivityModule(this))
                 .build();
     }
 

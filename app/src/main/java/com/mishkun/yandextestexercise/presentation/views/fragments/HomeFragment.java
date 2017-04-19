@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -31,12 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.ButterKnife;
-import io.reactivex.Observable;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 
@@ -66,8 +66,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
     @BindView(R.id.extended_translated_text_view)
     public TextView expandedTranslationTextView;
-    @Inject
-    public TranslatePresenter translatePresenter;
+
 
     @BindView(R.id.translation_card)
     public CardView translationCard;
@@ -84,10 +83,14 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @BindView(R.id.expanded_translation_list)
     public RecyclerView expandedTranslationRecyclerView;
 
+    @BindView(R.id.clear_button)
+    public Button clearButton;
+
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
     private ExpandedTranslationAdapter expandedTranslationAdapter;
 
-
+    @Inject
+    public TranslatePresenter translatePresenter;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -112,6 +115,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        //setRetainInstance(true);
         translationQueryViewModelBehaviorSubject = PublishSubject.create();
         this.getComponent(MainActivityComponent.class).inject(this);
     }
@@ -133,6 +137,13 @@ public class HomeFragment extends BaseFragment implements TranslateView {
             }
         });
         expandedTranslationRecyclerView.setAdapter(expandedTranslationAdapter);
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sourceTextView.setText("");
+            }
+        });
         translatePresenter.attachView(this);
         initializeReverseButton();
 
