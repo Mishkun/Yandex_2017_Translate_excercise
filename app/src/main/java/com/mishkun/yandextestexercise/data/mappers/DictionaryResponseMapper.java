@@ -17,6 +17,9 @@ public class DictionaryResponseMapper {
     private static final String TAG = DetectionResponseMapper.class.getSimpleName();
 
     static public Definition transform(DictionaryResponse dictionaryResponse) {
+        // If
+        if (dictionaryResponse.definitions.size() == 0)
+            return new Definition(null, null, null);
         String transcription = dictionaryResponse.definitions.get(0).transcription;
         String text = dictionaryResponse.definitions.get(0).original;
         List<Definition.DefinitionItem> definitionItems = new ArrayList<>();

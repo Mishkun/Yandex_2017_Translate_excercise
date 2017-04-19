@@ -105,7 +105,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
             TranslationDirection direction = new TranslationDirection(translationDirectionMapper.transform(value.getTranslationFrom()),
                                                                       translationDirectionMapper.transform(value.getTranslationTo()));
-            TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction, true);
+            TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction, attachedView.getGuessLanguage());
             translationInteractor.execute(new TranslationObserver(), query);
         }
     }
@@ -156,7 +156,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onError(Throwable e) {
-            Log.d(TAG, e.getMessage());
+            Log.d(TAG, "ERROR:" + e.getClass() + " message:" + e.getMessage() +"\n" + Log.getStackTraceString(e));
         }
     }
 

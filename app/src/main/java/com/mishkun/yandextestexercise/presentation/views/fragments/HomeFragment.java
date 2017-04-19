@@ -1,6 +1,8 @@
 package com.mishkun.yandextestexercise.presentation.views.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,10 +14,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
-import com.jakewharton.rxbinding2.widget.RxTextSwitcher;
 import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
@@ -33,8 +34,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 
 
@@ -55,19 +54,28 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @BindView(R.id.to_translation_spinner)
     public Spinner toTranslationSpinner;
 
-    @BindView(R.id.toTranslateEditText)
+    @BindView(R.id.to_translate_edit_text)
     public EditText sourceTextView;
 
-    @BindView(R.id.translatedTextView)
+    @BindView(R.id.translated_text_view)
     public TextView translationTextView;
 
-    @BindView(R.id.extendedTranslatedTextView)
+    @BindView(R.id.extended_translated_text_view)
     public TextView expandedTranslationTextView;
-
     @Inject
     public TranslatePresenter translatePresenter;
 
+    @BindView(R.id.translation_card)
+    public CardView translationCard;
+
+    @BindView(R.id.guess_toogle)
+    public ToggleButton guessToogle;
+
+    @BindView(R.id.expanded_translation_card)
+    public CardView expandedTranslationCard;
+
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -104,6 +112,8 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
+        expandedTranslationCard.setVisibility(View.GONE);
+        translationCard.setVisibility(View.GONE);
         translatePresenter.attachView(this);
         initializeReverseButton();
         return view;
@@ -113,9 +123,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         RxTextView.textChanges(sourceTextView).debounce(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<CharSequence>() {
             @Override
             public void accept(CharSequence charSequence) throws Exception {
-                translationQueryViewModelBehaviorSubject.onNext(new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(),
-                                                                                              fromTranslationSpinner.getSelectedItemPosition(),
-                                                                                              charSequence.toString()));
+                translationQueryViewModelBehaviorSubject.onNext(getTranslationViewModel());
             }
         });
     }
@@ -124,6 +132,12 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     public void onResume() {
         super.onResume();
         translatePresenter.resume();
+        guessToogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                translationQueryViewModelBehaviorSubject.onNext(getTranslationViewModel());
+            }
+        });
     }
 
     private void initializeReverseButton() {
@@ -153,6 +167,11 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @Override
     public void setTranslationFrom(int From) {
         fromTranslationSpinner.setSelection(From, false);
+    }
+
+    @Override
+    public boolean getGuessLanguage() {
+        return guessToogle.isChecked();
     }
 
     @Override
@@ -187,20 +206,20 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
     public void setTranslation(String translation) {
         if (!translation.equals("")) {
-            translationTextView.setVisibility(View.VISIBLE);
+            translationCard.setVisibility(View.VISIBLE);
             translationTextView.setText(translation);
         } else {
-            translationTextView.setVisibility(View.GONE);
+            translationCard.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void setExpandedTranslation(Definition expandedTranslation) {
         if (expandedTranslation.getText() != null) {
-            expandedTranslationTextView.setVisibility(View.VISIBLE);
+            expandedTranslationCard.setVisibility(View.VISIBLE);
             expandedTranslationTextView.setText(expandedTranslation.getText());
         } else {
-            expandedTranslationTextView.setVisibility(View.GONE);
+            expandedTranslationCard.setVisibility(View.GONE);
         }
     }
 
@@ -212,6 +231,13 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @Override
     public void hideError() {
 
+    }
+
+    @NonNull
+    private TranslationQueryViewModel getTranslationViewModel() {
+        return new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(),
+                                             fromTranslationSpinner.getSelectedItemPosition(),
+                                             sourceTextView.getText().toString());
     }
 
     /**
@@ -231,9 +257,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (userSelected) {
                 translationQueryViewModelBehaviorSubject.onNext(
-                        new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(),
-                                                      fromTranslationSpinner.getSelectedItemPosition(),
-                                                      sourceTextView.getText().toString()));
+                        getTranslationViewModel());
                 userSelected = false;
             }
         }
