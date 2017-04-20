@@ -4,18 +4,15 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
+              android:fitsSystemWindows="true"
               tools:context=".presentation.views.fragments.HomeFragment">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="0dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/title_home"
-        app:titleTextColor="@color/colorPrimaryLight"/>
+        app:titleTextColor="@color/colorWhite"
+        android:background="@color/colorPrimary"/>
 
     <ScrollView
         android:layout_width="match_parent"
