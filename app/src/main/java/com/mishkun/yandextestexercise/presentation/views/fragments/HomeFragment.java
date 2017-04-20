@@ -142,7 +142,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         translationCard.setVisibility(View.GONE);
         historyCard.setVisibility(View.VISIBLE);
 
-        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(expandedTranslationRecyclerView.getContext(),
+        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(getContext(),
                                                                                DividerItemDecoration.VERTICAL);
         horizontalDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
 

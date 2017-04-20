@@ -3,12 +3,20 @@ package com.mishkun.yandextestexercise.presentation.views.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mishkun.yandextestexercise.R;
+import com.mishkun.yandextestexercise.presentation.views.MyHistoryRecyclerViewAdapter;
+import com.mishkun.yandextestexercise.presentation.views.TranslationResultViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +33,7 @@ public class BookmarksFragment extends Fragment {
 
     @BindView(R.id.bookmarks_list)
     public RecyclerView bookmarksRecyclerView;
+    private MyHistoryRecyclerViewAdapter bookmarksRecyclerViewAdapter;
 
     public BookmarksFragment() {
     }
@@ -51,6 +60,26 @@ public class BookmarksFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
 
         ButterKnife.bind(this, view);
+
+        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(bookmarksRecyclerView.getContext(),
+                                                                               DividerItemDecoration.VERTICAL);
+        horizontalDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
+
+        List<TranslationResultViewModel> historyItemsDummy = new ArrayList<TranslationResultViewModel>();
+        historyItemsDummy.add(new TranslationResultViewModel("hi", "hello", null, 1, 2, true));
+        historyItemsDummy.add(new TranslationResultViewModel("hi", "WOW", null, 1, 2, false));
+        historyItemsDummy.add(new TranslationResultViewModel("rozor", "pizdec", null, 1, 2, true));
+        historyItemsDummy.add(new TranslationResultViewModel("sss", "quart", null, 1, 2, false));
+
+        bookmarksRecyclerViewAdapter = new MyHistoryRecyclerViewAdapter(historyItemsDummy);
+        bookmarksRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        bookmarksRecyclerView.setAdapter(bookmarksRecyclerViewAdapter);
+        bookmarksRecyclerView.addItemDecoration(horizontalDecoration);
         return view;
     }
 
