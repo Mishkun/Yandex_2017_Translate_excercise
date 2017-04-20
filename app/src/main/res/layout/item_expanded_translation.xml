@@ -1,28 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-
-    android:paddingTop="@dimen/text_margin">
-
-    <View
-        android:layout_marginBottom="@dimen/text_margin"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider"/>
-    <TextView
-        android:id="@+id/translations"
-        android:layout_marginStart="@dimen/text_margin"
-        android:layout_marginEnd="@dimen/text_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/translation_card_margin"
+                android:paddingTop="@dimen/translation_card_margin">
 
     <TextView
-        android:id="@+id/synonyms"
-        android:layout_marginEnd="@dimen/text_margin"
-        android:layout_marginStart="@dimen/text_margin"
-        android:layout_width="match_parent"
+        android:id="@+id/translations_number"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorTernaryText"/>
-</LinearLayout>
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/translation_card_margin"
+        android:layout_marginStart="@dimen/translation_card_margin"
+        android:text="1."
+        android:textSize="@dimen/textSize"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/text_margin"
+        android:layout_toEndOf="@id/translations_number"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/synonyms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Context"
+            android:textSize="@dimen/translationTextSize"/>
+
+        <TextView
+            android:id="@+id/meanings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Context"
+            android:textColor="@color/colorTernaryText"/>
+    </LinearLayout>
+
+</RelativeLayout>

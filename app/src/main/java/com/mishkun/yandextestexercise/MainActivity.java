@@ -10,11 +10,9 @@ import android.view.MenuItem;
 import com.mishkun.yandextestexercise.di.HasComponent;
 import com.mishkun.yandextestexercise.di.components.DaggerMainActivityComponent;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
-import com.mishkun.yandextestexercise.di.modules.MainActivityModule;
 import com.mishkun.yandextestexercise.presentation.views.fragments.BookmarksFragment;
 import com.mishkun.yandextestexercise.presentation.views.fragments.HistoryFragment;
 import com.mishkun.yandextestexercise.presentation.views.fragments.HomeFragment;
-import com.mishkun.yandextestexercise.presentation.views.fragments.SettingsFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,12 +38,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
                     break;
                 case R.id.navigation_bookmarks:
                     fragment = BookmarksFragment.newInstance(1);
-                    break;
-                case R.id.navigation_history:
-                    fragment = HistoryFragment.newInstance();
-                    break;
-                case R.id.navigation_settings:
-                    fragment = new SettingsFragment();
+
                     break;
                 default:
                     return false;

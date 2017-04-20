@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mishkun.yandextestexercise.R;
-import com.mishkun.yandextestexercise.adapters.MyHistoryRecyclerViewAdapter;
-import com.mishkun.yandextestexercise.dummy.DummyContent;
 
 /**
  * A fragment representing a list of Items.
@@ -39,7 +37,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -50,7 +48,6 @@ public class HistoryFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyHistoryRecyclerViewAdapter(DummyContent.ITEMS));
         }
         return view;
     }

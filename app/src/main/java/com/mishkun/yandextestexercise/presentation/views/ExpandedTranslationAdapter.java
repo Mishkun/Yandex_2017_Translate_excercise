@@ -1,18 +1,14 @@
 package com.mishkun.yandextestexercise.presentation.views;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mishkun.yandextestexercise.R;
-import com.mishkun.yandextestexercise.adapters.MyHistoryRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
-import com.mishkun.yandextestexercise.dummy.DummyContent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +27,6 @@ public class ExpandedTranslationAdapter extends RecyclerView.Adapter<ExpandedTra
     public void update(List<Definition.DefinitionItem> data) {
         values.clear();
         values.addAll(data);
-        values.add(new Definition.DefinitionItem(new ArrayList<String>(), new ArrayList<String>()));
     }
 
     @Override
@@ -44,15 +39,12 @@ public class ExpandedTranslationAdapter extends RecyclerView.Adapter<ExpandedTra
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.definitionItem = values.get(position);
-        if (values.get(position).getSynonyms() != null && values.get(position).getSynonyms().size() > 0) {
-            holder.translations.setText(join(values.get(position).getSynonyms()));
-        }else {
-            holder.translations.setVisibility(View.GONE);
-        }
+        holder.synonyms.setText(join(values.get(position).getSynonyms()));
+        holder.number.setText(String.format("%d.", position + 1));
         if (values.get(position).getMeanings() != null && values.get(position).getMeanings().size() > 0) {
-            holder.synonyms.setText(join(values.get(position).getMeanings()));
-        }else {
-            holder.synonyms.setVisibility(View.GONE);
+            holder.meanings.setText(join(values.get(position).getMeanings()));
+        } else {
+            holder.meanings.setVisibility(View.GONE);
         }
     }
 
@@ -76,15 +68,17 @@ public class ExpandedTranslationAdapter extends RecyclerView.Adapter<ExpandedTra
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
-        public final TextView translations;
+        public final TextView meanings;
         public final TextView synonyms;
+        public final TextView number;
         public Definition.DefinitionItem definitionItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
-            this.translations = (TextView) view.findViewById(R.id.translations);
             this.synonyms = (TextView) view.findViewById(R.id.synonyms);
+            this.meanings = (TextView) view.findViewById(R.id.meanings);
+            this.number = (TextView) view.findViewById(R.id.translations_number);
         }
     }
 }

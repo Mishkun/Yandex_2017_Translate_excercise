@@ -2,7 +2,9 @@ package com.mishkun.yandextestexercise.presentation.views.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,8 +27,10 @@ import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.presentation.views.ExpandedTranslationAdapter;
+import com.mishkun.yandextestexercise.presentation.views.MyHistoryRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
+import com.mishkun.yandextestexercise.presentation.views.TranslationResultViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,11 +90,18 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @BindView(R.id.clear_button)
     public Button clearButton;
 
-    private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
-    private ExpandedTranslationAdapter expandedTranslationAdapter;
+    @BindView(R.id.history_card)
+    public CardView historyCard;
+
+    @BindView(R.id.history_list)
+    public RecyclerView historyRecyclerView;
 
     @Inject
     public TranslatePresenter translatePresenter;
+    private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
+    private ExpandedTranslationAdapter expandedTranslationAdapter;
+    private MyHistoryRecyclerViewAdapter myHistoryRecyclerViewAdapter;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -129,6 +140,12 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
         expandedTranslationCard.setVisibility(View.GONE);
         translationCard.setVisibility(View.GONE);
+        historyCard.setVisibility(View.VISIBLE);
+
+        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(expandedTranslationRecyclerView.getContext(),
+                                                                               DividerItemDecoration.VERTICAL);
+        horizontalDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
+
         expandedTranslationAdapter = new ExpandedTranslationAdapter(new ArrayList<Definition.DefinitionItem>());
         expandedTranslationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
@@ -137,6 +154,24 @@ public class HomeFragment extends BaseFragment implements TranslateView {
             }
         });
         expandedTranslationRecyclerView.setAdapter(expandedTranslationAdapter);
+        expandedTranslationRecyclerView.addItemDecoration(horizontalDecoration);
+
+        List<TranslationResultViewModel> historyItemsDummy = new ArrayList<TranslationResultViewModel>();
+        historyItemsDummy.add(new TranslationResultViewModel("hi", "hello", null, 1, 2, true));
+        historyItemsDummy.add(new TranslationResultViewModel("hi", "WOW", null, 1, 2, false));
+        historyItemsDummy.add(new TranslationResultViewModel("rozor", "pizdec", null, 1, 2, true));
+        historyItemsDummy.add(new TranslationResultViewModel("sss", "quart", null, 1, 2, false));
+
+
+        myHistoryRecyclerViewAdapter = new MyHistoryRecyclerViewAdapter(historyItemsDummy);
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        historyRecyclerView.setAdapter(myHistoryRecyclerViewAdapter);
+        historyRecyclerView.addItemDecoration(horizontalDecoration);
 
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,9 +272,12 @@ public class HomeFragment extends BaseFragment implements TranslateView {
 
     public void setTranslation(String translation) {
         if (!translation.equals("")) {
+
+            historyCard.setVisibility(View.GONE);
             translationCard.setVisibility(View.VISIBLE);
             translationTextView.setText(translation);
         } else {
+            historyCard.setVisibility(View.VISIBLE);
             translationCard.setVisibility(View.GONE);
         }
     }
@@ -255,6 +293,12 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         } else {
             expandedTranslationCard.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void setHistoryRecyclerView(List<TranslationResultViewModel> translationResultViewModels) {
+        myHistoryRecyclerViewAdapter.update(translationResultViewModels);
+        myHistoryRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override

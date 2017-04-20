@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -6,8 +7,6 @@
               tools:context=".presentation.views.fragments.HomeFragment">
 
     <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -19,12 +18,10 @@
         app:titleTextColor="@color/colorPrimaryLight"/>
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -65,8 +62,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_above="@id/divider_edit_text"
-                        android:layout_toEndOf="@+id/reverse_translation_direction_btn"
-                        android:layout_alignParentTop="true"/>
+                        android:layout_alignParentTop="true"
+                        android:layout_toEndOf="@+id/reverse_translation_direction_btn"/>
 
                     <Spinner
                         android:id="@+id/to_translation_spinner"
@@ -74,8 +71,8 @@
                         android:layout_height="match_parent"
                         android:layout_above="@id/divider_edit_text"
                         android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@id/reverse_translation_direction_btn"
-                        android:layout_alignParentTop="true"/>
+                        android:layout_alignParentTop="true"
+                        android:layout_toStartOf="@id/reverse_translation_direction_btn"/>
 
 
                     <EditText
@@ -143,6 +140,7 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
+
             <android.support.v7.widget.CardView
                 android:id="@+id/translation_card"
                 android:layout_width="match_parent"
@@ -179,7 +177,7 @@
                         android:layout_marginEnd="@dimen/translation_card_margin"
                         android:layout_marginStart="@dimen/text_margin"
                         android:layout_marginTop="@dimen/translation_card_margin"
-                        android:layout_toLeftOf="@+id/favorite_btn"
+                        android:layout_toStartOf="@+id/favorite_btn"
                         android:textSize="@dimen/textSize"/>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -201,33 +199,46 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_marginEnd="@dimen/translation_card_margin"
-
-                        android:layout_marginStart="@dimen/text_margin"
-                        android:layout_marginTop="@dimen/translation_card_margin"
-                        android:textSize="@dimen/translationTextSize"/>
+                        android:layout_margin="@dimen/translation_card_margin"
+                        android:textSize="@dimen/textSize"/>
 
                     <TextView
                         android:id="@+id/transcription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/translation_card_margin"
-
-                        android:layout_marginStart="@dimen/translation_card_margin"
-                        android:layout_marginTop="@dimen/translation_card_margin"
+                        android:layout_margin="@dimen/translation_card_margin"
                         android:layout_toEndOf="@id/extended_translated_text_view"
                         android:textColor="@color/colorTernaryText"
                         android:textSize="@dimen/translationTextSize"/>
+
+                    <View
+                        android:id="@+id/divider_expanded"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/extended_translated_text_view"
+                        android:background="@color/divider"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/expanded_translation_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/transcription"
-                        android:orientation="vertical">
-
-                    </android.support.v7.widget.RecyclerView>
+                        android:layout_below="@+id/divider_expanded"
+                        android:orientation="vertical"/>
                 </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/history_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/translation_card_margin">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/history_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/transcription"
+                    android:orientation="vertical"/>
             </android.support.v7.widget.CardView>
         </LinearLayout>
     </ScrollView>
