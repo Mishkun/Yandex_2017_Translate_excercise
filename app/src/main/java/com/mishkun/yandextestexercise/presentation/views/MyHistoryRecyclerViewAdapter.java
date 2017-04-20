@@ -11,6 +11,9 @@ import com.mishkun.yandextestexercise.R;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * {@link RecyclerView.Adapter}
  * TODO: Replace the implementation with code for your data type.
@@ -61,17 +64,19 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
-        public final TextView text;
-        public final TextView translation;
-        public final ToggleButton favButton;
+        @BindView(R.id.translation_text_history)
+        public TextView text;
+        @BindView(R.id.original_text_history)
+        public TextView translation;
+        @BindView(R.id.favorite_button_history)
+        public ToggleButton favButton;
+
         public TranslationResultViewModel definitionItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
-            this.text = (TextView) view.findViewById(R.id.translation_text_history);
-            this.translation = (TextView) view.findViewById(R.id.original_text_history);
-            this.favButton = (ToggleButton) view.findViewById(R.id.favorite_button_history);
+            ButterKnife.bind(this, view);
         }
     }
 }

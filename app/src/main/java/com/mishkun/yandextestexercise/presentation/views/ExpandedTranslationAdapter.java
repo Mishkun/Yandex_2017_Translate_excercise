@@ -11,6 +11,9 @@ import com.mishkun.yandextestexercise.domain.entities.Definition;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Mishkun on 19.04.2017.
  */
@@ -68,17 +71,18 @@ public class ExpandedTranslationAdapter extends RecyclerView.Adapter<ExpandedTra
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
-        public final TextView meanings;
-        public final TextView synonyms;
-        public final TextView number;
+        @BindView(R.id.meanings)
+        public  TextView meanings;
+        @BindView(R.id.synonyms)
+        public  TextView synonyms;
+        @BindView(R.id.translations_number)
+        public  TextView number;
         public Definition.DefinitionItem definitionItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.view = itemView;
-            this.synonyms = (TextView) view.findViewById(R.id.synonyms);
-            this.meanings = (TextView) view.findViewById(R.id.meanings);
-            this.number = (TextView) view.findViewById(R.id.translations_number);
+            ButterKnife.bind(this, view);
         }
     }
 }
