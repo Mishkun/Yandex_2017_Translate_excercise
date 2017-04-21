@@ -3,6 +3,7 @@ package com.mishkun.yandextestexercise.di.modules;
 import android.content.Context;
 
 import com.mishkun.yandextestexercise.AndroidApplication;
+import com.mishkun.yandextestexercise.InternetConnection;
 
 import javax.inject.Singleton;
 
@@ -25,5 +26,11 @@ public class ApplicationModule {
     @Singleton
     Context provideApplicationContext() {
         return this.application;
+    }
+
+    @Provides
+    @Singleton
+    InternetConnection provideInternetConnection(Context context) {
+        return new InternetConnection(context);
     }
 }

@@ -1,6 +1,7 @@
 package com.mishkun.yandextestexercise.di.components;
 
 import com.mishkun.yandextestexercise.AndroidApplication;
+import com.mishkun.yandextestexercise.InternetConnection;
 import com.mishkun.yandextestexercise.MainActivity;
 import com.mishkun.yandextestexercise.data.ShortTranslation;
 import com.mishkun.yandextestexercise.di.modules.ApplicationModule;
@@ -51,6 +52,8 @@ public interface ApplicationComponent {
     TranslationDirectionProvider translationDirectionProvider();
 
     HistoryProvider provideHistory();
+
+    InternetConnection provideInternetConnection();
 
     @Named(JOB)
     Scheduler provideJobScheduler();
