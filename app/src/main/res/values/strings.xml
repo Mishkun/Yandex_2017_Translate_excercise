@@ -7,4 +7,6 @@
     <string name="translation_box_hint">Put your text here</string>
     <string name="guess_check">Определять язык</string>
     <string name="clear">Очистить</string>
+    <string name="clear_favorites_description">clear favorites button</string>
+    <string name="reverse_translation_direction_description">reverse translation direction</string>
 </resources>

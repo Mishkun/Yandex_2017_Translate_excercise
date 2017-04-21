@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/translation_card_margin"
@@ -13,8 +14,9 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="@dimen/translation_card_margin"
         android:layout_marginStart="@dimen/translation_card_margin"
-        android:text="1."
-        android:textSize="@dimen/textSize"/>
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="@dimen/textSize"
+        tools:text="1."/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -28,15 +30,17 @@
             android:id="@+id/synonyms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Context"
-            android:textSize="@dimen/translationTextSize"/>
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="@dimen/translationTextSize"
+            tools:text="Context"
+            />
 
         <TextView
             android:id="@+id/meanings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Context"
-            android:textColor="@color/colorTernaryText"/>
+            android:textColor="@color/colorTernaryText"
+            tools:text="Context"/>
     </LinearLayout>
 
 </RelativeLayout>
