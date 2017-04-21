@@ -86,10 +86,6 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
         horizontalDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
 
         List<HistoryItem> historyItemsDummy = new ArrayList<>();
-        historyItemsDummy.add(new HistoryItem("hello", "hi", true));
-        historyItemsDummy.add(new HistoryItem("WOW", "hi", false));
-        historyItemsDummy.add(new HistoryItem("pizdec", "rozor", true));
-        historyItemsDummy.add(new HistoryItem("quart", "sss", false));
 
         bookmarksRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this);
         bookmarksRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {

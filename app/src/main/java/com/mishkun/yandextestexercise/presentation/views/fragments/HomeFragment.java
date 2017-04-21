@@ -170,10 +170,6 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         expandedTranslationRecyclerView.addItemDecoration(horizontalDecoration);
 
         List<HistoryItem> historyItemsDummy = new ArrayList<>();
-        historyItemsDummy.add(new HistoryItem("hello", "hi", true));
-        historyItemsDummy.add(new HistoryItem("WOW", "hi", false));
-        historyItemsDummy.add(new HistoryItem("pizdec", "rozor", true));
-        historyItemsDummy.add(new HistoryItem("quart", "sss", false));
 
 
         historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this);

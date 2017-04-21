@@ -18,6 +18,11 @@ public interface ShortTranslation extends Persistable {
 
     String getTranslation();
 
+    String getDirectionTo();
+
+    String getDirectionFrom();
+
+
     boolean isSaved();
 
     boolean isFavored();

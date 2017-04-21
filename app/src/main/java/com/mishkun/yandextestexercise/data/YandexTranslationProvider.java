@@ -59,31 +59,128 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
 
     @Override
     public Observable<String> getShortTranslation(String query, TranslationDirection direction) {
-        return getShortTranslationFromApi(query, direction);
+        return Observable.concat(getShortTranslationFromDatabase(query, direction),
+                                 getShortTranslationFromApi(query, direction),
+                                 Observable.just(""))
+                         .filter(new Predicate<String>() {
+                             @Override
+                             public boolean test(String translation) throws Exception {
+                                 return translation != null;
+                             }
+                         })
+                         .firstElement()
+                         .toObservable();
     }
 
-    
+    private Observable<String> getShortTranslationFromDatabase(String query, TranslationDirection direction) {
+        return reactiveEntityStore.select(ShortTranslationEntity.class)
+                                  .where(ShortTranslationEntity.ORIGINAL.eq(query)
+                                                                        .and(ShortTranslationEntity.DIRECTION_FROM
+                                                                                     .eq(direction.getTranslationFrom()
+                                                                                                  .getCode())
+                                                                                     .and(ShortTranslationEntity.DIRECTION_TO
+                                                                                                  .eq(direction.getTranslationTo()
+                                                                                                               .getCode()))))
+                                  .get().observable().map(
+                        new Function<ShortTranslationEntity, String>() {
+                            @Override
+                            public String apply(ShortTranslationEntity shortTranslationEntity) throws Exception {
+                                return shortTranslationEntity.getTranslation();
+                            }
+                        });
+    }
 
-    private Observable<String> getShortTranslationFromApi(String query, TranslationDirection direction) {
-        return yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query)
-                                      .map(new Function<TranslationResponse, String>() {
-                                          @Override
-                                          public String apply(TranslationResponse translationResponse) throws Exception {
-                                              return translationResponse.getTranslation().get(0);
-                                          }
-                                      });
+
+    private Observable<String> getShortTranslationFromApi(final String query, final TranslationDirection direction) {
+        return internetConnection.isInternetOnObservable().switchMap(new Function<Boolean, ObservableSource<String>>() {
+            @Override
+            public ObservableSource<String> apply(Boolean isInternetOn) throws Exception {
+                if (isInternetOn) {
+                    Log.d(TAG, "INTERNET IS ON");
+                    return yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query).map(
+                            new Function<TranslationResponse, String>() {
+                                @Override
+                                public String apply(TranslationResponse translationResponse) throws Exception {
+                                    return translationResponse.getTranslation().get(0);
+                                }
+                            }).doOnNext(new Consumer<String>() {
+                        @Override
+                        public void accept(String translation) throws Exception {
+                            ShortTranslationEntity shortTranslationEntity = reactiveEntityStore.select(
+                                    ShortTranslationEntity.class).where(ShortTranslationEntity.ORIGINAL.eq(query)
+                                                                                                       .and(ShortTranslationEntity.DIRECTION_FROM
+                                                                                                                    .eq(direction.getTranslationFrom()
+                                                                                                                                 .getCode())
+                                                                                                                    .and(ShortTranslationEntity.DIRECTION_TO
+                                                                                                                                 .eq(direction
+                                                                                                                                             .getTranslationTo()
+                                                                                                                                             .getCode()))))
+                                                                                               .get()
+                                                                                               .firstOr(new ShortTranslationEntity());
+                            shortTranslationEntity.setTranslation(translation);
+                            shortTranslationEntity.setOriginal(query);
+                            shortTranslationEntity.setDirectionFrom(direction.getTranslationFrom()
+                                                                             .getCode());
+                            shortTranslationEntity.setDirectionTo(direction.getTranslationTo()
+                                                                           .getCode());
+                            reactiveEntityStore.upsert(shortTranslationEntity).subscribe();
+                        }
+                    });
+                } else {
+                    Log.d(TAG, "INTERNET IS OFF");
+                    return Observable.empty();
+                }
+            }
+        });
     }
 
     @Override
     public Observable<Language> guessLanguage(String query) {
-        return getLanguageGuessFromApi(query);
+        return Observable.concat(guessLanguageFromDatabase(query),
+                                 getLanguageGuessFromApi(query),
+                                 Observable.just(new Language("en", null)))
+                         .filter(new Predicate<Language>() {
+                             @Override
+                             public boolean test(Language language) throws Exception {
+                                 return language != null;
+                             }
+                         })
+                         .firstElement()
+                         .toObservable();
     }
 
-    private Observable<Language> getLanguageGuessFromApi(String query) {
-        return yandexTranslateRetrofit.detectLanguage(API_KEY, query).map(new Function<DetectionResponse, Language>() {
+    private Observable<Language> guessLanguageFromDatabase(String query) {
+        return reactiveEntityStore.findByKey(LanguageGuessEntity.class, query).toObservable().map(new Function<LanguageGuessEntity, Language>() {
             @Override
-            public Language apply(DetectionResponse detectionResponse) throws Exception {
-                return DetectionResponseMapper.transform(detectionResponse);
+            public Language apply(LanguageGuessEntity languageGuessEntity) throws Exception {
+                return SupportedLanguagesMapper.transform(languageGuessEntity.getLanguage());
+            }
+        });
+    }
+
+    private Observable<Language> getLanguageGuessFromApi(final String query) {
+        return internetConnection.isInternetOnObservable().switchMap(new Function<Boolean, ObservableSource<Language>>() {
+            @Override
+            public ObservableSource<Language> apply(Boolean isInternetOn) throws Exception {
+                if (isInternetOn) {
+                    Log.d(TAG, "InternetIsOn");
+                    return yandexTranslateRetrofit.detectLanguage(API_KEY, query).map(new Function<DetectionResponse, Language>() {
+                        @Override
+                        public Language apply(DetectionResponse detectionResponse) throws Exception {
+                            return DetectionResponseMapper.transform(detectionResponse);
+                        }
+                    }).doOnNext(new Consumer<Language>() {
+                        @Override
+                        public void accept(Language language) throws Exception {
+                            LanguageGuessEntity guessEntity = new LanguageGuessEntity();
+                            guessEntity.setLanguage(SupportedLanguagesMapper.transform(language));
+                            guessEntity.setQuery(query);
+                            reactiveEntityStore.upsert(guessEntity).subscribe();
+                        }
+                    });
+                } else {
+                    return Observable.empty();
+                }
             }
         });
     }
