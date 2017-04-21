@@ -11,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;
@@ -21,7 +22,7 @@ import io.requery.reactivex.ReactiveResult;
  */
 
 public class HistoryDatabase implements HistoryProvider {
-private static final String TAG = HistoryDatabase.class.getSimpleName();
+    private static final String TAG = HistoryDatabase.class.getSimpleName();
     private final ReactiveEntityStore<Persistable> reactiveEntityStore;
 
     @Inject
@@ -35,7 +36,23 @@ private static final String TAG = HistoryDatabase.class.getSimpleName();
                 new Function<ReactiveResult<ShortTranslationEntity>, List<HistoryItem>>() {
                     @Override
                     public List<HistoryItem> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
-                        Log.d(TAG, "apply: Called");
+                        List<HistoryItem> historyItems = new ArrayList<HistoryItem>();
+                        for (ShortTranslationEntity shortTranslationEntity : shortTranslationEntities) {
+                            historyItems.add(new HistoryItem(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
+                                                             shortTranslationEntity.isFavored()
+                            ));
+                        }
+                        return historyItems;
+                    }
+                });
+    }
+
+    @Override
+    public Observable<List<HistoryItem>> getFavoredItems() {
+        return reactiveEntityStore.select(ShortTranslationEntity.class).where(ShortTranslationEntity.FAVORED.eq(true).and(ShortTranslationEntity.SAVED.eq(true))).get().observableResult().map(
+                new Function<ReactiveResult<ShortTranslationEntity>, List<HistoryItem>>() {
+                    @Override
+                    public List<HistoryItem> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
                         List<HistoryItem> historyItems = new ArrayList<HistoryItem>();
                         for (ShortTranslationEntity shortTranslationEntity : shortTranslationEntities) {
                             historyItems.add(new HistoryItem(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
@@ -58,27 +75,46 @@ private static final String TAG = HistoryDatabase.class.getSimpleName();
                                                                .firstOrNull();
         if (itemEntity == null) {
             itemEntity = new ShortTranslationEntity();
+            List<ShortTranslationEntity> entities = reactiveEntityStore.select(ShortTranslationEntity.class).get().toList();
         }
-        Log.d(TAG, "addOrUpdateHistoryItem: called");
+
         itemEntity.setTranslation(item.getShortTranslation());
         itemEntity.setOriginal(item.getOriginal());
         itemEntity.setSaved(true);
         itemEntity.setFavored(item.isFavored());
 
         if (itemEntity.getId() == 0) {
-            reactiveEntityStore.insert(itemEntity);
+            Log.d(TAG, "insert");
+            reactiveEntityStore.insert(itemEntity).subscribe();
         } else {
-            reactiveEntityStore.update(itemEntity);
+            Log.d(TAG, "update");
+            reactiveEntityStore.update(itemEntity).subscribe();
         }
     }
 
     @Override
     public void clearFavoritesData() {
-        return;
+        List<ShortTranslationEntity> shortTranslationEntities = reactiveEntityStore.select(ShortTranslationEntity.class).where(
+                ShortTranslationEntity.FAVORED.eq(true).and(ShortTranslationEntity.SAVED.eq(true))).get().toList();
+        for (ShortTranslationEntity shortTranslationEntity :
+                shortTranslationEntities) {
+            shortTranslationEntity.setFavored(false);
+        }
+        Log.d(TAG, "clearFavs");
+        reactiveEntityStore.update(shortTranslationEntities).subscribe();
     }
 
     @Override
     public void clearHistoryData() {
-        return;
+        List<ShortTranslationEntity> shortTranslationEntities = reactiveEntityStore.select(ShortTranslationEntity.class).where(
+                ShortTranslationEntity.SAVED.eq(true)).get().toList();
+        for (ShortTranslationEntity shortTranslationEntity :
+                shortTranslationEntities) {
+            shortTranslationEntity.setSaved(false);
+            shortTranslationEntity.setFavored(false);
+        }
+
+        Log.d(TAG, "clearHis");
+        reactiveEntityStore.update(shortTranslationEntities);
     }
 }

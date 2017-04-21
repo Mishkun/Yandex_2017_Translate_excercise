@@ -30,18 +30,6 @@ public class GetFavoritesInteractor extends ParameterlessInteractor<List<History
 
     @Override
     Observable<List<HistoryItem>> buildUseCaseObservable() {
-        return historyProvider.getHistoryItems().map(new Function<List<HistoryItem>, List<HistoryItem>>() {
-            @Override
-            public List<HistoryItem> apply(List<HistoryItem> historyItems) throws Exception {
-                Iterator<HistoryItem> historyIterator = historyItems.iterator();
-                while (historyIterator.hasNext()) {
-                    HistoryItem item = historyIterator.next();
-                    if (!item.isFavored()) {
-                        historyIterator.remove();
-                    }
-                }
-                return historyItems;
-            }
-        });
+        return historyProvider.getFavoredItems();
     }
 }

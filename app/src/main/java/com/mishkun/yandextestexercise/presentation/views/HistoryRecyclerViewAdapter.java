@@ -2,6 +2,7 @@ package com.mishkun.yandextestexercise.presentation.views;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -20,14 +21,14 @@ import butterknife.ButterKnife;
  * {@link RecyclerView.Adapter}
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistoryRecyclerViewAdapter.ViewHolder> {
+public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = MyHistoryRecyclerViewAdapter.class.getSimpleName();
+    private static final String TAG = HistoryRecyclerViewAdapter.class.getSimpleName();
     private final List<HistoryItem> values;
 
     private final FavButtonListener listener;
 
-    public MyHistoryRecyclerViewAdapter(List<HistoryItem> values, FavButtonListener listener) {
+    public HistoryRecyclerViewAdapter(List<HistoryItem> values, FavButtonListener listener) {
         this.values = values;
         this.listener = listener;
     }
@@ -38,10 +39,10 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
     }
 
     @Override
-    public MyHistoryRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HistoryRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.item_history, parent, false);
-        return new MyHistoryRecyclerViewAdapter.ViewHolder(view);
+        return new HistoryRecyclerViewAdapter.ViewHolder(view);
     }
 
     @Override
@@ -49,6 +50,7 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
         holder.definitionItem = values.get(position);
         holder.text.setText(values.get(position).getOriginal());
         holder.translation.setText(values.get(position).getShortTranslation());
+        holder.favButton.setOnCheckedChangeListener(null);
         holder.favButton.setChecked(values.get(position).isFavored());
         holder.favButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

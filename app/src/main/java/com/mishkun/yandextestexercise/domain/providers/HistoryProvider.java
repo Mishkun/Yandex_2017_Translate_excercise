@@ -4,7 +4,6 @@ import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 
 import java.util.List;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -13,6 +12,7 @@ import io.reactivex.Observable;
 
 public interface HistoryProvider {
     public Observable<List<HistoryItem>> getHistoryItems();
+    public Observable<List<HistoryItem>> getFavoredItems();
 
     public void addOrUpdateHistoryItem(HistoryItem item);
 

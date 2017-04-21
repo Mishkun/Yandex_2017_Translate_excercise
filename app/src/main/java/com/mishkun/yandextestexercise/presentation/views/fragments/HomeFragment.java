@@ -30,7 +30,7 @@ import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.presentation.views.ExpandedTranslationAdapter;
 import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
-import com.mishkun.yandextestexercise.presentation.views.MyHistoryRecyclerViewAdapter;
+import com.mishkun.yandextestexercise.presentation.views.HistoryRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
 
@@ -105,7 +105,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     public TranslatePresenter translatePresenter;
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
     private ExpandedTranslationAdapter expandedTranslationAdapter;
-    private MyHistoryRecyclerViewAdapter myHistoryRecyclerViewAdapter;
+    private HistoryRecyclerViewAdapter historyRecyclerViewAdapter;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -176,14 +176,14 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         historyItemsDummy.add(new HistoryItem("quart", "sss", false));
 
 
-        myHistoryRecyclerViewAdapter = new MyHistoryRecyclerViewAdapter(historyItemsDummy, this);
+        historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        historyRecyclerView.setAdapter(myHistoryRecyclerViewAdapter);
+        historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
         historyRecyclerView.addItemDecoration(horizontalDecoration);
 
         clearButton.setOnClickListener(new View.OnClickListener() {
@@ -192,9 +192,9 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
                 sourceTextView.setText("");
             }
         });
-        translatePresenter.attachView(this);
         initializeReverseButton();
 
+        translatePresenter.attachView(this);
         return view;
     }
 
@@ -334,8 +334,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public void setData(List<HistoryItem> historyItems) {
-        myHistoryRecyclerViewAdapter.update(historyItems);
-        myHistoryRecyclerViewAdapter.notifyDataSetChanged();
+        historyRecyclerViewAdapter.update(historyItems);
+        historyRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     /**

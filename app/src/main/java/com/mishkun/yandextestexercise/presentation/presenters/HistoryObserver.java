@@ -8,8 +8,6 @@ import com.mishkun.yandextestexercise.presentation.views.HistoryView;
 
 import java.util.List;
 
-import io.reactivex.disposables.Disposable;
-
 /**
  * Created by Mishkun on 21.04.2017.
  */
@@ -25,14 +23,15 @@ class HistoryObserver extends MutedObserver<List<HistoryItem>> {
 
     @Override
     public void onNext(List<HistoryItem> value) {
-        historyView.setData(value);
         Log.d(TAG, "onNext: " + value);
+        historyView.setData(value);
     }
 
-@Override
-public void onError(Throwable e){
-    Log.d(TAG, e.getStackTrace().toString());
-}
+    @Override
+    public void onError(Throwable e) {
+        Log.d(TAG, e.getStackTrace().toString());
+    }
+
     @Override
     public void onComplete() {
         Log.d(TAG, "onComplete");
