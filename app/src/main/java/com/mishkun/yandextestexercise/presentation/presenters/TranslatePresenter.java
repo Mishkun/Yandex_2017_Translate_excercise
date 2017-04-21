@@ -148,7 +148,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
             Log.d(TAG, "SupportedLanguagesList arrived");
             TranslatePresenter.this.translationDirectionMapper = new TranslationDirectionMapper(value);
             setSupportedLanguages(value);
-            translationDirectionInteractor.execute(new TranslationDirectionObserver());
+            //translationDirectionInteractor.execute(new TranslationDirectionObserver());
             attachedView.getQueries().distinctUntilChanged().subscribe(new UserInputObserver());
         }
 

@@ -1,6 +1,5 @@
 package com.mishkun.yandextestexercise.di.modules;
 
-import com.mishkun.yandextestexercise.data.YandexDictionaryApi;
 import com.mishkun.yandextestexercise.data.api.YandexDictionaryRetrofitApi;
 import com.mishkun.yandextestexercise.data.api.YandexTranslationRetrofitApi;
 
