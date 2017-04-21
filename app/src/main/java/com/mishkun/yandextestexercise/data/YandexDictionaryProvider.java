@@ -188,7 +188,6 @@ public class YandexDictionaryProvider implements ExpandedTranslationProvider, Di
             @Override
             public ObservableSource<List<TranslationDirection>> apply(Boolean isInternetOn) throws Exception {
                 if (isInternetOn) {
-                    Log.d(TAG, "InternetIsOn");
                     return yandexDictionaryRetrofitApi.getSupportedLangs(API_KEY).map(new Function<List<String>, List<TranslationDirection>>() {
                         @Override
                         public List<TranslationDirection> apply(List<String> directions) throws Exception {

@@ -23,7 +23,6 @@ class HistoryObserver extends MutedObserver<List<HistoryItem>> {
 
     @Override
     public void onNext(List<HistoryItem> value) {
-        Log.d(TAG, "onNext: " + value);
         historyView.setData(value);
     }
 

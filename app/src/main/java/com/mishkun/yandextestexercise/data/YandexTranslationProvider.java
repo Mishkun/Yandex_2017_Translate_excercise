@@ -65,7 +65,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
                          .filter(new Predicate<String>() {
                              @Override
                              public boolean test(String translation) throws Exception {
-                                 return translation != null;
+                                 return translation != null && !translation.equals(" ");
                              }
                          })
                          .firstElement()
@@ -96,7 +96,6 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
             @Override
             public ObservableSource<String> apply(Boolean isInternetOn) throws Exception {
                 if (isInternetOn) {
-                    Log.d(TAG, "INTERNET IS ON");
                     return yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query).map(
                             new Function<TranslationResponse, String>() {
                                 @Override
@@ -127,7 +126,6 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
                         }
                     });
                 } else {
-                    Log.d(TAG, "INTERNET IS OFF");
                     return Observable.empty();
                 }
             }
@@ -138,7 +136,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
     public Observable<Language> guessLanguage(String query) {
         return Observable.concat(guessLanguageFromDatabase(query),
                                  getLanguageGuessFromApi(query),
-                                 Observable.just(new Language("en", null)))
+                                 Observable.just(new Language("ru", null)))
                          .filter(new Predicate<Language>() {
                              @Override
                              public boolean test(Language language) throws Exception {
@@ -163,7 +161,6 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
             @Override
             public ObservableSource<Language> apply(Boolean isInternetOn) throws Exception {
                 if (isInternetOn) {
-                    Log.d(TAG, "InternetIsOn");
                     return yandexTranslateRetrofit.detectLanguage(API_KEY, query).map(new Function<DetectionResponse, Language>() {
                         @Override
                         public Language apply(DetectionResponse detectionResponse) throws Exception {
@@ -228,7 +225,6 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
             @Override
             public ObservableSource<? extends List<Language>> apply(Boolean isInternetOn) throws Exception {
                 if (isInternetOn) {
-                    Log.d(TAG, "InternetIsOn");
                     return yandexTranslateRetrofit.getSupportedLanguages(API_KEY, UI).map(new Function<SupportedLanguagesResponse, List<Language>>() {
                         @Override
                         public List<Language> apply(SupportedLanguagesResponse supportedLanguagesResponse) throws Exception {
@@ -237,11 +233,11 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
                     }).doOnNext(new Consumer<List<Language>>() {
                         @Override
                         public void accept(List<Language> languages) throws Exception {
+                            reactiveEntityStore.delete(LanguageEntity.class).get().single().subscribe();
                             reactiveEntityStore.upsert(SupportedLanguagesMapper.transform(languages)).subscribe();
                         }
                     });
                 } else {
-                    Log.d(TAG, "InternetIsOff");
                     return Observable.empty();
                 }
             }

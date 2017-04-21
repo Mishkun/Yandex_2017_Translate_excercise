@@ -1,25 +1,27 @@
 package com.mishkun.yandextestexercise.domain.entities;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Mishkun on 28.03.2017.
  */
 
-public class Language {
-    private String mCode;
-    private String mDisplayName;
+public class Language  {
+    private String code;
+    private String displayName;
 
     public Language(String code, String name) {
-        mCode = code;
-        mDisplayName = name;
+        this.code = code;
+        displayName = name;
     }
 
 
     public String getCode() {
-        return mCode;
+        return code;
     }
 
     public String getDisplayName() {
-        return mDisplayName;
+        return displayName;
     }
 
     @Override
@@ -29,12 +31,13 @@ public class Language {
 
         Language language = (Language) obj;
 
-        return mCode.equals(language.mCode);
+        return code.equals(language.getCode());
 
     }
 
     @Override
     public int hashCode() {
-        return mCode.hashCode();
+        return code.hashCode();
     }
+
 }

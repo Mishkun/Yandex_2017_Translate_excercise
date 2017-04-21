@@ -100,7 +100,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     }
 
     private void setTranslationFrom(Language From) {
-        attachedView.setTranslationTo(translationDirectionMapper.transform(From));
+        attachedView.setTranslationFrom(translationDirectionMapper.transform(From));
     }
 
     public void onFavored(HistoryItem item, boolean favored) {
@@ -129,6 +129,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onNext(TranslationDirection translationDirection) {
+            Log.d(TAG, "onNext: arrivedTranslations" + translationDirection.getTranslationFrom().getCode() + " " + translationDirection.getTranslationTo().getCode());
             setTranslationTo(translationDirection.getTranslationTo());
             setTranslationFrom(translationDirection.getTranslationFrom());
         }
@@ -148,7 +149,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
             Log.d(TAG, "SupportedLanguagesList arrived");
             TranslatePresenter.this.translationDirectionMapper = new TranslationDirectionMapper(value);
             setSupportedLanguages(value);
-            //translationDirectionInteractor.execute(new TranslationDirectionObserver());
+            translationDirectionInteractor.execute(new TranslationDirectionObserver());
             attachedView.getQueries().distinctUntilChanged().subscribe(new UserInputObserver());
         }
 

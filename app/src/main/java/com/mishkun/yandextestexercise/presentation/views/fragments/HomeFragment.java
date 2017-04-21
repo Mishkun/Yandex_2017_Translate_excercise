@@ -231,7 +231,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public void setTranslationTo(int To) {
-        toTranslationSpinner.setSelection(To, false);
+        Log.d(TAG, "setTranslationTo: " + To);
+        toTranslationSpinner.setSelection(To);
     }
 
     @Override
@@ -241,7 +242,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public void setTranslationFrom(int From) {
-        fromTranslationSpinner.setSelection(From, false);
+        Log.d(TAG, "setTranslationFrom: " + From);
+        fromTranslationSpinner.setSelection(From);
     }
 
     @Override
@@ -280,8 +282,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     }
 
     public void setTranslation(String translation) {
-        if (!translation.equals("")) {
-
+        if (translation != null && !translation.equals("")) {
             historyCard.setVisibility(View.GONE);
             translationCard.setVisibility(View.VISIBLE);
             translationTextView.setText(translation);

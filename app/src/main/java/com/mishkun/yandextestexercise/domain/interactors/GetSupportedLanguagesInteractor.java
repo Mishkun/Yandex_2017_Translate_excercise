@@ -4,15 +4,16 @@ import com.mishkun.yandextestexercise.di.modules.DomainModule;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.providers.SupportedLanguagesProvider;
 
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
+import io.reactivex.functions.Function;
 
 /**
  * Created by Mishkun on 12.04.2017.
@@ -33,7 +34,28 @@ public class GetSupportedLanguagesInteractor extends ParameterlessInteractor<Lis
 
     @Override
     Observable<List<Language>> buildUseCaseObservable() {
-        return supportedLanguagesProvider.getSupportedLanguages();
+        return supportedLanguagesProvider.getSupportedLanguages().map(new Function<List<Language>, List<Language>>() {
+            @Override
+            public List<Language> apply(List<Language> languages) throws Exception {
+                for (Iterator<Language> iterator = languages.iterator(); iterator.hasNext(); ) {
+                    if (iterator.next().getDisplayName() == null) {
+                        iterator.remove();
+                    }
+                }
+                return languages;
+            }
+        }).map(new Function<List<Language>, List<Language>>() {
+            @Override
+            public List<Language> apply(List<Language> languages) throws Exception {
+                java.util.Collections.sort(languages, new Comparator<Language>() {
+                    @Override
+                    public int compare(Language o1, Language o2) {
+                        return o1.getDisplayName().compareTo(o2.getDisplayName());
+                    }
+                });
+                return languages;
+            }
+        });
     }
 }
 
