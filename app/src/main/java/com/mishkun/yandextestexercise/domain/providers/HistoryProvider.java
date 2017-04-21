@@ -13,5 +13,11 @@ import io.reactivex.Observable;
 
 public interface HistoryProvider {
     public Observable<List<HistoryItem>> getHistoryItems();
-    public Completable addHistoryItem(HistoryItem item);
+
+    public void addOrUpdateHistoryItem(HistoryItem item);
+
+    public void clearFavoritesData();
+
+
+    public void clearHistoryData();
 }

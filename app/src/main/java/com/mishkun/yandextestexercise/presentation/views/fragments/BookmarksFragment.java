@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mishkun.yandextestexercise.R;
+import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
 import com.mishkun.yandextestexercise.presentation.views.MyHistoryRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.presentation.views.TranslationResultViewModel;
 
@@ -25,7 +27,7 @@ import butterknife.ButterKnife;
  * A fragment representing a list of Items.
  * <p/>
  */
-public class BookmarksFragment extends Fragment {
+public class BookmarksFragment extends Fragment implements FavButtonListener {
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -65,13 +67,13 @@ public class BookmarksFragment extends Fragment {
                                                                                DividerItemDecoration.VERTICAL);
         horizontalDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
 
-        List<TranslationResultViewModel> historyItemsDummy = new ArrayList<TranslationResultViewModel>();
-        historyItemsDummy.add(new TranslationResultViewModel("hi", "hello", null, 1, 2, true));
-        historyItemsDummy.add(new TranslationResultViewModel("hi", "WOW", null, 1, 2, false));
-        historyItemsDummy.add(new TranslationResultViewModel("rozor", "pizdec", null, 1, 2, true));
-        historyItemsDummy.add(new TranslationResultViewModel("sss", "quart", null, 1, 2, false));
+        List<HistoryItem> historyItemsDummy = new ArrayList<>();
+        historyItemsDummy.add(new HistoryItem("hello", "hi", true));
+        historyItemsDummy.add(new HistoryItem("WOW", "hi", false));
+        historyItemsDummy.add(new HistoryItem("pizdec", "rozor", true));
+        historyItemsDummy.add(new HistoryItem("quart", "sss", false));
 
-        bookmarksRecyclerViewAdapter = new MyHistoryRecyclerViewAdapter(historyItemsDummy);
+        bookmarksRecyclerViewAdapter = new MyHistoryRecyclerViewAdapter(historyItemsDummy, this);
         bookmarksRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
@@ -93,5 +95,10 @@ public class BookmarksFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void favButtonChecked(HistoryItem item, boolean favored) {
+
     }
 }

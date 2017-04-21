@@ -1,10 +1,12 @@
 package com.mishkun.yandextestexercise.di.modules;
 
+import com.mishkun.yandextestexercise.data.HistoryDatabase;
 import com.mishkun.yandextestexercise.data.TranslationDirectionHolder;
 import com.mishkun.yandextestexercise.data.YandexDictionaryApi;
 import com.mishkun.yandextestexercise.data.YandexTranslationApi;
 import com.mishkun.yandextestexercise.domain.providers.DictionarySupportedLanguagesProvider;
 import com.mishkun.yandextestexercise.domain.providers.ExpandedTranslationProvider;
+import com.mishkun.yandextestexercise.domain.providers.HistoryProvider;
 import com.mishkun.yandextestexercise.domain.providers.ShortTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.SupportedLanguagesProvider;
 import com.mishkun.yandextestexercise.domain.providers.TranslationDirectionGuessProvider;
@@ -56,5 +58,11 @@ public class DataModule {
     @Singleton
     DictionarySupportedLanguagesProvider provideDictionarySupportedLanguagesApi(YandexDictionaryApi yandexApi) {
         return yandexApi;
+    }
+
+    @Provides
+    @Singleton
+    HistoryProvider provideHistory(HistoryDatabase historyDatabase){
+        return historyDatabase;
     }
 }

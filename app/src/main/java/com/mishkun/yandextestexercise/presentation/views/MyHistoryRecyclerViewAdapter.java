@@ -4,10 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.mishkun.yandextestexercise.R;
+import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 
 import java.util.List;
 
@@ -21,13 +23,16 @@ import butterknife.ButterKnife;
 public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistoryRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = MyHistoryRecyclerViewAdapter.class.getSimpleName();
-    private final List<TranslationResultViewModel> values;
+    private final List<HistoryItem> values;
 
-    public MyHistoryRecyclerViewAdapter(List<TranslationResultViewModel> values) {
+    private final FavButtonListener listener;
+
+    public MyHistoryRecyclerViewAdapter(List<HistoryItem> values, FavButtonListener listener) {
         this.values = values;
+        this.listener = listener;
     }
 
-    public void update(List<TranslationResultViewModel> data) {
+    public void update(List<HistoryItem> data) {
         values.clear();
         values.addAll(data);
     }
@@ -42,19 +47,15 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.definitionItem = values.get(position);
-        holder.text.setText(values.get(position).input);
-        holder.translation.setText(values.get(position).translation);
-        holder.favButton.setChecked(values.get(position).favored);
-       /* holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.text.setText(values.get(position).getOriginal());
+        holder.translation.setText(values.get(position).getShortTranslation());
+        holder.favButton.setChecked(values.get(position).isFavored());
+        holder.favButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the enabled callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                listener.favButtonChecked(holder.definitionItem, isChecked);
             }
-        });*/
+        });
     }
 
     @Override
@@ -71,7 +72,7 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
         @BindView(R.id.favorite_button_history)
         public ToggleButton favButton;
 
-        public TranslationResultViewModel definitionItem;
+        public HistoryItem definitionItem;
 
         public ViewHolder(View itemView) {
             super(itemView);

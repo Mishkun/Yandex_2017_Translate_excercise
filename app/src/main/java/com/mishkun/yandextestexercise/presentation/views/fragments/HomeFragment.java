@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -25,12 +26,13 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
+import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.presentation.views.ExpandedTranslationAdapter;
+import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
 import com.mishkun.yandextestexercise.presentation.views.MyHistoryRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
-import com.mishkun.yandextestexercise.presentation.views.TranslationResultViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,7 @@ import io.reactivex.subjects.PublishSubject;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends BaseFragment implements TranslateView {
+public class HomeFragment extends BaseFragment implements TranslateView, FavButtonListener {
 
     private static final String TAG = HomeFragment.class.getSimpleName();
 
@@ -96,6 +98,9 @@ public class HomeFragment extends BaseFragment implements TranslateView {
     @BindView(R.id.history_list)
     public RecyclerView historyRecyclerView;
 
+    @BindView(R.id.favorite_btn)
+    public ToggleButton favoriteToggle;
+
     @Inject
     public TranslatePresenter translatePresenter;
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
@@ -138,6 +143,14 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
+        favoriteToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                translatePresenter.onFavored(new HistoryItem(sourceTextView.getText().toString(), translationTextView.getText().toString(), false),
+                                             isChecked);
+            }
+        });
+
         expandedTranslationCard.setVisibility(View.GONE);
         translationCard.setVisibility(View.GONE);
         historyCard.setVisibility(View.VISIBLE);
@@ -156,14 +169,14 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         expandedTranslationRecyclerView.setAdapter(expandedTranslationAdapter);
         expandedTranslationRecyclerView.addItemDecoration(horizontalDecoration);
 
-        List<TranslationResultViewModel> historyItemsDummy = new ArrayList<TranslationResultViewModel>();
-        historyItemsDummy.add(new TranslationResultViewModel("hi", "hello", null, 1, 2, true));
-        historyItemsDummy.add(new TranslationResultViewModel("hi", "WOW", null, 1, 2, false));
-        historyItemsDummy.add(new TranslationResultViewModel("rozor", "pizdec", null, 1, 2, true));
-        historyItemsDummy.add(new TranslationResultViewModel("sss", "quart", null, 1, 2, false));
+        List<HistoryItem> historyItemsDummy = new ArrayList<>();
+        historyItemsDummy.add(new HistoryItem("hello", "hi", true));
+        historyItemsDummy.add(new HistoryItem("WOW", "hi", false));
+        historyItemsDummy.add(new HistoryItem("pizdec", "rozor", true));
+        historyItemsDummy.add(new HistoryItem("quart", "sss", false));
 
 
-        myHistoryRecyclerViewAdapter = new MyHistoryRecyclerViewAdapter(historyItemsDummy);
+        myHistoryRecyclerViewAdapter = new MyHistoryRecyclerViewAdapter(historyItemsDummy, this);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
@@ -277,6 +290,7 @@ public class HomeFragment extends BaseFragment implements TranslateView {
             translationCard.setVisibility(View.VISIBLE);
             translationTextView.setText(translation);
         } else {
+            translatePresenter.getHistory();
             historyCard.setVisibility(View.VISIBLE);
             translationCard.setVisibility(View.GONE);
         }
@@ -295,11 +309,6 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         }
     }
 
-    @Override
-    public void setHistoryRecyclerView(List<TranslationResultViewModel> translationResultViewModels) {
-        myHistoryRecyclerViewAdapter.update(translationResultViewModels);
-        myHistoryRecyclerViewAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void showError(String errorMessage) {
@@ -316,6 +325,17 @@ public class HomeFragment extends BaseFragment implements TranslateView {
         return new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(),
                                              fromTranslationSpinner.getSelectedItemPosition(),
                                              sourceTextView.getText().toString());
+    }
+
+    @Override
+    public void favButtonChecked(HistoryItem item, boolean favored) {
+        translatePresenter.onFavored(item, favored);
+    }
+
+    @Override
+    public void setData(List<HistoryItem> historyItems) {
+        myHistoryRecyclerViewAdapter.update(historyItems);
+        myHistoryRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     /**

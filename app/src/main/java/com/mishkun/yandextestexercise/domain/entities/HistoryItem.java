@@ -7,11 +7,13 @@ package com.mishkun.yandextestexercise.domain.entities;
 
 public class HistoryItem {
     private boolean favored;
-    private Translation translation;
+    private String original;
+    private String shortTranslation;
 
-    public HistoryItem(boolean favored, Translation translation) {
+    public HistoryItem(String original, String shortTranslation, boolean favored) {
         this.favored = favored;
-        this.translation = translation;
+        this.original = original;
+        this.shortTranslation = shortTranslation;
     }
 
     public boolean isFavored() {
@@ -22,11 +24,19 @@ public class HistoryItem {
         this.favored = favored;
     }
 
-    public Translation getTranslation() {
-        return translation;
+    public String getShortTranslation() {
+        return shortTranslation;
     }
 
-    public void setTranslation(Translation translation) {
-        this.translation = translation;
+    public void setShortTranslation(String shortTranslation) {
+        this.shortTranslation = shortTranslation;
+    }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
     }
 }

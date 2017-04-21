@@ -10,7 +10,7 @@ import io.reactivex.Observable;
  * Created by Mishkun on 28.03.2017.
  */
 
-public interface TranslateView {
+public interface TranslateView extends HistoryView {
     int getTranslationTo();
 
     void setTranslationTo(int To);
@@ -18,8 +18,6 @@ public interface TranslateView {
     int getTranslationFrom();
 
     void setTranslationFrom(int From);
-
-    void setHistoryRecyclerView(List<TranslationResultViewModel> translationResultViewModels);
 
     boolean getGuessLanguage();
 

@@ -1,13 +1,15 @@
 package com.mishkun.yandextestexercise.presentation.presenters;
 
-import android.nfc.Tag;
 import android.util.Log;
 
 import com.mishkun.yandextestexercise.di.PerActivity;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
+import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
+import com.mishkun.yandextestexercise.domain.interactors.AddEditHistoryInteractor;
+import com.mishkun.yandextestexercise.domain.interactors.GetHistoryInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetSupportedLanguagesInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetTranslationDirectionInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.TranslationInteractor;
@@ -15,15 +17,10 @@ import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
 
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import dagger.Module;
-import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by Mishkun on 28.03.2017.
@@ -37,22 +34,28 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     private final TranslationInteractor translationInteractor;
     private final GetTranslationDirectionInteractor translationDirectionInteractor;
     private final GetSupportedLanguagesInteractor supportedLanguagesInteractor;
-
+    private final AddEditHistoryInteractor addEditHistoryInteractor;
+    private final GetHistoryInteractor getHistoryInteractor;
     private TranslationDirectionMapper translationDirectionMapper;
 
 
     @Inject
     public TranslatePresenter(TranslationInteractor translationInteractor,
                               GetTranslationDirectionInteractor translationDirectionInteractor,
-                              GetSupportedLanguagesInteractor supportedLanguagesInteractor) {
+                              GetSupportedLanguagesInteractor supportedLanguagesInteractor,
+                              AddEditHistoryInteractor addEditHistoryInteractor,
+                              GetHistoryInteractor getHistoryInteractor) {
         this.translationInteractor = translationInteractor;
         this.translationDirectionInteractor = translationDirectionInteractor;
         this.supportedLanguagesInteractor = supportedLanguagesInteractor;
+        this.addEditHistoryInteractor = addEditHistoryInteractor;
+        this.getHistoryInteractor = getHistoryInteractor;
     }
 
     @Override
     public void resume() {
         supportedLanguagesInteractor.execute(new SupportedLanguagesObserver());
+        getHistory();
         Log.d(TAG, "onResume called");
     }
 
@@ -80,6 +83,10 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         attachedView.reverseText();
     }
 
+    public void getHistory(){
+        getHistoryInteractor.execute(new HistoryObserver(attachedView));
+    }
+
     private void setTranslationString(String translationString) {
         attachedView.setTranslation(translationString);
     }
@@ -96,6 +103,11 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         attachedView.setTranslationTo(translationDirectionMapper.transform(From));
     }
 
+    public void onFavored(HistoryItem item, boolean favored) {
+        item.setFavored(favored);
+        addEditHistoryInteractor.execute(new MutedObserver<Void>(), item);
+    }
+
     private final class UserInputObserver extends MutedObserver<TranslationQueryViewModel> {
         private final String TAG = UserInputObserver.class.getSimpleName();
 
@@ -105,7 +117,8 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
             TranslationDirection direction = new TranslationDirection(translationDirectionMapper.transform(value.getTranslationFrom()),
                                                                       translationDirectionMapper.transform(value.getTranslationTo()));
-            TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction, attachedView.getGuessLanguage());
+            TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction,
+                                                                                                      attachedView.getGuessLanguage());
             translationInteractor.execute(new TranslationObserver(), query);
         }
     }
@@ -156,7 +169,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onError(Throwable e) {
-            Log.d(TAG, "ERROR:" + e.getClass() + " message:" + e.getMessage() +"\n" + Log.getStackTraceString(e));
+            Log.d(TAG, "ERROR:" + e.getClass() + " message:" + e.getMessage() + "\n" + Log.getStackTraceString(e));
         }
     }
 

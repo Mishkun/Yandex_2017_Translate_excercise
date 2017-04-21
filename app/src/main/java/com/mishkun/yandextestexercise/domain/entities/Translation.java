@@ -5,9 +5,9 @@ package com.mishkun.yandextestexercise.domain.entities;
  */
 
 public class Translation {
+    private String original;
     private String shortTranslation;
     private Definition expandedTranslation;
-    private String original;
     private TranslationDirection direction;
 
     public Translation(String shortTranslation, Definition expandedTranslation, String original, TranslationDirection direction) {
