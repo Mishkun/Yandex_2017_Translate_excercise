@@ -104,6 +104,11 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         addEditHistoryInteractor.execute(new MutedObserver<Void>(), item);
     }
 
+    public void onHistoryDismissed(HistoryItem historyItem) {
+        historyItem.setSaved(false);
+        addEditHistoryInteractor.execute(new MutedObserver<Void>(), historyItem);
+    }
+
     private final class UserInputObserver extends MutedObserver<TranslationQueryViewModel> {
         private final String TAG = UserInputObserver.class.getSimpleName();
 

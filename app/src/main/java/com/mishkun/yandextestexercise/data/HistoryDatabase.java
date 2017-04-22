@@ -66,7 +66,6 @@ public class HistoryDatabase implements HistoryProvider {
 
     @Override
     public void addOrUpdateHistoryItem(HistoryItem item) {
-
         ShortTranslationEntity itemEntity = reactiveEntityStore.select(ShortTranslationEntity.class)
                                                                .where(ShortTranslationEntity.ORIGINAL.eq(item.getOriginal())
                                                                                                      .and(ShortTranslationEntity.TRANSLATION
@@ -75,21 +74,14 @@ public class HistoryDatabase implements HistoryProvider {
                                                                .firstOrNull();
         if (itemEntity == null) {
             itemEntity = new ShortTranslationEntity();
-            List<ShortTranslationEntity> entities = reactiveEntityStore.select(ShortTranslationEntity.class).get().toList();
         }
 
+        itemEntity.setSaved(item.isSaved());
         itemEntity.setTranslation(item.getShortTranslation());
         itemEntity.setOriginal(item.getOriginal());
-        itemEntity.setSaved(true);
         itemEntity.setFavored(item.isFavored());
 
-        if (itemEntity.getId() == 0) {
-            Log.d(TAG, "insert");
-            reactiveEntityStore.insert(itemEntity).subscribe();
-        } else {
-            Log.d(TAG, "update");
-            reactiveEntityStore.update(itemEntity).subscribe();
-        }
+        reactiveEntityStore.upsert(itemEntity).subscribe();
     }
 
     @Override

@@ -65,6 +65,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         return values.size();
     }
 
+    public HistoryItem getItemAt(int adapterPosition) {
+        return values.get(adapterPosition);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
         @BindView(R.id.translation_text_history)

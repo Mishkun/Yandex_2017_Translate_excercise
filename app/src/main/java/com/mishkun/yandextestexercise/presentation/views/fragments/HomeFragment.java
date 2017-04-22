@@ -7,6 +7,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -184,6 +185,20 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         });
         historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
         historyRecyclerView.addItemDecoration(horizontalDecoration);
+        ItemTouchHelper swipeToDismissTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        // callback for drag-n-drop, false to skip this feature
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        translatePresenter.onHistoryDismissed(historyRecyclerViewAdapter.getItemAt(viewHolder.getAdapterPosition()));
+                    }
+                });
+swipeToDismissTouchHelper.attachToRecyclerView(historyRecyclerView);
 
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
