@@ -19,8 +19,9 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="1dp"
         android:layout_gravity="bottom"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         app:itemIconTint="@drawable/nav_item_color_set"
         app:itemTextColor="@drawable/nav_item_color_set"
         app:menu="@menu/navigation" />

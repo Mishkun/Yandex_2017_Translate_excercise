@@ -1,9 +1,8 @@
 <resources>
-    <string name="app_name">Translator</string>
+    <string name="app_name">Yandex.Translate</string>
     <string name="title_home">Translate</string>
     <string name="title_bookmarks">Bookmarks</string>
-    <string name="title_history">History</string>
-    <string name="title_settings">Settings</string>
+    <string name="title_translate">Yandex.Translate</string>
     <string name="translation_box_hint">Put your text here</string>
     <string name="guess_check">Определять язык</string>
     <string name="clear">Очистить</string>

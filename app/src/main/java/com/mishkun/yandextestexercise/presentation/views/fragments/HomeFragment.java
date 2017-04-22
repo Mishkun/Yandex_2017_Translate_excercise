@@ -135,6 +135,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         }
         //setRetainInstance(true);
         translationQueryViewModelBehaviorSubject = PublishSubject.create();
+        Log.d(TAG, "onCreate: " + this.getComponent(MainActivityComponent.class));
         this.getComponent(MainActivityComponent.class).inject(this);
     }
 

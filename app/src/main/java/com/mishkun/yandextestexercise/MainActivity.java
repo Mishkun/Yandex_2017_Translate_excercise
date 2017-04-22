@@ -52,11 +52,11 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupComponent();
         ButterKnife.bind(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.content, fragment).commit();
-        setupComponent();
     }
 
     private void setupComponent() {
