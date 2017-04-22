@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.mishkun.yandextestexercise.AndroidApplication;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
@@ -55,7 +56,7 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static BookmarksFragment newInstance(int columnCount) {
+    public static BookmarksFragment newInstance() {
         BookmarksFragment fragment = new BookmarksFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -67,7 +68,7 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
-        this.getComponent(MainActivityComponent.class).inject(this);
+        ((AndroidApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
         bookMarksPresenter.attachView(this);
     }
 

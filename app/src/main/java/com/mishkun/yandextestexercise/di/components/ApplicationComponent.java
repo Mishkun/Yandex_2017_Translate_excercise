@@ -17,6 +17,8 @@ import com.mishkun.yandextestexercise.domain.providers.ShortTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.SupportedLanguagesProvider;
 import com.mishkun.yandextestexercise.domain.providers.TranslationDirectionGuessProvider;
 import com.mishkun.yandextestexercise.domain.providers.TranslationDirectionProvider;
+import com.mishkun.yandextestexercise.presentation.views.fragments.BookmarksFragment;
+import com.mishkun.yandextestexercise.presentation.views.fragments.HomeFragment;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -38,6 +40,8 @@ import static com.mishkun.yandextestexercise.di.modules.DomainModule.UI;
 public interface ApplicationComponent {
     void inject(AndroidApplication application);
 
+    void inject(HomeFragment homeFragment);
+    void inject(BookmarksFragment bookmarksFragment);
     //Exposed to sub-graphs
     ExpandedTranslationProvider expandedTranslationProvider();
 

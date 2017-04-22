@@ -26,7 +26,7 @@ import javax.inject.Inject;
  * Created by Mishkun on 28.03.2017.
  */
 
-@PerActivity
+
 public class TranslatePresenter extends Presenter<TranslateView> {
 
     private static final String TAG = TranslatePresenter.class.getSimpleName();

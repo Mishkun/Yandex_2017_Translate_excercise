@@ -24,8 +24,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.mishkun.yandextestexercise.AndroidApplication;
 import com.mishkun.yandextestexercise.R;
-import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 import com.mishkun.yandextestexercise.domain.entities.Language;
@@ -128,16 +128,13 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
-        //setRetainInstance(true);
+        setRetainInstance(true);
+        ((AndroidApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
         translationQueryViewModelBehaviorSubject = PublishSubject.create();
-        Log.d(TAG, "onCreate: " + this.getComponent(MainActivityComponent.class));
-        this.getComponent(MainActivityComponent.class).inject(this);
     }
 
     @Override
@@ -198,7 +195,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
                         translatePresenter.onHistoryDismissed(historyRecyclerViewAdapter.getItemAt(viewHolder.getAdapterPosition()));
                     }
                 });
-swipeToDismissTouchHelper.attachToRecyclerView(historyRecyclerView);
+        swipeToDismissTouchHelper.attachToRecyclerView(historyRecyclerView);
 
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
