@@ -27,6 +27,7 @@ import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.presentation.views.ExpandedTranslationAdapter;
 import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
@@ -106,6 +107,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
     private ExpandedTranslationAdapter expandedTranslationAdapter;
     private HistoryRecyclerViewAdapter historyRecyclerViewAdapter;
+    private ArrayAdapter<Language> spinnersAdapter;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -225,25 +227,25 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     }
 
     @Override
-    public int getTranslationTo() {
-        return toTranslationSpinner.getSelectedItemPosition();
+    public Language getTranslationTo() {
+        return (Language) toTranslationSpinner.getSelectedItem();
     }
 
     @Override
-    public void setTranslationTo(int To) {
+    public void setTranslationTo(Language To) {
         Log.d(TAG, "setTranslationTo: " + To);
-        toTranslationSpinner.setSelection(To);
+        toTranslationSpinner.setSelection(spinnersAdapter.getPosition(To));
     }
 
     @Override
-    public int getTranslationFrom() {
-        return fromTranslationSpinner.getSelectedItemPosition();
+    public Language getTranslationFrom() {
+        return (Language) fromTranslationSpinner.getSelectedItem();
     }
 
     @Override
-    public void setTranslationFrom(int From) {
+    public void setTranslationFrom(Language From) {
         Log.d(TAG, "setTranslationFrom: " + From);
-        fromTranslationSpinner.setSelection(From);
+        fromTranslationSpinner.setSelection(spinnersAdapter.getPosition(From));
     }
 
     @Override
@@ -262,16 +264,16 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     }
 
     @Override
-    public void setSupportedLanguages(List<String> supportedLanguages) {
+    public void setSupportedLanguages(List<Language> supportedLanguages) {
         Log.d(TAG, "SetSupportedLanguages called");
-        ArrayAdapter<String> spinnersAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, supportedLanguages);
+        spinnersAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, supportedLanguages);
 
         spinnersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         toTranslationSpinner.setAdapter(spinnersAdapter);
         fromTranslationSpinner.setAdapter(spinnersAdapter);
 
-        fromTranslationSpinner.setSelection(spinnersAdapter.getPosition("Английский"));
-        toTranslationSpinner.setSelection(spinnersAdapter.getPosition("Русский"));
+        fromTranslationSpinner.setSelection(spinnersAdapter.getPosition(new Language("ru", null)));
+        toTranslationSpinner.setSelection(spinnersAdapter.getPosition(new Language("en", null)));
         SpinnerInteractionListener listener = new SpinnerInteractionListener();
         toTranslationSpinner.setOnItemSelectedListener(listener);
         toTranslationSpinner.setOnTouchListener(listener);
@@ -319,8 +321,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @NonNull
     private TranslationQueryViewModel getTranslationViewModel() {
-        return new TranslationQueryViewModel(toTranslationSpinner.getSelectedItemPosition(),
-                                             fromTranslationSpinner.getSelectedItemPosition(),
+        return new TranslationQueryViewModel((Language) fromTranslationSpinner.getSelectedItem(),
+                                             (Language) toTranslationSpinner.getSelectedItem(),
                                              sourceTextView.getText().toString());
     }
 

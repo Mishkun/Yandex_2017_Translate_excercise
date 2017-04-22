@@ -36,6 +36,11 @@ public class Language  {
     }
 
     @Override
+    public String toString(){
+        return displayName;
+    }
+
+    @Override
     public int hashCode() {
         return code.hashCode();
     }

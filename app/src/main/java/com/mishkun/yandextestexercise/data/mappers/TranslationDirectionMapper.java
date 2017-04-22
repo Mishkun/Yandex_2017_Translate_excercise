@@ -13,6 +13,7 @@ public class TranslationDirectionMapper {
     }
 
     public static TranslationDirection transform(String direction) {
-        return new TranslationDirection(new Language(direction.substring(0, 2), null), new Language(direction.substring(3, 5), null));
+        String[] split = direction.split("-");
+        return new TranslationDirection(new Language(split[0], null), new Language(split[1], null));
     }
 }

@@ -120,13 +120,15 @@ public class YandexDictionaryProvider implements ExpandedTranslationProvider, Di
                             expandedTranslationEntity.setTranslationFrom(direction.getTranslationFrom().getCode());
                             List<DefinitionItemEntity> definitionItems = expandedTranslationEntity.getDefinitions();
                             if (definitionItems.isEmpty()) {
-                                definitionItems = new ArrayList<DefinitionItemEntity>(definition.getDefinitionItems().size());
-                                for (Definition.DefinitionItem definitionItem : definition.getDefinitionItems()) {
-                                    DefinitionItemEntity definitionItemEntity = new DefinitionItemEntity();
-                                    definitionItemEntity.setSynonyms((ArrayList<String>) definitionItem.getSynonyms());
-                                    definitionItemEntity.setMeanings((ArrayList<String>) definitionItem.getMeanings());
-                                    definitionItemEntity.setOwner(expandedTranslationEntity);
-                                    definitionItems.add(definitionItemEntity);
+                                definitionItems = new ArrayList<DefinitionItemEntity>();
+                                if (definition.getDefinitionItems() != null) {
+                                    for (Definition.DefinitionItem definitionItem : definition.getDefinitionItems()) {
+                                                                        DefinitionItemEntity definitionItemEntity = new DefinitionItemEntity();
+                                                                        definitionItemEntity.setSynonyms((ArrayList<String>) definitionItem.getSynonyms());
+                                                                        definitionItemEntity.setMeanings((ArrayList<String>) definitionItem.getMeanings());
+                                                                        definitionItemEntity.setOwner(expandedTranslationEntity);
+                                                                        definitionItems.add(definitionItemEntity);
+                                                                    }
                                 }
                                 reactiveEntityStore.upsert(expandedTranslationEntity).subscribe();
                                 reactiveEntityStore.upsert(definitionItems).subscribe();

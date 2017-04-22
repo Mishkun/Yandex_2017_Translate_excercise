@@ -1,6 +1,7 @@
 package com.mishkun.yandextestexercise.presentation.views;
 
 import com.mishkun.yandextestexercise.domain.entities.Definition;
+import com.mishkun.yandextestexercise.domain.entities.Language;
 
 import java.util.List;
 
@@ -11,13 +12,13 @@ import io.reactivex.Observable;
  */
 
 public interface TranslateView extends HistoryView {
-    int getTranslationTo();
+    Language getTranslationTo();
 
-    void setTranslationTo(int To);
+    void setTranslationTo(Language To);
 
-    int getTranslationFrom();
+    Language getTranslationFrom();
 
-    void setTranslationFrom(int From);
+    void setTranslationFrom(Language From);
 
     boolean getGuessLanguage();
 
@@ -25,7 +26,7 @@ public interface TranslateView extends HistoryView {
 
     void reverseText();
 
-    void setSupportedLanguages(List<String> supportedLanguages);
+    void setSupportedLanguages(List<Language> supportedLanguages);
 
     void setTranslation(String translation);
 

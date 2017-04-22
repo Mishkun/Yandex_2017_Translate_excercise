@@ -151,7 +151,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
         return reactiveEntityStore.findByKey(LanguageGuessEntity.class, query).toObservable().map(new Function<LanguageGuessEntity, Language>() {
             @Override
             public Language apply(LanguageGuessEntity languageGuessEntity) throws Exception {
-                return SupportedLanguagesMapper.transform(languageGuessEntity.getLanguage());
+                return new Language(languageGuessEntity.getLanguage(), null);
             }
         });
     }
@@ -170,7 +170,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
                         @Override
                         public void accept(Language language) throws Exception {
                             LanguageGuessEntity guessEntity = new LanguageGuessEntity();
-                            guessEntity.setLanguage(SupportedLanguagesMapper.transform(language));
+                            guessEntity.setLanguage(language.getCode());
                             guessEntity.setQuery(query);
                             reactiveEntityStore.upsert(guessEntity).subscribe();
                         }

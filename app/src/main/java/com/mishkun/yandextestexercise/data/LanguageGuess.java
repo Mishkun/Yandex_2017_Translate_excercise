@@ -15,7 +15,5 @@ public interface LanguageGuess extends Persistable{
     @Key
     String getQuery();
 
-    @ForeignKey
-    @OneToOne
-    LanguageEntity getLanguage();
+    String getLanguage();
 }

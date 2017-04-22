@@ -1,5 +1,7 @@
 package com.mishkun.yandextestexercise.domain.interactors;
 
+import android.util.Log;
+
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.providers.SupportedLanguagesProvider;
@@ -21,7 +23,7 @@ import io.reactivex.functions.Function;
 
 public class GetSupportedLanguagesInteractor extends ParameterlessInteractor<List<Language>> {
 
-
+private static final String TAG = GetSupportedLanguagesInteractor.class.getSimpleName();
     private final SupportedLanguagesProvider supportedLanguagesProvider;
 
     @Inject
@@ -38,8 +40,10 @@ public class GetSupportedLanguagesInteractor extends ParameterlessInteractor<Lis
             @Override
             public List<Language> apply(List<Language> languages) throws Exception {
                 for (Iterator<Language> iterator = languages.iterator(); iterator.hasNext(); ) {
-                    if (iterator.next().getDisplayName() == null) {
+                    Language lang = iterator.next();
+                    if (lang.getDisplayName() == null) {
                         iterator.remove();
+                        Log.d(TAG, "removed: " + lang.getCode());
                     }
                 }
                 return languages;

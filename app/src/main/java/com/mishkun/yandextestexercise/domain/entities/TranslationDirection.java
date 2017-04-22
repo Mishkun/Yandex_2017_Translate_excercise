@@ -1,12 +1,14 @@
 package com.mishkun.yandextestexercise.domain.entities;
 
+import android.util.Log;
+
 /**
  * Created by Mishkun on 28.03.2017.
  */
 
 public class TranslationDirection {
     private Language mFrom;
-
+private static final String TAG = TranslationDirection.class.getSimpleName();
     private Language mTo;
 
     public TranslationDirection(Language from, Language to) {

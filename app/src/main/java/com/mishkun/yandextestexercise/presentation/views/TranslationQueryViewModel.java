@@ -1,25 +1,27 @@
 package com.mishkun.yandextestexercise.presentation.views;
 
+import com.mishkun.yandextestexercise.domain.entities.Language;
+
 /**
  * Created by Mishkun on 18.04.2017.
  */
 
 public class TranslationQueryViewModel {
-    private int translationTo;
-    private int translationFrom;
+    private Language translationTo;
+    private Language translationFrom;
     private String query;
 
-    public TranslationQueryViewModel( int translationFrom, int translationTo, String query) {
+    public TranslationQueryViewModel( Language translationFrom, Language translationTo, String query) {
         this.translationTo = translationTo;
         this.translationFrom = translationFrom;
         this.query = query;
     }
 
-    public int getTranslationTo() {
+    public Language getTranslationTo() {
         return translationTo;
     }
 
-    public int getTranslationFrom() {
+    public Language getTranslationFrom() {
         return translationFrom;
     }
 
@@ -42,8 +44,8 @@ public class TranslationQueryViewModel {
 
     @Override
     public int hashCode() {
-        int result = translationTo;
-        result = 31 * result + translationFrom;
+        int result = translationTo.hashCode();
+        result = 31 * result + translationFrom.hashCode();
         result = 31 * result + query.hashCode();
         return result;
     }

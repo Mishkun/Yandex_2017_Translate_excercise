@@ -36,7 +36,6 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     private final GetSupportedLanguagesInteractor supportedLanguagesInteractor;
     private final AddEditHistoryInteractor addEditHistoryInteractor;
     private final GetHistoryInteractor getHistoryInteractor;
-    private TranslationDirectionMapper translationDirectionMapper;
 
 
     @Inject
@@ -67,17 +66,14 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
 
     private void setSupportedLanguages(List<Language> supportedLanguages) {
-        List<String> representedLanguages = new ArrayList<>(supportedLanguages.size());
-        for (Language language : supportedLanguages) {
-            representedLanguages.add(language.getDisplayName());
-        }
-        attachedView.setSupportedLanguages(representedLanguages);
+
+        attachedView.setSupportedLanguages(supportedLanguages);
     }
 
 
     public void OnReverseTranslationButtonClicked() {
-        int from = attachedView.getTranslationTo();
-        int to = attachedView.getTranslationFrom();
+        Language from = attachedView.getTranslationTo();
+        Language to = attachedView.getTranslationFrom();
         attachedView.setTranslationFrom(from);
         attachedView.setTranslationTo(to);
         attachedView.reverseText();
@@ -96,11 +92,11 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     }
 
     private void setTranslationTo(Language To) {
-        attachedView.setTranslationTo(translationDirectionMapper.transform(To));
+        attachedView.setTranslationTo(To);
     }
 
     private void setTranslationFrom(Language From) {
-        attachedView.setTranslationFrom(translationDirectionMapper.transform(From));
+        attachedView.setTranslationFrom(From);
     }
 
     public void onFavored(HistoryItem item, boolean favored) {
@@ -115,8 +111,8 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         public void onNext(TranslationQueryViewModel value) {
             String queryString = value.getQuery();
 
-            TranslationDirection direction = new TranslationDirection(translationDirectionMapper.transform(value.getTranslationFrom()),
-                                                                      translationDirectionMapper.transform(value.getTranslationTo()));
+            TranslationDirection direction = new TranslationDirection(value.getTranslationFrom(),
+                                                                      value.getTranslationTo());
             TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction,
                                                                                                       attachedView.getGuessLanguage());
             translationInteractor.execute(new TranslationObserver(), query);
@@ -129,7 +125,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onNext(TranslationDirection translationDirection) {
-            Log.d(TAG, "onNext: arrivedTranslations" + translationDirection.getTranslationFrom().getCode() + " " + translationDirection.getTranslationTo().getCode());
+            Log.d(TAG, "onNext: arrivedTranslationDirections " + translationDirection.getTranslationFrom().getCode() + " " + translationDirection.getTranslationTo().getCode());
             setTranslationTo(translationDirection.getTranslationTo());
             setTranslationFrom(translationDirection.getTranslationFrom());
         }
@@ -147,7 +143,6 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         @Override
         public void onNext(List<Language> value) {
             Log.d(TAG, "SupportedLanguagesList arrived");
-            TranslatePresenter.this.translationDirectionMapper = new TranslationDirectionMapper(value);
             setSupportedLanguages(value);
             translationDirectionInteractor.execute(new TranslationDirectionObserver());
             attachedView.getQueries().distinctUntilChanged().subscribe(new UserInputObserver());
