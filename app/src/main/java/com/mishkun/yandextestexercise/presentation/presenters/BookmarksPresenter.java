@@ -6,6 +6,10 @@ import com.mishkun.yandextestexercise.domain.interactors.ClearFavoritesInteracto
 import com.mishkun.yandextestexercise.domain.interactors.GetFavoritesInteractor;
 import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.BookmarksView;
+import com.mishkun.yandextestexercise.presentation.views.HistoryView;
+import com.mishkun.yandextestexercise.presentation.views.TranslateView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,7 +33,7 @@ public class BookmarksPresenter extends Presenter<BookmarksView> {
 
     @Override
     public void resume() {
-        getFavoritesInteractor.execute(new HistoryObserver(attachedView));
+        getFavoritesInteractor.execute(new BookmarksObserver(attachedView));
     }
 
     @Override
@@ -44,5 +48,22 @@ public class BookmarksPresenter extends Presenter<BookmarksView> {
 
     public void clearFavorites() {
         clearFavoritesInteractor.execute(new MutedObserver<Void>());
+    }
+
+    private class BookmarksObserver extends HistoryObserver {
+
+
+        BookmarksObserver(HistoryView historyView) {
+            super(historyView);}
+
+        @Override
+        public void onNext(List<HistoryItem> value) {
+            super.onNext(value);
+            if (value.size() > 0){
+                attachedView.hideEmptyState();
+            }else {
+                attachedView.showEmptyState();
+            }
+        }
     }
 }

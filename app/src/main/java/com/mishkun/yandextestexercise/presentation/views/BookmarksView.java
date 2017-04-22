@@ -5,4 +5,8 @@ package com.mishkun.yandextestexercise.presentation.views;
  */
 
 public interface BookmarksView extends HistoryView {
+
+    public void showEmptyState();
+
+    public void hideEmptyState();
 }

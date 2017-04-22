@@ -9,4 +9,6 @@
     <string name="clear">Очистить</string>
     <string name="clear_favorites_description">clear favorites button</string>
     <string name="reverse_translation_direction_description">reverse translation direction</string>
+    <string name="no_bookmarks">No bookmarks</string>
+    <string name="no_bookmarks_hint">You can add bookmarks\non the main screen</string>
 </resources>

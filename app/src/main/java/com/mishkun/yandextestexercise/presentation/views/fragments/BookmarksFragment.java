@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
@@ -42,10 +43,13 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
 
     @BindView(R.id.clear_favs_button)
     public ImageButton clearFavsButton;
-    private HistoryRecyclerViewAdapter bookmarksRecyclerViewAdapter;
 
+    @BindView(R.id.no_content_bookmarks)
+    public RelativeLayout noContent;
     @Inject
     public BookmarksPresenter bookMarksPresenter;
+    private HistoryRecyclerViewAdapter bookmarksRecyclerViewAdapter;
+
     public BookmarksFragment() {
     }
 
@@ -125,5 +129,15 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
     public void setData(List<HistoryItem> historyItems) {
         bookmarksRecyclerViewAdapter.update(historyItems);
         bookmarksRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showEmptyState() {
+        noContent.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideEmptyState() {
+        noContent.setVisibility(View.GONE);
     }
 }

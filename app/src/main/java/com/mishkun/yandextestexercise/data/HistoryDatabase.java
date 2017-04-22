@@ -11,7 +11,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.requery.Persistable;
 import io.requery.reactivex.ReactiveEntityStore;
@@ -49,7 +48,8 @@ public class HistoryDatabase implements HistoryProvider {
 
     @Override
     public Observable<List<HistoryItem>> getFavoredItems() {
-        return reactiveEntityStore.select(ShortTranslationEntity.class).where(ShortTranslationEntity.FAVORED.eq(true).and(ShortTranslationEntity.SAVED.eq(true))).get().observableResult().map(
+        return reactiveEntityStore.select(ShortTranslationEntity.class).where(
+                ShortTranslationEntity.FAVORED.eq(true).and(ShortTranslationEntity.SAVED.eq(true))).get().observableResult().map(
                 new Function<ReactiveResult<ShortTranslationEntity>, List<HistoryItem>>() {
                     @Override
                     public List<HistoryItem> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
@@ -102,6 +102,7 @@ public class HistoryDatabase implements HistoryProvider {
         }
         Log.d(TAG, "clearFavs");
         reactiveEntityStore.update(shortTranslationEntities).subscribe();
+        reactiveEntityStore.refresh(shortTranslationEntities).subscribe();
     }
 
     @Override
