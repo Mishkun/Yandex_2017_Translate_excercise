@@ -239,7 +239,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     }
 
     private void initializeTextObservable() {
-        RxTextView.textChanges(sourceTextView).debounce(400, TimeUnit.MILLISECONDS).subscribe(new Consumer<CharSequence>() {
+        RxTextView.textChanges(sourceTextView).debounce(300, TimeUnit.MILLISECONDS).subscribe(new Consumer<CharSequence>() {
             @Override
             public void accept(CharSequence charSequence) throws Exception {
                 translationQueryViewModelBehaviorSubject.onNext(getTranslationViewModel());
@@ -300,11 +300,13 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public void showProgressBar() {
+        historyRecyclerView.setVisibility(View.GONE);
         loadingBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
+        historyRecyclerView.setVisibility(View.VISIBLE);
         loadingBar.setVisibility(View.GONE);
     }
 
@@ -315,7 +317,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public Observable<TranslationQuery> getQueries() {
-        return translationQueryViewModelBehaviorSubject.debounce(200, TimeUnit.MILLISECONDS).distinctUntilChanged().observeOn(AndroidSchedulers.mainThread());
+        return translationQueryViewModelBehaviorSubject.debounce(100, TimeUnit.MILLISECONDS).distinctUntilChanged().observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -352,6 +354,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
             translationTextView.setText(translation);
             creditsText.setVisibility(View.VISIBLE);
         } else {
+            transcriptionTextView.setText("");
             creditsText.setVisibility(View.GONE);
             translatePresenter.getHistory();
             historyRecyclerView.setVisibility(View.VISIBLE);
