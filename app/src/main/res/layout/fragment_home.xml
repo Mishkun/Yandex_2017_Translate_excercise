@@ -82,9 +82,10 @@
                     android:layout_marginTop="@dimen/card_padding_vertical"
                     android:background="@null"
                     android:ems="10"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
                     android:gravity="top"
                     android:hint="@string/translation_box_hint"
-                    android:inputType="textMultiLine"
                     android:minHeight="@dimen/translation_box_height"
                     android:textSize="@dimen/textSize"/>
 

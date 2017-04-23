@@ -1,5 +1,6 @@
 package com.mishkun.yandextestexercise.presentation.views.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -8,14 +9,15 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -151,6 +153,21 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
+        sourceTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    translatePresenter.onHistory(
+                            new HistoryItem(sourceTextView.getText().toString(), translationTextView.getText().toString(), favoriteToggle.isChecked(),
+                                            getTranslationFrom(), getTranslationTo()));
+                    InputMethodManager inputManager = (InputMethodManager)
+                            getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.toggleSoftInput(0, 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         favoriteToggle.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
@@ -187,7 +204,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this, new ItemClickListener<HistoryItem>() {
             @Override
             public void onClicked(HistoryItem data) {
-                ((AppNavigator)getActivity()).NavigateToTranslationPage(data.getOriginal(), data.getFrom().getCode(), data.getTo().getCode());
+                ((AppNavigator) getActivity()).NavigateToTranslationPage(data.getOriginal(), data.getFrom().getCode(), data.getTo().getCode());
             }
         });
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {

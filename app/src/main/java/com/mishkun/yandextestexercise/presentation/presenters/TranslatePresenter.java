@@ -112,6 +112,8 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     }
 
     public void onHistory(HistoryItem historyItem) {
+        Log.d(TAG, "onHistory: " + historyItem.getOriginal());
+        historyItem.setSaved(true);
         addEditHistoryInteractor.execute(new MutedObserver<Void>(), historyItem);
     }
 
