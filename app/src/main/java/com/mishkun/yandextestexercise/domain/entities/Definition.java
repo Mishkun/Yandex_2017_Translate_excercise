@@ -13,7 +13,9 @@ public class Definition {
     private String transcription;
     private List<DefinitionItem> definitionItems;
 
-    public Definition(String translation, String transcription, List<DefinitionItem> definitionItems) {
+    public Definition(String original, TranslationDirection direction, String translation, String transcription, List<DefinitionItem> definitionItems) {
+        this.original = original;
+        this.direction = direction;
         this.translation = translation;
         this.transcription = transcription;
         this.definitionItems = definitionItems;
@@ -29,6 +31,22 @@ public class Definition {
 
     public List<DefinitionItem> getDefinitionItems() {
         return definitionItems;
+    }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
+
+    public TranslationDirection getDirection() {
+        return direction;
+    }
+
+    public void setDirection(TranslationDirection direction) {
+        this.direction = direction;
     }
 
     public static class DefinitionItem {

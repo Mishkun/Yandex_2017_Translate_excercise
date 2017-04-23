@@ -1,10 +1,8 @@
 package com.mishkun.yandextestexercise.data.mappers;
 
-import android.util.Log;
-
-import com.mishkun.yandextestexercise.data.responses.DetectionResponse;
 import com.mishkun.yandextestexercise.data.responses.DictionaryResponse;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
+import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +14,10 @@ import java.util.List;
 public class DictionaryResponseMapper {
     private static final String TAG = DetectionResponseMapper.class.getSimpleName();
 
-    static public Definition transform(DictionaryResponse dictionaryResponse) {
+    static public Definition transform(DictionaryResponse dictionaryResponse, String query, TranslationDirection direction) {
         // If dictionary response is not supported, return nothing
         if (dictionaryResponse.definitions.size() == 0)
-            return new Definition(null, null, null);
+            return new Definition(query, direction, null, null, null);
         String transcription = dictionaryResponse.definitions.get(0).transcription;
         String text = dictionaryResponse.definitions.get(0).original;
         List<Definition.DefinitionItem> definitionItems = new ArrayList<>();
@@ -32,7 +30,7 @@ public class DictionaryResponseMapper {
                 definitionItems.add(definitionItem);
             }
         }
-        return new Definition(text, transcription, definitionItems);
+        return new Definition(query, direction, text, transcription, definitionItems);
     }
 
     static private List<String> flattenTextResponse(List<DictionaryResponse.TextResponse> textResponses) {

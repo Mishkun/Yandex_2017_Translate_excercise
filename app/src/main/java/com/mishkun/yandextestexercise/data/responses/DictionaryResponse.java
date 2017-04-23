@@ -17,8 +17,6 @@ public class DictionaryResponse {
         public String original;
         @SerializedName("tr")
         public List<TranslationDefinitionResponse> translationDefinitionResponses;
-        @SerializedName("pos")
-        public String partOfSpeech;
         @SerializedName("ts")
         public String transcription;
     }

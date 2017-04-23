@@ -107,7 +107,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
                                                                                                                     query.getDirection());
                                                       }
                                                   }
-                                                  return Observable.just(new Definition(null, null, null));
+                                                  return Observable.just(new Definition(query.getString(), query.getDirection(), null, null, null));
                                               }
                                           }),
                                   new BiFunction<ShortTranslationModel, Definition, Translation>() {
@@ -125,7 +125,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
                     .map(new Function<ShortTranslationModel, Translation>() {
                         @Override
                         public Translation apply(ShortTranslationModel shortTranslation) throws Exception {
-                            Translation translation = new Translation(shortTranslation.getTranslation(), new Definition(null, null, null),
+                            Translation translation = new Translation(shortTranslation.getTranslation(), new Definition(query.getString(), query.getDirection(), null, null, null),
                                                                       query.getString(), query.getDirection());
                             translation.setFavored(shortTranslation.isFavored());
                             return translation;

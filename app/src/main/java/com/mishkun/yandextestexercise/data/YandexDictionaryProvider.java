@@ -51,10 +51,10 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
     public Observable<Definition> getExpandedTranslation(String query, TranslationDirection direction) {
         return collectFromSources(getDefinitionFromDatabase(query, direction),
                                   getDefinitionFromApi(query, direction),
-                                  Observable.just(new Definition(null, null, null)));
+                                  Observable.just(new Definition(query, direction, null, null, null)));
     }
 
-    private Observable<Definition> getDefinitionFromDatabase(String query, TranslationDirection direction) {
+    private Observable<Definition> getDefinitionFromDatabase(final String query, final TranslationDirection direction) {
         return reactiveEntityStore.select(ExpandedTranslationEntity.class)
                                   .where(ExpandedTranslationEntity.ORIGINAL.eq(query)
                                                                            .and(ExpandedTranslationEntity.TRANSLATION_FROM
@@ -70,7 +70,7 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
                                           for (DefinitionItemEntity entity : expandedTranslationEntity.getDefinitions()) {
                                               definitionItems.add(new Definition.DefinitionItem(entity.getSynonyms(), entity.getMeanings()));
                                           }
-                                          return new Definition(expandedTranslationEntity.getOriginal(), expandedTranslationEntity.getTranscription(),
+                                          return new Definition(query, direction, expandedTranslationEntity.getOriginal(), expandedTranslationEntity.getTranscription(),
                                                                 definitionItems);
                                       }
                                   });
@@ -82,7 +82,7 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
                                                                 new Function<DictionaryResponse, Definition>() {
                                                                     @Override
                                                                     public Definition apply(DictionaryResponse dictionaryResponse) throws Exception {
-                                                                        return DictionaryResponseMapper.transform(dictionaryResponse);
+                                                                        return DictionaryResponseMapper.transform(dictionaryResponse, query, direction);
                                                                     }
                                                                 }).doOnNext(new DefinitionConsumer(query, direction)));
     }
