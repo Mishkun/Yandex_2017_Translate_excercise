@@ -85,7 +85,7 @@
                     android:layout_marginTop="@dimen/card_padding_vertical"
                     android:background="@null"
                     android:ems="10"
-                    android:inputType="translation"
+                    android:inputType="text"
                     android:imeOptions="actionDone"
                     android:gravity="top"
                     android:hint="@string/translation_box_hint"
@@ -128,7 +128,7 @@
                     android:layout_marginEnd="@dimen/text_margin"
                     android:layout_marginStart="40dp"
                     android:layout_toEndOf="@+id/guess_toogle"
-                    android:translation="@string/clear"
+                    android:text="@string/clear"
                     android:textSize="16sp"/>
                 <View
                     android:id="@+id/divider_last"
@@ -267,7 +267,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/expanded_translation_card"
             android:layout_gravity="center_horizontal"
-            android:translation="@string/translated_using_yandex_translate"
+            android:text="@string/translated_using_yandex_translate"
             android:textAlignment="center"/>
     </RelativeLayout>
 </ScrollView>

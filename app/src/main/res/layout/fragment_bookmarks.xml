@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/no_content_bookmarks_img"
                     android:layout_centerHorizontal="true"
-                    android:translation="@string/no_bookmarks"
+                    android:text="@string/no_bookmarks"
                     android:textSize="@dimen/textSize"/>
 
                 <TextView
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/no_content_bookmarks_text"
                     android:layout_centerHorizontal="true"
-                    android:translation="@string/no_bookmarks_hint"
+                    android:text="@string/no_bookmarks_hint"
                     android:textAlignment="center"/>
             </RelativeLayout>
         </RelativeLayout>
