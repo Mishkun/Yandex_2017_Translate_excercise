@@ -2,6 +2,7 @@ package com.mishkun.yandextestexercise.presentation.views;
 
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Language;
+import com.mishkun.yandextestexercise.domain.entities.TranslationQuery;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface TranslateView extends HistoryView {
     void showProgressBar();
     void hideProgressBar();
 
-    Observable<TranslationQueryViewModel> getQueries();
+    Observable<TranslationQuery> getQueries();
 
     void reverseText();
 

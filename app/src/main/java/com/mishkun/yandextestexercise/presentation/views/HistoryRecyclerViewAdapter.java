@@ -38,7 +38,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     public void update(List<ShortTranslationModel> data) {
         values.clear();
         values.addAll(data);
-        Log.d(TAG, "update: " + data.size());
     }
 
     @Override
@@ -52,7 +51,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.definitionItem = values.get(position);
         holder.text.setText(values.get(position).getOriginal());
-        Log.d(TAG, "onBindViewHolder: " + holder.text.getText().toString() + " " + position);
         holder.translation.setText(values.get(position).getTranslation());
         holder.favButton.setOnCheckedChangeListener(null);
         holder.favButton.setChecked(values.get(position).isFavored());

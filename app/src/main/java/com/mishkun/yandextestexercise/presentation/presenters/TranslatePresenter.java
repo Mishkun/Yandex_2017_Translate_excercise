@@ -3,8 +3,8 @@ package com.mishkun.yandextestexercise.presentation.presenters;
 import android.util.Log;
 
 import com.mishkun.yandextestexercise.domain.entities.Definition;
-import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.entities.TranslationQuery;
@@ -16,7 +16,6 @@ import com.mishkun.yandextestexercise.domain.interactors.GetTranslationDirection
 import com.mishkun.yandextestexercise.domain.interactors.TranslationInteractor;
 import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
-import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
 
 import java.util.List;
 
@@ -119,18 +118,12 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     }
 
 
-    private final class UserInputObserver extends MutedObserver<TranslationQueryViewModel> {
+    private final class UserInputObserver extends MutedObserver<TranslationQuery> {
         private final String TAG = UserInputObserver.class.getSimpleName();
 
         @Override
-        public void onNext(TranslationQueryViewModel value) {
-            String queryString = value.getQuery();
-
-            TranslationDirection direction = new TranslationDirection(value.getTranslationFrom(),
-                                                                      value.getTranslationTo());
-            TranslationQuery query = new TranslationQuery(queryString, direction,
-                                                          attachedView.getGuessLanguage());
-            translationInteractor.execute(new TranslationObserver(), query);
+        public void onNext(TranslationQuery value) {
+            translationInteractor.execute(new TranslationObserver(), value);
 
         }
     }

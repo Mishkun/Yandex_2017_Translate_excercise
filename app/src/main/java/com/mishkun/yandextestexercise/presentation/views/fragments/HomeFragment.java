@@ -32,8 +32,10 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mishkun.yandextestexercise.AndroidApplication;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
-import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
+import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
+import com.mishkun.yandextestexercise.domain.entities.TranslationQuery;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.presentation.views.AppNavigator;
 import com.mishkun.yandextestexercise.presentation.views.ExpandedTranslationAdapter;
@@ -41,7 +43,6 @@ import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
 import com.mishkun.yandextestexercise.presentation.views.HistoryRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.presentation.views.ItemClickListener;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
-import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     public TextView creditsText;
     @Inject
     public TranslatePresenter translatePresenter;
-    private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
+    private PublishSubject<TranslationQuery> translationQueryViewModelBehaviorSubject;
     private ExpandedTranslationAdapter expandedTranslationAdapter;
     private HistoryRecyclerViewAdapter historyRecyclerViewAdapter;
     private ArrayAdapter<Language> spinnersAdapter;
@@ -153,7 +154,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     translatePresenter.addHistoryItem(
-                            new ShortTranslationModel(sourceTextView.getText().toString(), translationTextView.getText().toString(), favoriteToggle.isChecked(),
+                            new ShortTranslationModel(sourceTextView.getText().toString(), translationTextView.getText().toString(),
+                                                      favoriteToggle.isChecked(),
                                                       getTranslationFrom(), getTranslationTo()));
                     InputMethodManager inputManager = (InputMethodManager)
                             getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -167,9 +169,10 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         favoriteToggle.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                translatePresenter.onFavored(new ShortTranslationModel(sourceTextView.getText().toString(), translationTextView.getText().toString(), false,
-                                                                       getTranslationFrom(), getTranslationTo()),
-                                             favoriteToggle.isChecked());
+                translatePresenter.onFavored(
+                        new ShortTranslationModel(sourceTextView.getText().toString(), translationTextView.getText().toString(), false,
+                                                  getTranslationFrom(), getTranslationTo()),
+                        favoriteToggle.isChecked());
             }
         });
 
@@ -311,7 +314,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     }
 
     @Override
-    public Observable<TranslationQueryViewModel> getQueries() {
+    public Observable<TranslationQuery> getQueries() {
         return translationQueryViewModelBehaviorSubject.observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -377,10 +380,11 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
 
     @NonNull
-    private TranslationQueryViewModel getTranslationViewModel() {
-        return new TranslationQueryViewModel((Language) fromTranslationSpinner.getSelectedItem(),
-                                             (Language) toTranslationSpinner.getSelectedItem(),
-                                             sourceTextView.getText().toString());
+    private TranslationQuery getTranslationViewModel() {
+        return new TranslationQuery(sourceTextView.getText().toString(),
+                                    new TranslationDirection((Language) fromTranslationSpinner.getSelectedItem(),
+                                                             (Language) toTranslationSpinner.getSelectedItem()),
+                                    guessToogle.isChecked());
     }
 
     @Override
