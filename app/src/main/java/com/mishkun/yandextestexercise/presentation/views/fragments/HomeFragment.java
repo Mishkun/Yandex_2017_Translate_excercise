@@ -239,7 +239,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     }
 
     private void initializeTextObservable() {
-        RxTextView.textChanges(sourceTextView).debounce(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<CharSequence>() {
+        RxTextView.textChanges(sourceTextView).debounce(450, TimeUnit.MILLISECONDS).subscribe(new Consumer<CharSequence>() {
             @Override
             public void accept(CharSequence charSequence) throws Exception {
                 translationQueryViewModelBehaviorSubject.onNext(getTranslationViewModel());
