@@ -1,6 +1,7 @@
 package com.mishkun.yandextestexercise.presentation.views;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     public void update(List<HistoryItem> data) {
         values.clear();
         values.addAll(data);
+        Log.d(TAG, "update: " + data.size());
     }
 
     @Override
@@ -50,6 +52,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.definitionItem = values.get(position);
         holder.text.setText(values.get(position).getOriginal());
+        Log.d(TAG, "onBindViewHolder: " + holder.text.getText().toString() + " " + position);
         holder.translation.setText(values.get(position).getShortTranslation());
         holder.favButton.setOnCheckedChangeListener(null);
         holder.favButton.setChecked(values.get(position).isFavored());
@@ -89,6 +92,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+            Log.d(TAG, "onCreateViewHolder: ");
             this.view = itemView;
             ButterKnife.bind(this, view);
         }

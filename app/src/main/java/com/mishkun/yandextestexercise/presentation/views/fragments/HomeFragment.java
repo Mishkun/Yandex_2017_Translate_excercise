@@ -206,12 +206,15 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
             public void onClicked(HistoryItem data) {
                 ((AppNavigator) getActivity()).NavigateToTranslationPage(data.getOriginal(), data.getFrom().getCode(), data.getTo().getCode());
             }
-        });
+        });/*
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
+        });*/
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true){
+
         });
         historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
         historyRecyclerView.addItemDecoration(horizontalDecoration);
@@ -403,7 +406,6 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState: ");
         outState.putString(KEY_SOURCE_TEXT, sourceTextView.getText().toString());
         outState.putString(KEY_FROM_DIRECTION, ((Language) fromTranslationSpinner.getSelectedItem()).getCode());
         outState.putString(KEY_TO_DIRECTION, ((Language) toTranslationSpinner.getSelectedItem()).getCode());
