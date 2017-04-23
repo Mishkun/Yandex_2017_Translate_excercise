@@ -2,7 +2,6 @@ package com.mishkun.yandextestexercise.presentation.views.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,21 +9,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -61,57 +55,43 @@ import io.reactivex.subjects.PublishSubject;
  */
 public class HomeFragment extends BaseFragment implements TranslateView, FavButtonListener {
 
+    private static final String KEY_SOURCE_TEXT = "SOURCE_TEXT";
+    private static final String KEY_FROM_DIRECTION = "FROM_DIRECTION";
+    private static final String KEY_TO_DIRECTION = "TO_DIRECTION";
     private static final String TAG = HomeFragment.class.getSimpleName();
-
     @BindView(R.id.from_translation_spinner)
     public Spinner fromTranslationSpinner;
-
     @BindView(R.id.reverse_translation_direction_btn)
     public ImageButton reverseTranslationButton;
-
     @BindView(R.id.to_translation_spinner)
     public Spinner toTranslationSpinner;
-
     @BindView(R.id.to_translate_edit_text)
     public EditText sourceTextView;
-
     @BindView(R.id.translated_text_view)
     public TextView translationTextView;
-
     @BindView(R.id.extended_translated_text_view)
     public TextView expandedTranslationTextView;
-
-
     @BindView(R.id.translation_card)
     public CardView translationCard;
-
     @BindView(R.id.guess_toogle)
     public ToggleButton guessToogle;
-
     @BindView(R.id.transcription)
     public TextView transcriptionTextView;
-
     @BindView(R.id.expanded_translation_card)
     public CardView expandedTranslationCard;
-
     @BindView(R.id.expanded_translation_list)
     public RecyclerView expandedTranslationRecyclerView;
-
     @BindView(R.id.clear_button)
     public Button clearButton;
-
     @BindView(R.id.history_card)
     public CardView historyCard;
-
     @BindView(R.id.history_list)
     public RecyclerView historyRecyclerView;
-
     @BindView(R.id.favorite_btn)
     public ToggleButton favoriteToggle;
-
-
     @Inject
     public TranslatePresenter translatePresenter;
+    private Bundle savedInstance;
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
     private ExpandedTranslationAdapter expandedTranslationAdapter;
     private HistoryRecyclerViewAdapter historyRecyclerViewAdapter;
@@ -135,11 +115,16 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         return fragment;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated: " + savedInstanceState);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        savedInstance = savedInstanceState;
         ((AndroidApplication) getActivity().getApplication()).getApplicationComponent().inject(this);
         translationQueryViewModelBehaviorSubject = PublishSubject.create();
     }
@@ -150,11 +135,17 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        favoriteToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        if (savedInstanceState != null) {
+            Log.d(TAG, "onCreateView: SavedInstanceState was not null");
+            sourceTextView.setText(savedInstanceState.getString(KEY_SOURCE_TEXT));
+        }
+
+        favoriteToggle.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onClick(View v) {
                 translatePresenter.onFavored(new HistoryItem(sourceTextView.getText().toString(), translationTextView.getText().toString(), false),
-                                             isChecked);
+                                             favoriteToggle.isChecked());
             }
         });
 
@@ -290,8 +281,14 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         toTranslationSpinner.setAdapter(spinnersAdapter);
         fromTranslationSpinner.setAdapter(spinnersAdapter);
 
-        fromTranslationSpinner.setSelection(spinnersAdapter.getPosition(new Language("ru", null)));
-        toTranslationSpinner.setSelection(spinnersAdapter.getPosition(new Language("en", null)));
+        if (savedInstance == null) {
+
+            fromTranslationSpinner.setSelection(spinnersAdapter.getPosition(new Language("ru", null)));
+            toTranslationSpinner.setSelection(spinnersAdapter.getPosition(new Language("en", null)));
+        } else {
+            fromTranslationSpinner.setSelection(spinnersAdapter.getPosition(new Language(savedInstance.getString(KEY_FROM_DIRECTION), null)));
+            toTranslationSpinner.setSelection(spinnersAdapter.getPosition(new Language(savedInstance.getString(KEY_TO_DIRECTION), null)));
+        }
         SpinnerInteractionListener listener = new SpinnerInteractionListener();
         toTranslationSpinner.setOnItemSelectedListener(listener);
         toTranslationSpinner.setOnTouchListener(listener);
@@ -349,6 +346,15 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     public void setData(List<HistoryItem> historyItems) {
         historyRecyclerViewAdapter.update(historyItems);
         historyRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: ");
+        outState.putString(KEY_SOURCE_TEXT, sourceTextView.getText().toString());
+        outState.putString(KEY_FROM_DIRECTION, ((Language) fromTranslationSpinner.getSelectedItem()).getCode());
+        outState.putString(KEY_TO_DIRECTION, ((Language) toTranslationSpinner.getSelectedItem()).getCode());
     }
 
     /**
