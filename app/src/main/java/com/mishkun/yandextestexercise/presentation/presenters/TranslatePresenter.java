@@ -3,7 +3,7 @@ package com.mishkun.yandextestexercise.presentation.presenters;
 import android.util.Log;
 
 import com.mishkun.yandextestexercise.domain.entities.Definition;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
@@ -101,20 +101,20 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         attachedView.setTranslationFrom(From);
     }
 
-    public void onFavored(HistoryItem item, boolean favored) {
+    public void onFavored(ShortTranslationModel item, boolean favored) {
         item.setFavored(favored);
         addEditHistoryInteractor.execute(new MutedObserver<Void>(), item);
     }
 
-    public void onHistoryDismissed(HistoryItem historyItem) {
-        historyItem.setSaved(false);
-        addEditHistoryInteractor.execute(new MutedObserver<Void>(), historyItem);
+    public void onHistoryDismissed(ShortTranslationModel shortTranslationModel) {
+        shortTranslationModel.setSaved(false);
+        addEditHistoryInteractor.execute(new MutedObserver<Void>(), shortTranslationModel);
     }
 
-    public void onHistory(HistoryItem historyItem) {
-        Log.d(TAG, "onHistory: " + historyItem.getOriginal());
-        historyItem.setSaved(true);
-        addEditHistoryInteractor.execute(new MutedObserver<Void>(), historyItem);
+    public void onHistory(ShortTranslationModel shortTranslationModel) {
+        Log.d(TAG, "onHistory: " + shortTranslationModel.getOriginal());
+        shortTranslationModel.setSaved(true);
+        addEditHistoryInteractor.execute(new MutedObserver<Void>(), shortTranslationModel);
     }
 
     private final class UserInputObserver extends MutedObserver<TranslationQueryViewModel> {

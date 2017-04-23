@@ -1,6 +1,6 @@
 package com.mishkun.yandextestexercise.presentation.views;
 
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface HistoryView {
-    void setData(List<HistoryItem> historyItems);
+    void setData(List<ShortTranslationModel> shortTranslationModels);
 }

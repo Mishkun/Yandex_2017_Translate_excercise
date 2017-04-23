@@ -31,46 +31,46 @@ public class HistoryDatabase implements HistoryProvider {
     }
 
     @Override
-    public Observable<List<HistoryItem>> getHistoryItems() {
+    public Observable<List<ShortTranslationModel>> getHistoryItems() {
         return reactiveEntityStore.select(ShortTranslationEntity.class).where(ShortTranslationEntity.SAVED.eq(true)).get().observableResult().map(
-                new Function<ReactiveResult<ShortTranslationEntity>, List<HistoryItem>>() {
+                new Function<ReactiveResult<ShortTranslationEntity>, List<ShortTranslationModel>>() {
                     @Override
-                    public List<HistoryItem> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
-                        List<HistoryItem> historyItems = new ArrayList<HistoryItem>();
+                    public List<ShortTranslationModel> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
+                        List<ShortTranslationModel> shortTranslationModels = new ArrayList<ShortTranslationModel>();
                         for (ShortTranslationEntity shortTranslationEntity : shortTranslationEntities) {
-                            historyItems.add(new HistoryItem(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
-                                                             shortTranslationEntity.isFavored(),
-                                                             new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null)));
+                            shortTranslationModels.add(new ShortTranslationModel(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
+                                                                                 shortTranslationEntity.isFavored(),
+                                                                                 new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null)));
                         }
-                        return historyItems;
+                        return shortTranslationModels;
                     }
                 });
     }
 
     @Override
-    public Observable<List<HistoryItem>> getFavoredItems() {
+    public Observable<List<ShortTranslationModel>> getFavoredItems() {
         return reactiveEntityStore.select(ShortTranslationEntity.class).where(
                 ShortTranslationEntity.FAVORED.eq(true).and(ShortTranslationEntity.SAVED.eq(true))).get().observableResult().map(
-                new Function<ReactiveResult<ShortTranslationEntity>, List<HistoryItem>>() {
+                new Function<ReactiveResult<ShortTranslationEntity>, List<ShortTranslationModel>>() {
                     @Override
-                    public List<HistoryItem> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
-                        List<HistoryItem> historyItems = new ArrayList<HistoryItem>();
+                    public List<ShortTranslationModel> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
+                        List<ShortTranslationModel> shortTranslationModels = new ArrayList<ShortTranslationModel>();
                         for (ShortTranslationEntity shortTranslationEntity : shortTranslationEntities) {
-                            historyItems.add(new HistoryItem(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
-                                                             shortTranslationEntity.isFavored(),
-                                                             new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null)));
+                            shortTranslationModels.add(new ShortTranslationModel(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
+                                                                                 shortTranslationEntity.isFavored(),
+                                                                                 new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null)));
                         }
-                        return historyItems;
+                        return shortTranslationModels;
                     }
                 });
     }
 
     @Override
-    public void addOrUpdateHistoryItem(HistoryItem item) {
+    public void addOrUpdateHistoryItem(ShortTranslationModel item) {
         ShortTranslationEntity itemEntity = reactiveEntityStore.select(ShortTranslationEntity.class)
                                                                .where(ShortTranslationEntity.ORIGINAL.eq(item.getOriginal())
                                                                                                      .and(ShortTranslationEntity.TRANSLATION
-                                                                                                                  .eq(item.getShortTranslation())))
+                                                                                                                  .eq(item.getTranslation())))
                                                                .get()
                                                                .firstOrNull();
         if (itemEntity == null) {
@@ -80,7 +80,7 @@ public class HistoryDatabase implements HistoryProvider {
         itemEntity.setDirectionFrom(item.getFrom().getCode());
         itemEntity.setDirectionTo(item.getTo().getCode());
         itemEntity.setSaved(item.isSaved());
-        itemEntity.setTranslation(item.getShortTranslation());
+        itemEntity.setTranslation(item.getTranslation());
         itemEntity.setOriginal(item.getOriginal());
         itemEntity.setFavored(item.isFavored());
 

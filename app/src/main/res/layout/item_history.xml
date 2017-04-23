@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/translation_card_margin"
         android:layout_toStartOf="@+id/favorite_button_history"
         android:textSize="@dimen/translationTextSize"
-        tools:text="Context"/>
+        tools:translation="Context"/>
 
     <TextView
         android:id="@+id/translation_text_history"
@@ -27,7 +27,7 @@
         android:layout_marginStart="@dimen/text_margin"
         android:layout_toStartOf="@+id/favorite_button_history"
         android:textColor="@color/colorTernaryText"
-        tools:text="Context"/>
+        tools:translation="Context"/>
 
     <ToggleButton
         android:id="@+id/favorite_button_history"

@@ -5,18 +5,18 @@ package com.mishkun.yandextestexercise.domain.entities;
  */
 
 
-public class HistoryItem {
+public class ShortTranslationModel {
     private boolean saved = true;
     private boolean favored;
     private String original;
-    private String shortTranslation;
+    private String translation;
     private Language from;
     private Language to;
 
-    public HistoryItem(String original, String shortTranslation, boolean favored, Language from, Language to) {
+    public ShortTranslationModel(String original, String translation, boolean favored, Language from, Language to) {
         this.favored = favored;
         this.original = original;
-        this.shortTranslation = shortTranslation;
+        this.translation = translation;
         this.from = from;
         this.to = to;
     }
@@ -29,12 +29,12 @@ public class HistoryItem {
         this.favored = favored;
     }
 
-    public String getShortTranslation() {
-        return shortTranslation;
+    public String getTranslation() {
+        return translation;
     }
 
-    public void setShortTranslation(String shortTranslation) {
-        this.shortTranslation = shortTranslation;
+    public void setTranslation(String translation) {
+        this.translation = translation;
     }
 
     public String getOriginal() {

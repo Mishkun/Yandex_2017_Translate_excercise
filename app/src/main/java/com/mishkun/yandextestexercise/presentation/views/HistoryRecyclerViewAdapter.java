@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.mishkun.yandextestexercise.R;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 
 import java.util.List;
 
@@ -24,18 +24,18 @@ import butterknife.ButterKnife;
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = HistoryRecyclerViewAdapter.class.getSimpleName();
-    private final List<HistoryItem> values;
+    private final List<ShortTranslationModel> values;
 
     private final FavButtonListener favButtonListener;
-    private final ItemClickListener<HistoryItem> clicksListener;
+    private final ItemClickListener<ShortTranslationModel> clicksListener;
 
-    public HistoryRecyclerViewAdapter(List<HistoryItem> values, FavButtonListener favButtonListener, ItemClickListener<HistoryItem> clicksListener) {
+    public HistoryRecyclerViewAdapter(List<ShortTranslationModel> values, FavButtonListener favButtonListener, ItemClickListener<ShortTranslationModel> clicksListener) {
         this.values = values;
         this.favButtonListener = favButtonListener;
         this.clicksListener = clicksListener;
     }
 
-    public void update(List<HistoryItem> data) {
+    public void update(List<ShortTranslationModel> data) {
         values.clear();
         values.addAll(data);
         Log.d(TAG, "update: " + data.size());
@@ -53,7 +53,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.definitionItem = values.get(position);
         holder.text.setText(values.get(position).getOriginal());
         Log.d(TAG, "onBindViewHolder: " + holder.text.getText().toString() + " " + position);
-        holder.translation.setText(values.get(position).getShortTranslation());
+        holder.translation.setText(values.get(position).getTranslation());
         holder.favButton.setOnCheckedChangeListener(null);
         holder.favButton.setChecked(values.get(position).isFavored());
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +75,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         return values.size();
     }
 
-    public HistoryItem getItemAt(int adapterPosition) {
+    public ShortTranslationModel getItemAt(int adapterPosition) {
         return values.get(adapterPosition);
     }
 
@@ -88,7 +88,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         @BindView(R.id.favorite_button_history)
         public ToggleButton favButton;
 
-        public HistoryItem definitionItem;
+        public ShortTranslationModel definitionItem;
 
         public ViewHolder(View itemView) {
             super(itemView);

@@ -182,7 +182,7 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
                                                                                                                                           .getTranslationTo()
                                                                                                                                           .getCode()))))
                                                                                      .get().firstOr(new ExpandedTranslationEntity());
-            expandedTranslationEntity.setTranslation(definition.getText());
+            expandedTranslationEntity.setTranslation(definition.getTranslation());
             expandedTranslationEntity.setOriginal(query);
             expandedTranslationEntity.setTranslationTo(direction.getTranslationTo().getCode());
             expandedTranslationEntity.setTranslationFrom(direction.getTranslationFrom().getCode());

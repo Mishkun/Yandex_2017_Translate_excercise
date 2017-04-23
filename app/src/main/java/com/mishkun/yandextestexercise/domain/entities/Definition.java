@@ -7,18 +7,20 @@ import java.util.List;
  */
 
 public class Definition {
-    private String text;
+    private String original;
+    private TranslationDirection direction;
+    private String translation;
     private String transcription;
     private List<DefinitionItem> definitionItems;
 
-    public Definition(String text, String transcription, List<DefinitionItem> definitionItems) {
-        this.text = text;
+    public Definition(String translation, String transcription, List<DefinitionItem> definitionItems) {
+        this.translation = translation;
         this.transcription = transcription;
         this.definitionItems = definitionItems;
     }
 
-    public String getText() {
-        return text;
+    public String getTranslation() {
+        return translation;
     }
 
     public String getTranscription() {

@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.mishkun.yandextestexercise.AndroidApplication;
 import com.mishkun.yandextestexercise.R;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.presentation.presenters.BookmarksPresenter;
 import com.mishkun.yandextestexercise.presentation.views.AppNavigator;
 import com.mishkun.yandextestexercise.presentation.views.BookmarksView;
@@ -91,11 +91,11 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
                                                                                DividerItemDecoration.VERTICAL);
         horizontalDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
 
-        List<HistoryItem> historyItemsDummy = new ArrayList<>();
+        List<ShortTranslationModel> historyItemsDummy = new ArrayList<>();
 
-        bookmarksRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this, new ItemClickListener<HistoryItem>() {
+        bookmarksRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this, new ItemClickListener<ShortTranslationModel>() {
             @Override
-            public void onClicked(HistoryItem data) {
+            public void onClicked(ShortTranslationModel data) {
                 ((AppNavigator)getActivity()).NavigateToTranslationPage(data.getOriginal(), data.getFrom().getCode(), data.getTo().getCode());
             }
         });
@@ -128,13 +128,13 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
     }
 
     @Override
-    public void favButtonChecked(HistoryItem item, boolean favored) {
+    public void favButtonChecked(ShortTranslationModel item, boolean favored) {
         bookMarksPresenter.onFavored(item, favored);
     }
 
     @Override
-    public void setData(List<HistoryItem> historyItems) {
-        bookmarksRecyclerViewAdapter.update(historyItems);
+    public void setData(List<ShortTranslationModel> shortTranslationModels) {
+        bookmarksRecyclerViewAdapter.update(shortTranslationModels);
         bookmarksRecyclerViewAdapter.notifyDataSetChanged();
     }
 

@@ -1,7 +1,7 @@
 package com.mishkun.yandextestexercise.data.mappers;
 
 import com.mishkun.yandextestexercise.data.ShortTranslationEntity;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 
 /**
@@ -9,8 +9,8 @@ import com.mishkun.yandextestexercise.domain.entities.Language;
  */
 
 public class ShortTranslationEntityMapper {
-    public static HistoryItem transform(ShortTranslationEntity shortTranslationEntity){
-        return new HistoryItem(shortTranslationEntity.getTranslation(), shortTranslationEntity.getOriginal(), shortTranslationEntity.isFavored(),
-                               new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null));
+    public static ShortTranslationModel transform(ShortTranslationEntity shortTranslationEntity){
+        return new ShortTranslationModel(shortTranslationEntity.getTranslation(), shortTranslationEntity.getOriginal(), shortTranslationEntity.isFavored(),
+                                         new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null));
     }
 }

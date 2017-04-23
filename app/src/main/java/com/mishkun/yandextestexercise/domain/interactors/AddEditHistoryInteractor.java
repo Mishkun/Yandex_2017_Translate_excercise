@@ -1,7 +1,7 @@
 package com.mishkun.yandextestexercise.domain.interactors;
 
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.providers.HistoryProvider;
 
 import javax.inject.Inject;
@@ -14,7 +14,7 @@ import io.reactivex.Scheduler;
  * Created by Mishkun on 16.04.2017.
  */
 
-public class AddEditHistoryInteractor extends Interactor<Void, HistoryItem> {
+public class AddEditHistoryInteractor extends Interactor<Void, ShortTranslationModel> {
 
     private HistoryProvider historyProvider;
 
@@ -26,7 +26,7 @@ public class AddEditHistoryInteractor extends Interactor<Void, HistoryItem> {
     }
 
     @Override
-    Observable<Void> buildUseCaseObservable(HistoryItem params) {
+    Observable<Void> buildUseCaseObservable(ShortTranslationModel params) {
         historyProvider.addOrUpdateHistoryItem(params);
         return Observable.never();
     }

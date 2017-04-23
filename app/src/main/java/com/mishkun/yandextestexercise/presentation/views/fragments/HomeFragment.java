@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,7 +32,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mishkun.yandextestexercise.AndroidApplication;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
 import com.mishkun.yandextestexercise.presentation.views.AppNavigator;
@@ -154,8 +153,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     translatePresenter.onHistory(
-                            new HistoryItem(sourceTextView.getText().toString(), translationTextView.getText().toString(), favoriteToggle.isChecked(),
-                                            getTranslationFrom(), getTranslationTo()));
+                            new ShortTranslationModel(sourceTextView.getText().toString(), translationTextView.getText().toString(), favoriteToggle.isChecked(),
+                                                      getTranslationFrom(), getTranslationTo()));
                     InputMethodManager inputManager = (InputMethodManager)
                             getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.toggleSoftInput(0, 0);
@@ -168,8 +167,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         favoriteToggle.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                translatePresenter.onFavored(new HistoryItem(sourceTextView.getText().toString(), translationTextView.getText().toString(), false,
-                                                             getTranslationFrom(), getTranslationTo()),
+                translatePresenter.onFavored(new ShortTranslationModel(sourceTextView.getText().toString(), translationTextView.getText().toString(), false,
+                                                                       getTranslationFrom(), getTranslationTo()),
                                              favoriteToggle.isChecked());
             }
         });
@@ -195,12 +194,12 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         expandedTranslationRecyclerView.setAdapter(expandedTranslationAdapter);
         expandedTranslationRecyclerView.addItemDecoration(horizontalDecoration);
 
-        List<HistoryItem> historyItemsDummy = new ArrayList<>();
+        List<ShortTranslationModel> historyItemsDummy = new ArrayList<>();
 
 
-        historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this, new ItemClickListener<HistoryItem>() {
+        historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this, new ItemClickListener<ShortTranslationModel>() {
             @Override
-            public void onClicked(HistoryItem data) {
+            public void onClicked(ShortTranslationModel data) {
                 ((AppNavigator) getActivity()).NavigateToTranslationPage(data.getOriginal(), data.getFrom().getCode(), data.getTo().getCode());
             }
         });
@@ -359,9 +358,9 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public void setExpandedTranslation(Definition expandedTranslation) {
-        if (expandedTranslation.getText() != null) {
+        if (expandedTranslation.getTranslation() != null) {
             expandedTranslationCard.setVisibility(View.VISIBLE);
-            expandedTranslationTextView.setText(expandedTranslation.getText());
+            expandedTranslationTextView.setText(expandedTranslation.getTranslation());
             expandedTranslationAdapter.update(expandedTranslation.getDefinitionItems());
             expandedTranslationAdapter.notifyDataSetChanged();
             transcriptionTextView.setText(expandedTranslation.getTranscription() == null ? null : "[" + expandedTranslation.getTranscription() + "]");
@@ -385,13 +384,13 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     }
 
     @Override
-    public void favButtonChecked(HistoryItem item, boolean favored) {
+    public void favButtonChecked(ShortTranslationModel item, boolean favored) {
         translatePresenter.onFavored(item, favored);
     }
 
     @Override
-    public void setData(List<HistoryItem> historyItems) {
-        historyRecyclerViewAdapter.update(historyItems);
+    public void setData(List<ShortTranslationModel> shortTranslationModels) {
+        historyRecyclerViewAdapter.update(shortTranslationModels);
         historyRecyclerViewAdapter.notifyDataSetChanged();
     }
 

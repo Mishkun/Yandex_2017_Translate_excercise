@@ -11,7 +11,7 @@ import com.mishkun.yandextestexercise.data.mappers.TranslationDirectionMapper;
 import com.mishkun.yandextestexercise.data.responses.DetectionResponse;
 import com.mishkun.yandextestexercise.data.responses.SupportedLanguagesResponse;
 import com.mishkun.yandextestexercise.data.responses.TranslationResponse;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.providers.ShortTranslationProvider;
@@ -55,14 +55,14 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
     }
 
     @Override
-    public Observable<HistoryItem> getShortTranslation(String query, TranslationDirection direction) {
+    public Observable<ShortTranslationModel> getShortTranslation(String query, TranslationDirection direction) {
         return collectFromSources(getShortTranslationFromApi(query, direction),
                                   getShortTranslationFromDatabase(query, direction),
-                                  Observable.just(new HistoryItem(query, "", false, null, null)));
+                                  Observable.just(new ShortTranslationModel(query, "", false, null, null)));
     }
 
 
-    private Observable<HistoryItem> getShortTranslationFromDatabase(String query, TranslationDirection direction) {
+    private Observable<ShortTranslationModel> getShortTranslationFromDatabase(String query, TranslationDirection direction) {
         return reactiveEntityStore.select(ShortTranslationEntity.class)
                                   .where(ShortTranslationEntity.ORIGINAL.eq(query).and(ShortTranslationEntity.DIRECTION_FROM
                                                                                                .eq(direction.getTranslationFrom().getCode())
@@ -71,27 +71,27 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
                                                                                                                          .getCode()))))
                                   .get()
                                   .observable()
-                                  .map(new Function<ShortTranslationEntity, HistoryItem>() {
+                                  .map(new Function<ShortTranslationEntity, ShortTranslationModel>() {
                                       @Override
-                                      public HistoryItem apply(ShortTranslationEntity shortTranslationEntity) throws Exception {
-                                          return new HistoryItem(shortTranslationEntity.getOriginal(),
-                                                                 shortTranslationEntity.getTranslation(),
-                                                                 shortTranslationEntity.isFavored(),
-                                                                 new Language(shortTranslationEntity.getDirectionFrom(), null),
-                                                                 new Language(shortTranslationEntity.getDirectionTo(), null));
+                                      public ShortTranslationModel apply(ShortTranslationEntity shortTranslationEntity) throws Exception {
+                                          return new ShortTranslationModel(shortTranslationEntity.getOriginal(),
+                                                                           shortTranslationEntity.getTranslation(),
+                                                                           shortTranslationEntity.isFavored(),
+                                                                           new Language(shortTranslationEntity.getDirectionFrom(), null),
+                                                                           new Language(shortTranslationEntity.getDirectionTo(), null));
                                       }
                                   });
     }
 
 
-    private Observable<HistoryItem> getShortTranslationFromApi(final String query, final TranslationDirection direction) {
+    private Observable<ShortTranslationModel> getShortTranslationFromApi(final String query, final TranslationDirection direction) {
         return getIfInternet(yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query)
-                                                    .map(new Function<TranslationResponse, HistoryItem>() {
+                                                    .map(new Function<TranslationResponse, ShortTranslationModel>() {
                                                         @Override
-                                                        public HistoryItem apply(TranslationResponse translationResponse) throws Exception {
-                                                            return new HistoryItem(query, translationResponse.getTranslation().get(0), false,
-                                                                                   direction.getTranslationFrom(),
-                                                                                   direction.getTranslationTo());
+                                                        public ShortTranslationModel apply(TranslationResponse translationResponse) throws Exception {
+                                                            return new ShortTranslationModel(query, translationResponse.getTranslation().get(0), false,
+                                                                                             direction.getTranslationFrom(),
+                                                                                             direction.getTranslationTo());
                                                         }
                                                     })
                                                     .doOnNext(new ShortTranslationCacher()));
@@ -188,22 +188,22 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
         return Observable.just(languages);
     }
 
-    private class ShortTranslationCacher implements Consumer<HistoryItem> {
+    private class ShortTranslationCacher implements Consumer<ShortTranslationModel> {
 
         @Override
-        public void accept(HistoryItem historyItem) throws Exception {
+        public void accept(ShortTranslationModel shortTranslationModel) throws Exception {
             ShortTranslationEntity shortTranslationEntity = reactiveEntityStore.select(
-                    ShortTranslationEntity.class).where(ShortTranslationEntity.ORIGINAL.eq(historyItem.getOriginal())
+                    ShortTranslationEntity.class).where(ShortTranslationEntity.ORIGINAL.eq(shortTranslationModel.getOriginal())
                                                                                        .and(ShortTranslationEntity.DIRECTION_FROM
-                                                                                                    .eq(historyItem.getFrom().getCode())
+                                                                                                    .eq(shortTranslationModel.getFrom().getCode())
                                                                                                     .and(ShortTranslationEntity.DIRECTION_TO
-                                                                                                                 .eq(historyItem.getTo().getCode()))))
+                                                                                                                 .eq(shortTranslationModel.getTo().getCode()))))
                                                                                .get()
                                                                                .firstOr(new ShortTranslationEntity());
-            shortTranslationEntity.setTranslation(historyItem.getShortTranslation());
-            shortTranslationEntity.setOriginal(historyItem.getOriginal());
-            shortTranslationEntity.setDirectionFrom(historyItem.getFrom().getCode());
-            shortTranslationEntity.setDirectionTo(historyItem.getTo().getCode());
+            shortTranslationEntity.setTranslation(shortTranslationModel.getTranslation());
+            shortTranslationEntity.setOriginal(shortTranslationModel.getOriginal());
+            shortTranslationEntity.setDirectionFrom(shortTranslationModel.getFrom().getCode());
+            shortTranslationEntity.setDirectionTo(shortTranslationModel.getTo().getCode());
             reactiveEntityStore.upsert(shortTranslationEntity).subscribe();
         }
     }

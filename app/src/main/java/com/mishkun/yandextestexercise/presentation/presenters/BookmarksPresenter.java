@@ -1,13 +1,12 @@
 package com.mishkun.yandextestexercise.presentation.presenters;
 
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.interactors.AddEditHistoryInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.ClearFavoritesInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetFavoritesInteractor;
 import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.BookmarksView;
 import com.mishkun.yandextestexercise.presentation.views.HistoryView;
-import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class BookmarksPresenter extends Presenter<BookmarksView> {
 
     }
 
-    public void onFavored(HistoryItem item, boolean favored) {
+    public void onFavored(ShortTranslationModel item, boolean favored) {
         item.setFavored(favored);
         addEditHistoryInteractor.execute(new MutedObserver<Void>(), item);
     }
@@ -57,7 +56,7 @@ public class BookmarksPresenter extends Presenter<BookmarksView> {
             super(historyView);}
 
         @Override
-        public void onNext(List<HistoryItem> value) {
+        public void onNext(List<ShortTranslationModel> value) {
             super.onNext(value);
             if (value.size() > 0){
                 attachedView.hideEmptyState();

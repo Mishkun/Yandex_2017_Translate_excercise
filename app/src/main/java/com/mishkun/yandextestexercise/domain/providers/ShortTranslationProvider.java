@@ -1,6 +1,6 @@
 package com.mishkun.yandextestexercise.domain.providers;
 
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 
 import io.reactivex.Observable;
@@ -10,5 +10,5 @@ import io.reactivex.Observable;
  */
 
 public interface ShortTranslationProvider {
-    Observable<HistoryItem> getShortTranslation(String query, TranslationDirection direction);
+    Observable<ShortTranslationModel> getShortTranslation(String query, TranslationDirection direction);
 }

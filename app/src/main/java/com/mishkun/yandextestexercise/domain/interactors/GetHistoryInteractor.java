@@ -1,7 +1,7 @@
 package com.mishkun.yandextestexercise.domain.interactors;
 
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.providers.HistoryProvider;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import io.reactivex.Scheduler;
  * Created by Mishkun on 16.04.2017.
  */
 
-public class GetHistoryInteractor extends ParameterlessInteractor<List<HistoryItem>> {
+public class GetHistoryInteractor extends ParameterlessInteractor<List<ShortTranslationModel>> {
     private HistoryProvider historyProvider;
 
     @Inject
@@ -27,7 +27,7 @@ public class GetHistoryInteractor extends ParameterlessInteractor<List<HistoryIt
     }
 
     @Override
-    Observable<List<HistoryItem>> buildUseCaseObservable() {
+    Observable<List<ShortTranslationModel>> buildUseCaseObservable() {
         return historyProvider.getHistoryItems();
     }
 }

@@ -2,7 +2,7 @@ package com.mishkun.yandextestexercise.presentation.presenters;
 
 import android.util.Log;
 
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.HistoryView;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Mishkun on 21.04.2017.
  */
 
-class HistoryObserver extends MutedObserver<List<HistoryItem>> {
+class HistoryObserver extends MutedObserver<List<ShortTranslationModel>> {
 
     private static final String TAG = HistoryObserver.class.getSimpleName();
     private HistoryView historyView;
@@ -22,7 +22,7 @@ class HistoryObserver extends MutedObserver<List<HistoryItem>> {
     }
 
     @Override
-    public void onNext(List<HistoryItem> value) {
+    public void onNext(List<ShortTranslationModel> value) {
         historyView.setData(value);
     }
 

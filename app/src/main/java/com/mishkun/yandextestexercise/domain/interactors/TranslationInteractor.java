@@ -2,7 +2,7 @@ package com.mishkun.yandextestexercise.domain.interactors;
 
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
@@ -109,10 +109,10 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
                                                   return Observable.just(new Definition(null, null, null));
                                               }
                                           }),
-                                  new BiFunction<HistoryItem, Definition, Translation>() {
+                                  new BiFunction<ShortTranslationModel, Definition, Translation>() {
                                       @Override
-                                      public Translation apply(HistoryItem shortTranslation, Definition expandedTranslation) throws Exception {
-                                          Translation translation = new Translation(shortTranslation.getShortTranslation(), expandedTranslation,
+                                      public Translation apply(ShortTranslationModel shortTranslation, Definition expandedTranslation) throws Exception {
+                                          Translation translation = new Translation(shortTranslation.getTranslation(), expandedTranslation,
                                                                                     query.getString(), query.getDirection());
                                           translation.setFavored(shortTranslation.isFavored());
                                           return translation;
@@ -121,10 +121,10 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
         } else {
             return shortTranslationProvider
                     .getShortTranslation(query.getString(), query.getDirection())
-                    .map(new Function<HistoryItem, Translation>() {
+                    .map(new Function<ShortTranslationModel, Translation>() {
                         @Override
-                        public Translation apply(HistoryItem shortTranslation) throws Exception {
-                            Translation translation = new Translation(shortTranslation.getShortTranslation(), new Definition(null, null, null),
+                        public Translation apply(ShortTranslationModel shortTranslation) throws Exception {
+                            Translation translation = new Translation(shortTranslation.getTranslation(), new Definition(null, null, null),
                                                                       query.getString(), query.getDirection());
                             translation.setFavored(shortTranslation.isFavored());
                             return translation;
