@@ -38,4 +38,25 @@ public class TranslationQuery {
             return new TranslationQuery(" ", direction, shouldGuess);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TranslationQuery that = (TranslationQuery) o;
+
+        if (shouldGuess != that.shouldGuess) return false;
+        if (!string.equals(that.string)) return false;
+        return direction.equals(that.direction);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = string.hashCode();
+        result = 31 * result + direction.hashCode();
+        result = 31 * result + (shouldGuess ? 1 : 0);
+        return result;
+    }
 }
