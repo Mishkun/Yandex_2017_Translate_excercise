@@ -60,7 +60,12 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
                                                         @Override
                                                         public TranslationDirection apply(Language language) throws Exception {
                                                             if (!language.getCode().equals("")) {
-                                                                return new TranslationDirection(language, params.getDirection().getTranslationTo());
+                                                                if (language.equals(params.getDirection().getTranslationTo())) {
+                                                                    return new TranslationDirection(language, params.getDirection().getTranslationFrom());
+                                                                } else {
+                                                                    return new TranslationDirection(language,
+                                                                                                    params.getDirection().getTranslationTo());
+                                                                }
                                                             } else {
                                                                 return params.getDirection();
                                                             }
