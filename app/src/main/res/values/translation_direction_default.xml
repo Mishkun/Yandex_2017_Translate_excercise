@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="language_from">ru</string>
-    <string name="language_to">en</string>
-    <string name="language_from_value">Русский</string>
-    <string name="language_to_value">Английский</string>
+    <string name="language_from" translatable="false">ru</string>
+    <string name="language_to" translatable="false">en</string>
+    <string name="language_from_value">Russian</string>
+    <string name="language_to_value">English</string>
 </resources>

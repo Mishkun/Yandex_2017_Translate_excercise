@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Yandex.Translate</string>
+    <string name="clear">Очистить</string>
+    <string name="clear_favorites_description">очистить закладки</string>
+    <string name="guess_check">Определять язык</string>
+    <string name="language_from_value">Русский</string>
+    <string name="language_to_value">Английский</string>
+    <string name="no_bookmarks">Нет закладок</string>
+    <string name="no_bookmarks_hint">Вы можете добавить закладки на главном экране</string>
+    <string name="reverse_translation_direction_description">обратить направление перевода</string>
+    <string name="snackbar_text">Вы не подключены к интернету</string>
+    <string name="title_bookmarks">Закладки</string>
+    <string name="title_home">Переводчик</string>
+    <string name="title_translate">Яндекс.Переводчик</string>
+    <string name="translated_using_yandex_translate">Переведено сервисом  <a href="https://translate.yandex.ru/">«Яндекс.Переводчик»</a></string>
+    <string name="translation_box_hint"></string>
+</resources>

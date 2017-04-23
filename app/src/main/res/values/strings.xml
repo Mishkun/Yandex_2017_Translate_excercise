@@ -3,9 +3,9 @@
     <string name="title_home">Translate</string>
     <string name="title_bookmarks">Bookmarks</string>
     <string name="title_translate">Yandex.Translate</string>
-    <string name="translation_box_hint">Put your translation here</string>
-    <string name="guess_check">Определять язык</string>
-    <string name="clear">Очистить</string>
+    <string name="translation_box_hint" translatable="false">Put your translation here</string>
+    <string name="guess_check">Guess Language</string>
+    <string name="clear">Clear</string>
     <string name="clear_favorites_description">clear favorites button</string>
     <string name="reverse_translation_direction_description">reverse translation direction</string>
     <string name="no_bookmarks">No bookmarks</string>
