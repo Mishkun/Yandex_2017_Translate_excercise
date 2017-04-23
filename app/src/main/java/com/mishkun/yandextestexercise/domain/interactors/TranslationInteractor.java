@@ -2,8 +2,8 @@ package com.mishkun.yandextestexercise.domain.interactors;
 
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
-import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.entities.TranslationQuery;
@@ -26,9 +26,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
- * Created by Mishkun on 12.04.2017.
+ * Main Interactor of the app. Collects data from all sorts of sources and gives it back in form of Translation
  */
-
 public class TranslationInteractor extends Interactor<Translation, TranslationQuery> {
 
     private final String oneWordRegex = "\\S+";
@@ -62,7 +61,8 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
                                                         public TranslationDirection apply(Language language) throws Exception {
                                                             if (!language.getCode().equals("")) {
                                                                 if (language.equals(params.getDirection().getTranslationTo())) {
-                                                                    return new TranslationDirection(language, params.getDirection().getTranslationFrom());
+                                                                    return new TranslationDirection(language,
+                                                                                                    params.getDirection().getTranslationFrom());
                                                                 } else {
                                                                     return new TranslationDirection(language,
                                                                                                     params.getDirection().getTranslationTo());
@@ -75,6 +75,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
                                                     .doOnNext(new Consumer<TranslationDirection>() {
                                                         @Override
                                                         public void accept(TranslationDirection direction) throws Exception {
+                                                            // propagate the received direction
                                                             translationDirectionProvider.setTranslationDirection(direction);
                                                         }
                                                     })
@@ -112,7 +113,8 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
                                           }),
                                   new BiFunction<ShortTranslationModel, Definition, Translation>() {
                                       @Override
-                                      public Translation apply(ShortTranslationModel shortTranslation, Definition expandedTranslation) throws Exception {
+                                      public Translation apply(ShortTranslationModel shortTranslation,
+                                                               Definition expandedTranslation) throws Exception {
                                           Translation translation = new Translation(shortTranslation.getTranslation(), expandedTranslation,
                                                                                     query.getString(), query.getDirection());
                                           translation.setFavored(shortTranslation.isFavored());
@@ -125,7 +127,8 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
                     .map(new Function<ShortTranslationModel, Translation>() {
                         @Override
                         public Translation apply(ShortTranslationModel shortTranslation) throws Exception {
-                            Translation translation = new Translation(shortTranslation.getTranslation(), new Definition(query.getString(), query.getDirection(), null, null, null),
+                            Translation translation = new Translation(shortTranslation.getTranslation(),
+                                                                      new Definition(query.getString(), query.getDirection(), null, null, null),
                                                                       query.getString(), query.getDirection());
                             translation.setFavored(shortTranslation.isFavored());
                             return translation;
