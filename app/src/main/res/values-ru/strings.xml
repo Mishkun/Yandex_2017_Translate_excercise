@@ -14,5 +14,5 @@
     <string name="title_home">Переводчик</string>
     <string name="title_translate">Яндекс.Переводчик</string>
     <string name="translated_using_yandex_translate">Переведено сервисом  <a href="https://translate.yandex.ru/">«Яндекс.Переводчик»</a></string>
-    <string name="translation_box_hint"></string>
+    <string name="ui">ru</string>
 </resources>

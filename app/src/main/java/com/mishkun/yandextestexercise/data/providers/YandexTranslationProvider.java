@@ -40,7 +40,7 @@ import io.requery.reactivex.ReactiveEntityStore;
 public class YandexTranslationProvider extends ConnectedDataSource implements ShortTranslationProvider, TranslationDirectionGuessProvider, SupportedLanguagesProvider {
 
     private static final String API_KEY = "trnsl.1.1.20170414T212056Z.25cea1a11b69f402.e460c7b40c14a59917a1f93580ad7beeadc2d559";
-    private static final String UI = "ru";
+    private  final String UI;
     private final YandexTranslationRetrofitApi yandexTranslateRetrofit;
     private final Context context;
     private final String TAG = YandexTranslationProvider.class.getSimpleName();
@@ -55,6 +55,7 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
         this.yandexTranslateRetrofit = yandexTranslateRetrofit;
         this.reactiveEntityStore = reactiveEntityStore;
         this.context = context;
+        UI = context.getResources().getString(R.string.ui);
     }
 
     @Override
