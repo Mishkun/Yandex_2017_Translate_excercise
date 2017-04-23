@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
             getSupportFragmentManager().beginTransaction().replace(R.id.content, homeFragment).commit();
             fragment_id = ID_HOME_FRAGMENT;
         }
-
-
     }
 
     private void setupComponent() {

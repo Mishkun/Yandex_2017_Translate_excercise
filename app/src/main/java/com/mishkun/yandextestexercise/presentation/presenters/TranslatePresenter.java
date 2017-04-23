@@ -122,11 +122,11 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         public void onNext(TranslationQueryViewModel value) {
             String queryString = value.getQuery();
 
-                TranslationDirection direction = new TranslationDirection(value.getTranslationFrom(),
-                                                                          value.getTranslationTo());
-                TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction,
-                                                                                                          attachedView.getGuessLanguage());
-                translationInteractor.execute(new TranslationObserver(), query);
+            TranslationDirection direction = new TranslationDirection(value.getTranslationFrom(),
+                                                                      value.getTranslationTo());
+            TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction,
+                                                                                                      attachedView.getGuessLanguage());
+            translationInteractor.execute(new TranslationObserver(), query);
 
         }
     }
@@ -169,7 +169,15 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         private final String TAG = TranslationObserver.class.getSimpleName();
 
         @Override
+        protected void onStart() {
+            super.onStart();
+            attachedView.showProgressBar();
+        }
+
+        @Override
         public void onNext(Translation value) {
+
+            attachedView.hideProgressBar();
             TranslatePresenter.this.setFavored(value.isFavored());
             TranslatePresenter.this.setTranslationString(value.getShortTranslation());
             TranslatePresenter.this.setExpandedTranslationString(value.getExpandedTranslation());

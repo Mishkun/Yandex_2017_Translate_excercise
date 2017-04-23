@@ -22,6 +22,9 @@ public interface TranslateView extends HistoryView {
 
     boolean getGuessLanguage();
 
+    void showProgressBar();
+    void hideProgressBar();
+
     Observable<TranslationQueryViewModel> getQueries();
 
     void reverseText();

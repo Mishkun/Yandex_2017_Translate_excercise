@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -45,6 +46,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 
@@ -92,6 +94,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     public RecyclerView historyRecyclerView;
     @BindView(R.id.favorite_btn)
     public ToggleButton favoriteToggle;
+    @BindView(R.id.loadingBar)
+    public ProgressBar loadingBar;
     @Inject
     public TranslatePresenter translatePresenter;
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
@@ -225,6 +229,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         });
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -272,13 +277,23 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     }
 
     @Override
+    public void showProgressBar() {
+        loadingBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        loadingBar.setVisibility(View.GONE);
+    }
+
+    @Override
     public void reverseText() {
         sourceTextView.setText(translationTextView.getText());
     }
 
     @Override
     public Observable<TranslationQueryViewModel> getQueries() {
-        return translationQueryViewModelBehaviorSubject;
+        return translationQueryViewModelBehaviorSubject.observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
