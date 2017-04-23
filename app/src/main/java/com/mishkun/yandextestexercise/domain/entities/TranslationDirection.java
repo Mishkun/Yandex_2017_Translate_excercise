@@ -1,29 +1,33 @@
 package com.mishkun.yandextestexercise.domain.entities;
 
-import android.util.Log;
-
 /**
  * Created by Mishkun on 28.03.2017.
  */
 
 public class TranslationDirection {
-    private Language mFrom;
-private static final String TAG = TranslationDirection.class.getSimpleName();
-    private Language mTo;
+    private static final String TAG = TranslationDirection.class.getSimpleName();
+    private Language from;
+    private Language to;
 
     public TranslationDirection(Language from, Language to) {
-        this.mFrom = from;
-        this.mTo = to;
+        this.from = from;
+        this.to = to;
     }
 
+    public void setFrom(Language from) {
+        this.from = from;
+    }
 
+    public void setTo(Language to) {
+        this.to = to;
+    }
 
     public Language getTranslationFrom() {
-        return mFrom;
+        return from;
     }
 
     public Language getTranslationTo() {
-        return mTo;
+        return to;
     }
 
     @Override
@@ -33,15 +37,15 @@ private static final String TAG = TranslationDirection.class.getSimpleName();
 
         TranslationDirection that = (TranslationDirection) o;
 
-        if (!mFrom.equals(that.mFrom)) return false;
-        return mTo.equals(that.mTo);
+        if (!from.equals(that.from)) return false;
+        return to.equals(that.to);
 
     }
 
     @Override
     public int hashCode() {
-        int result = mFrom.hashCode();
-        result = 31 * result + mTo.hashCode();
+        int result = from.hashCode();
+        result = 31 * result + to.hashCode();
         return result;
     }
 }

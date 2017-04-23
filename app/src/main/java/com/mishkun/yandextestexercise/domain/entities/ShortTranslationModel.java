@@ -10,15 +10,13 @@ public class ShortTranslationModel {
     private boolean favored;
     private String original;
     private String translation;
-    private Language from;
-    private Language to;
+    private TranslationDirection direction;
 
     public ShortTranslationModel(String original, String translation, boolean favored, Language from, Language to) {
         this.favored = favored;
         this.original = original;
         this.translation = translation;
-        this.from = from;
-        this.to = to;
+        direction = new TranslationDirection(from, to);
     }
 
     public boolean isFavored() {
@@ -54,18 +52,18 @@ public class ShortTranslationModel {
     }
 
     public Language getFrom() {
-        return from;
+        return direction.getTranslationFrom();
     }
 
     public void setFrom(Language from) {
-        this.from = from;
+        this.direction.setFrom(from);
     }
 
     public Language getTo() {
-        return to;
+        return direction.getTranslationTo();
     }
 
     public void setTo(Language to) {
-        this.to = to;
+        this.direction.setTo(to);
     }
 }
