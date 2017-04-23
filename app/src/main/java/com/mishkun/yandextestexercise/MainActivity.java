@@ -20,12 +20,14 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements HasComponent<MainActivityComponent> {
 
     private static final String KEY_CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
+    private static final String KEY_HOME_FRAGMENT_STATE = "HOME_FRAGMENT_STATE";
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int ID_HOME_FRAGMENT = 400;
     private static final int ID_BOOKMARKS_FRAGMENT = 979;
-    Fragment fragment;
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
+    private Fragment homeFragment;
+    private Fragment bookmarksFragment;
     private int fragment_id;
     private MainActivityComponent mainActivityComponent;
 
@@ -34,20 +36,19 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    fragment = HomeFragment.newInstance();
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content, homeFragment).commit();
                     fragment_id = ID_HOME_FRAGMENT;
                     break;
                 case R.id.navigation_bookmarks:
-                    fragment = BookmarksFragment.newInstance();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content, bookmarksFragment).commit();
                     fragment_id = ID_BOOKMARKS_FRAGMENT;
                     break;
                 default:
                     return false;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
             return true;
         }
 
@@ -56,7 +57,10 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
 
     @Override
     public void onSaveInstanceState(Bundle state) {
+        Bundle fragmentStateBundle = new Bundle();
+        homeFragment.onSaveInstanceState(fragmentStateBundle);
         state.putInt(KEY_CURRENT_FRAGMENT, fragment_id);
+        state.putBundle(KEY_HOME_FRAGMENT_STATE, fragmentStateBundle);
     }
 
     @Override
@@ -67,27 +71,27 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
         ButterKnife.bind(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        bookmarksFragment = BookmarksFragment.newInstance();
         if (savedInstanceState != null) {
             fragment_id = savedInstanceState.getInt(KEY_CURRENT_FRAGMENT);
             switch (fragment_id) {
                 case ID_HOME_FRAGMENT:
-                    fragment = HomeFragment.newInstance();
+                    Bundle fragmentArgs = savedInstanceState.getBundle(KEY_HOME_FRAGMENT_STATE);
+                    homeFragment = HomeFragment.newInstance(fragmentArgs);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content, homeFragment).commit();
                     break;
                 case ID_BOOKMARKS_FRAGMENT:
-                    fragment = BookmarksFragment.newInstance();
                     navigation.setSelectedItemId(R.id.navigation_bookmarks);
-                    break;
-                default:
-                    fragment = HomeFragment.newInstance();
-                    fragment_id = ID_HOME_FRAGMENT;
+                    homeFragment = HomeFragment.newInstance("", "ru", "en");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content, homeFragment).commit();
                     break;
             }
         } else {
-            fragment = HomeFragment.newInstance();
+            homeFragment = HomeFragment.newInstance("", "ru", "en");
+            getSupportFragmentManager().beginTransaction().replace(R.id.content, homeFragment).commit();
             fragment_id = ID_HOME_FRAGMENT;
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
 
     }
 
