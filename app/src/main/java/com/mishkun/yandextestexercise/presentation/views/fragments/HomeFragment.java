@@ -152,7 +152,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    translatePresenter.onHistory(
+                    translatePresenter.addHistoryItem(
                             new ShortTranslationModel(sourceTextView.getText().toString(), translationTextView.getText().toString(), favoriteToggle.isChecked(),
                                                       getTranslationFrom(), getTranslationTo()));
                     InputMethodManager inputManager = (InputMethodManager)
@@ -217,7 +217,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        translatePresenter.onHistoryDismissed(historyRecyclerViewAdapter.getItemAt(viewHolder.getAdapterPosition()));
+                        translatePresenter.onHistoryItemDismissed(historyRecyclerViewAdapter.getItemAt(viewHolder.getAdapterPosition()));
                     }
                 });
         swipeToDismissTouchHelper.attachToRecyclerView(historyRecyclerView);

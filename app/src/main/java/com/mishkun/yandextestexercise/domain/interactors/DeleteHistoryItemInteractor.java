@@ -11,23 +11,23 @@ import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 
 /**
- * Created by Mishkun on 16.04.2017.
+ * Created by Mishkun on 23.04.2017.
  */
 
-public class AddEditHistoryInteractor extends Interactor<Void, ShortTranslationModel> {
-
+public class DeleteHistoryItemInteractor extends Interactor<Void, ShortTranslationModel> {
     private HistoryProvider historyProvider;
 
     @Inject
-    AddEditHistoryInteractor(@Named(DomainModule.JOB) Scheduler threadExecutor, @Named(DomainModule.UI) Scheduler postExecutionThread,
-                             HistoryProvider historyProvider) {
+    DeleteHistoryItemInteractor(@Named(DomainModule.JOB) Scheduler threadExecutor,
+                                @Named(DomainModule.UI) Scheduler postExecutionThread,
+                                HistoryProvider historyProvider) {
         super(threadExecutor, postExecutionThread);
         this.historyProvider = historyProvider;
     }
 
     @Override
     Observable<Void> buildUseCaseObservable(ShortTranslationModel params) {
-        historyProvider.addOrUpdateHistoryItem(params);
+        historyProvider.deleteHistoryItem(params);
         return Observable.empty();
     }
 }

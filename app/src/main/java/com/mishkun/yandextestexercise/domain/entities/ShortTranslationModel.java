@@ -6,7 +6,6 @@ package com.mishkun.yandextestexercise.domain.entities;
 
 
 public class ShortTranslationModel {
-    private boolean saved = true;
     private boolean favored;
     private String original;
     private String translation;
@@ -41,14 +40,6 @@ public class ShortTranslationModel {
 
     public void setOriginal(String original) {
         this.original = original;
-    }
-
-    public boolean isSaved() {
-        return saved;
-    }
-
-    public void setSaved(boolean saved) {
-        this.saved = saved;
     }
 
     public Language getFrom() {

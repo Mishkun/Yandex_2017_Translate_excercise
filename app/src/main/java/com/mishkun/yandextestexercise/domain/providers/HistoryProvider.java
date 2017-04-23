@@ -20,4 +20,6 @@ public interface HistoryProvider {
 
 
     public void clearHistoryData();
+
+    void deleteHistoryItem(ShortTranslationModel item);
 }

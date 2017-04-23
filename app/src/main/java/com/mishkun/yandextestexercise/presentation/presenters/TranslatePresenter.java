@@ -8,6 +8,7 @@ import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.interactors.AddEditHistoryInteractor;
+import com.mishkun.yandextestexercise.domain.interactors.DeleteHistoryItemInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetHistoryInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetSupportedLanguagesInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetTranslationDirectionInteractor;
@@ -34,6 +35,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
     private final GetSupportedLanguagesInteractor supportedLanguagesInteractor;
     private final AddEditHistoryInteractor addEditHistoryInteractor;
     private final GetHistoryInteractor getHistoryInteractor;
+    private final DeleteHistoryItemInteractor deleteHistoryItemInteractor;
 
 
     @Inject
@@ -41,12 +43,13 @@ public class TranslatePresenter extends Presenter<TranslateView> {
                               GetTranslationDirectionInteractor translationDirectionInteractor,
                               GetSupportedLanguagesInteractor supportedLanguagesInteractor,
                               AddEditHistoryInteractor addEditHistoryInteractor,
-                              GetHistoryInteractor getHistoryInteractor) {
+                              GetHistoryInteractor getHistoryInteractor, DeleteHistoryItemInteractor deleteHistoryItemInteractor) {
         this.translationInteractor = translationInteractor;
         this.translationDirectionInteractor = translationDirectionInteractor;
         this.supportedLanguagesInteractor = supportedLanguagesInteractor;
         this.addEditHistoryInteractor = addEditHistoryInteractor;
         this.getHistoryInteractor = getHistoryInteractor;
+        this.deleteHistoryItemInteractor = deleteHistoryItemInteractor;
     }
 
     @Override
@@ -106,16 +109,14 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         addEditHistoryInteractor.execute(new MutedObserver<Void>(), item);
     }
 
-    public void onHistoryDismissed(ShortTranslationModel shortTranslationModel) {
-        shortTranslationModel.setSaved(false);
+    public void onHistoryItemDismissed(ShortTranslationModel shortTranslationModel) {
+        deleteHistoryItemInteractor.execute(new MutedObserver<Void>(), shortTranslationModel);
+    }
+
+    public void addHistoryItem(ShortTranslationModel shortTranslationModel) {
         addEditHistoryInteractor.execute(new MutedObserver<Void>(), shortTranslationModel);
     }
 
-    public void onHistory(ShortTranslationModel shortTranslationModel) {
-        Log.d(TAG, "onHistory: " + shortTranslationModel.getOriginal());
-        shortTranslationModel.setSaved(true);
-        addEditHistoryInteractor.execute(new MutedObserver<Void>(), shortTranslationModel);
-    }
 
     private final class UserInputObserver extends MutedObserver<TranslationQueryViewModel> {
         private final String TAG = UserInputObserver.class.getSimpleName();

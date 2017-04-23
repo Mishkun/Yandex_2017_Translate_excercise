@@ -2,8 +2,8 @@ package com.mishkun.yandextestexercise.data;
 
 import android.util.Log;
 
-import com.mishkun.yandextestexercise.domain.entities.*;
 import com.mishkun.yandextestexercise.domain.entities.Language;
+import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.providers.HistoryProvider;
 
 import java.util.ArrayList;
@@ -38,9 +38,11 @@ public class HistoryDatabase implements HistoryProvider {
                     public List<ShortTranslationModel> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
                         List<ShortTranslationModel> shortTranslationModels = new ArrayList<ShortTranslationModel>();
                         for (ShortTranslationEntity shortTranslationEntity : shortTranslationEntities) {
-                            shortTranslationModels.add(new ShortTranslationModel(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
-                                                                                 shortTranslationEntity.isFavored(),
-                                                                                 new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null)));
+                            shortTranslationModels.add(
+                                    new ShortTranslationModel(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
+                                                              shortTranslationEntity.isFavored(),
+                                                              new Language(shortTranslationEntity.getDirectionFrom(), null),
+                                                              new Language(shortTranslationEntity.getDirectionTo(), null)));
                         }
                         return shortTranslationModels;
                     }
@@ -56,9 +58,11 @@ public class HistoryDatabase implements HistoryProvider {
                     public List<ShortTranslationModel> apply(ReactiveResult<ShortTranslationEntity> shortTranslationEntities) throws Exception {
                         List<ShortTranslationModel> shortTranslationModels = new ArrayList<ShortTranslationModel>();
                         for (ShortTranslationEntity shortTranslationEntity : shortTranslationEntities) {
-                            shortTranslationModels.add(new ShortTranslationModel(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
-                                                                                 shortTranslationEntity.isFavored(),
-                                                                                 new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null)));
+                            shortTranslationModels.add(
+                                    new ShortTranslationModel(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
+                                                              shortTranslationEntity.isFavored(),
+                                                              new Language(shortTranslationEntity.getDirectionFrom(), null),
+                                                              new Language(shortTranslationEntity.getDirectionTo(), null)));
                         }
                         return shortTranslationModels;
                     }
@@ -79,7 +83,29 @@ public class HistoryDatabase implements HistoryProvider {
 
         itemEntity.setDirectionFrom(item.getFrom().getCode());
         itemEntity.setDirectionTo(item.getTo().getCode());
-        itemEntity.setSaved(item.isSaved());
+        itemEntity.setSaved(true);
+        itemEntity.setTranslation(item.getTranslation());
+        itemEntity.setOriginal(item.getOriginal());
+        itemEntity.setFavored(item.isFavored());
+
+        reactiveEntityStore.upsert(itemEntity).subscribe();
+    }
+
+    @Override
+    public void deleteHistoryItem(ShortTranslationModel item) {
+        ShortTranslationEntity itemEntity = reactiveEntityStore.select(ShortTranslationEntity.class)
+                                                               .where(ShortTranslationEntity.ORIGINAL.eq(item.getOriginal())
+                                                                                                     .and(ShortTranslationEntity.TRANSLATION
+                                                                                                                  .eq(item.getTranslation())))
+                                                               .get()
+                                                               .firstOrNull();
+        if (itemEntity == null) {
+            itemEntity = new ShortTranslationEntity();
+        }
+        itemEntity.setDirectionFrom(item.getFrom().getCode());
+        itemEntity.setDirectionTo(item.getTo().getCode());
+        itemEntity.setSaved(false);
+        itemEntity.setFavored(false);
         itemEntity.setTranslation(item.getTranslation());
         itemEntity.setOriginal(item.getOriginal());
         itemEntity.setFavored(item.isFavored());

@@ -27,6 +27,6 @@ public class ClearFavoritesInteractor extends ParameterlessInteractor<Void> {
     @Override
     Observable<Void> buildUseCaseObservable() {
         historyProvider.clearFavoritesData();
-        return Observable.never();
+        return Observable.empty();
     }
 }
