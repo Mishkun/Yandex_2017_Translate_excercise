@@ -95,8 +95,6 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     public RecyclerView expandedTranslationRecyclerView;
     @BindView(R.id.clear_button)
     public Button clearButton;
-    @BindView(R.id.history_card)
-    public CardView historyCard;
     @BindView(R.id.history_list)
     public RecyclerView historyRecyclerView;
     @BindView(R.id.favorite_btn)
@@ -180,9 +178,10 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
         expandedTranslationCard.setVisibility(View.GONE);
         translationCard.setVisibility(View.GONE);
-        historyCard.setVisibility(View.VISIBLE);
+        historyRecyclerView.setVisibility(View.VISIBLE);
 
         creditsText.setMovementMethod(LinkMovementMethod.getInstance());
+        creditsText.setVisibility(View.GONE);
 
         DividerItemDecoration horizontalDecoration = new DividerItemDecoration(getContext(),
                                                                                DividerItemDecoration.VERTICAL);
@@ -206,17 +205,10 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
             public void onClicked(HistoryItem data) {
                 ((AppNavigator) getActivity()).NavigateToTranslationPage(data.getOriginal(), data.getFrom().getCode(), data.getTo().getCode());
             }
-        });/*
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        });*/
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true){
-
         });
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true));
         historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
+        historyRecyclerView.setNestedScrollingEnabled(false);
         historyRecyclerView.addItemDecoration(horizontalDecoration);
         ItemTouchHelper swipeToDismissTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -355,12 +347,14 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     public void setTranslation(String translation) {
         if (translation != null && !translation.equals("")) {
-            historyCard.setVisibility(View.GONE);
+            historyRecyclerView.setVisibility(View.GONE);
             translationCard.setVisibility(View.VISIBLE);
             translationTextView.setText(translation);
+            creditsText.setVisibility(View.VISIBLE);
         } else {
+            creditsText.setVisibility(View.GONE);
             translatePresenter.getHistory();
-            historyCard.setVisibility(View.VISIBLE);
+            historyRecyclerView.setVisibility(View.VISIBLE);
             translationCard.setVisibility(View.GONE);
         }
     }
