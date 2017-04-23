@@ -16,10 +16,10 @@ import com.mishkun.yandextestexercise.AndroidApplication;
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.presentation.presenters.BookmarksPresenter;
-import com.mishkun.yandextestexercise.presentation.views.AppNavigator;
+import com.mishkun.yandextestexercise.AppNavigator;
 import com.mishkun.yandextestexercise.presentation.views.BookmarksView;
 import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
-import com.mishkun.yandextestexercise.presentation.views.HistoryRecyclerViewAdapter;
+import com.mishkun.yandextestexercise.presentation.views.adapters.HistoryRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.presentation.views.ItemClickListener;
 
 import java.util.ArrayList;

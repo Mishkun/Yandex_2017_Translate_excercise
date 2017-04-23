@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.presentation.views;
+package com.mishkun.yandextestexercise.presentation.views.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +11,8 @@ import android.widget.ToggleButton;
 
 import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
+import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
+import com.mishkun.yandextestexercise.presentation.views.ItemClickListener;
 
 import java.util.List;
 

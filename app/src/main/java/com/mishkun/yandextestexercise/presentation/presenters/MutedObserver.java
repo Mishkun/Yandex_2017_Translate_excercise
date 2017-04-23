@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.presentation;
+package com.mishkun.yandextestexercise.presentation.presenters;
 
 import android.util.Log;
 

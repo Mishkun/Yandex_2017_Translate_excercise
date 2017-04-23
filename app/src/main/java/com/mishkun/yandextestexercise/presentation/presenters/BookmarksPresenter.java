@@ -4,7 +4,7 @@ import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.interactors.AddEditHistoryInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.ClearFavoritesInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetFavoritesInteractor;
-import com.mishkun.yandextestexercise.presentation.MutedObserver;
+import com.mishkun.yandextestexercise.presentation.Presenter;
 import com.mishkun.yandextestexercise.presentation.views.BookmarksView;
 import com.mishkun.yandextestexercise.presentation.views.HistoryView;
 

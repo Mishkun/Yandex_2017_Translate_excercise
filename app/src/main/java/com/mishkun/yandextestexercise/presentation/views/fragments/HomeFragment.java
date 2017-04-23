@@ -37,10 +37,10 @@ import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.entities.TranslationQuery;
 import com.mishkun.yandextestexercise.presentation.presenters.TranslatePresenter;
-import com.mishkun.yandextestexercise.presentation.views.AppNavigator;
-import com.mishkun.yandextestexercise.presentation.views.ExpandedTranslationAdapter;
+import com.mishkun.yandextestexercise.AppNavigator;
+import com.mishkun.yandextestexercise.presentation.views.adapters.ExpandedTranslationAdapter;
 import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
-import com.mishkun.yandextestexercise.presentation.views.HistoryRecyclerViewAdapter;
+import com.mishkun.yandextestexercise.presentation.views.adapters.HistoryRecyclerViewAdapter;
 import com.mishkun.yandextestexercise.presentation.views.ItemClickListener;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 

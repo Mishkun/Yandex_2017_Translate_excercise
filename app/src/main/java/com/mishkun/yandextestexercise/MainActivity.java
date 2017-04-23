@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import com.mishkun.yandextestexercise.di.HasComponent;
 import com.mishkun.yandextestexercise.di.components.DaggerMainActivityComponent;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
-import com.mishkun.yandextestexercise.presentation.views.AppNavigator;
 import com.mishkun.yandextestexercise.presentation.views.fragments.BookmarksFragment;
 import com.mishkun.yandextestexercise.presentation.views.fragments.HomeFragment;
 

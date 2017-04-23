@@ -1,7 +1,8 @@
-package com.mishkun.yandextestexercise.data;
+package com.mishkun.yandextestexercise.data.providers;
 
 import android.util.Log;
 
+import com.mishkun.yandextestexercise.data.ShortTranslationEntity;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.providers.HistoryProvider;

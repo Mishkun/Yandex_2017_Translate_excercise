@@ -14,7 +14,7 @@ import com.mishkun.yandextestexercise.domain.interactors.GetHistoryInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetSupportedLanguagesInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetTranslationDirectionInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.TranslationInteractor;
-import com.mishkun.yandextestexercise.presentation.MutedObserver;
+import com.mishkun.yandextestexercise.presentation.Presenter;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 
 import java.util.List;

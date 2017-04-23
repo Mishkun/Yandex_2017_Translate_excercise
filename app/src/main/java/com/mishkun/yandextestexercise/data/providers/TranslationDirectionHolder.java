@@ -1,17 +1,11 @@
-package com.mishkun.yandextestexercise.data;
+package com.mishkun.yandextestexercise.data.providers;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.mishkun.yandextestexercise.R;
-import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.providers.TranslationDirectionProvider;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 
 /**

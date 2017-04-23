@@ -1,10 +1,9 @@
-package com.mishkun.yandextestexercise.data;
+package com.mishkun.yandextestexercise.data.providers;
 
 import com.mishkun.yandextestexercise.InternetConnection;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 

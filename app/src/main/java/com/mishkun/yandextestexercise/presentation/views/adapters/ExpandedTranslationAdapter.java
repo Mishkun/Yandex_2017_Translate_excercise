@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.presentation.views;
+package com.mishkun.yandextestexercise.presentation.views.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import com.mishkun.yandextestexercise.R;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +44,7 @@ public class ExpandedTranslationAdapter extends RecyclerView.Adapter<ExpandedTra
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.definitionItem = values.get(position);
         holder.synonyms.setText(join(values.get(position).getSynonyms()));
-        holder.number.setText(String.format("%d.", position + 1));
+        holder.number.setText(String.format(Locale.ENGLISH, "%d.", position + 1));
         if (values.get(position).getMeanings() != null && values.get(position).getMeanings().size() > 0) {
             holder.meanings.setText(join(values.get(position).getMeanings()));
         } else {

@@ -3,7 +3,6 @@ package com.mishkun.yandextestexercise.presentation.presenters;
 import android.util.Log;
 
 import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
-import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.HistoryView;
 
 import java.util.List;

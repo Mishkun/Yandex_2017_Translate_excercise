@@ -1,9 +1,12 @@
-package com.mishkun.yandextestexercise.data;
+package com.mishkun.yandextestexercise.data.providers;
 
 import android.content.Context;
 
 import com.mishkun.yandextestexercise.InternetConnection;
 import com.mishkun.yandextestexercise.R;
+import com.mishkun.yandextestexercise.data.DefinitionItemEntity;
+import com.mishkun.yandextestexercise.data.ExpandedTranslationEntity;
+import com.mishkun.yandextestexercise.data.TranslationDirectionEntity;
 import com.mishkun.yandextestexercise.data.api.YandexDictionaryRetrofitApi;
 import com.mishkun.yandextestexercise.data.mappers.DictionaryResponseMapper;
 import com.mishkun.yandextestexercise.data.mappers.TranslationDirectionMapper;

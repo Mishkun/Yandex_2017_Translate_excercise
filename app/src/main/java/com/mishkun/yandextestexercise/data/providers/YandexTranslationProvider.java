@@ -1,9 +1,12 @@
-package com.mishkun.yandextestexercise.data;
+package com.mishkun.yandextestexercise.data.providers;
 
 import android.content.Context;
 
 import com.mishkun.yandextestexercise.InternetConnection;
 import com.mishkun.yandextestexercise.R;
+import com.mishkun.yandextestexercise.data.LanguageEntity;
+import com.mishkun.yandextestexercise.data.LanguageGuessEntity;
+import com.mishkun.yandextestexercise.data.ShortTranslationEntity;
 import com.mishkun.yandextestexercise.data.api.YandexTranslationRetrofitApi;
 import com.mishkun.yandextestexercise.data.mappers.DetectionResponseMapper;
 import com.mishkun.yandextestexercise.data.mappers.SupportedLanguagesMapper;

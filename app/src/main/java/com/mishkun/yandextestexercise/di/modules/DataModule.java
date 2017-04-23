@@ -1,9 +1,9 @@
 package com.mishkun.yandextestexercise.di.modules;
 
-import com.mishkun.yandextestexercise.data.HistoryDatabase;
-import com.mishkun.yandextestexercise.data.TranslationDirectionHolder;
-import com.mishkun.yandextestexercise.data.YandexDictionaryProvider;
-import com.mishkun.yandextestexercise.data.YandexTranslationProvider;
+import com.mishkun.yandextestexercise.data.providers.HistoryDatabase;
+import com.mishkun.yandextestexercise.data.providers.TranslationDirectionHolder;
+import com.mishkun.yandextestexercise.data.providers.YandexDictionaryProvider;
+import com.mishkun.yandextestexercise.data.providers.YandexTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.DictionarySupportedLanguagesProvider;
 import com.mishkun.yandextestexercise.domain.providers.ExpandedTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.HistoryProvider;
