@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
 
         if (savedInstanceState != null) {
             fragment_id = savedInstanceState.getInt(KEY_CURRENT_FRAGMENT);
-            Log.d(TAG, "onCreate: " + fragment_id);
             switch (fragment_id) {
                 case ID_HOME_FRAGMENT:
                     fragment = HomeFragment.newInstance();

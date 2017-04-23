@@ -9,6 +9,7 @@ public class Translation {
     private String shortTranslation;
     private Definition expandedTranslation;
     private TranslationDirection direction;
+    private boolean favored;
 
     public Translation(String shortTranslation, Definition expandedTranslation, String original, TranslationDirection direction) {
         this.shortTranslation = shortTranslation;

@@ -2,6 +2,7 @@ package com.mishkun.yandextestexercise.presentation.views.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
@@ -9,16 +10,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -103,6 +109,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     @BindView(R.id.favorite_btn)
     public ToggleButton favoriteToggle;
 
+
     @Inject
     public TranslatePresenter translatePresenter;
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
@@ -143,7 +150,6 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-
         favoriteToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -205,6 +211,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         });
         initializeReverseButton();
 
+
         translatePresenter.attachView(this);
         return view;
     }
@@ -246,7 +253,6 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public void setTranslationTo(Language To) {
-        Log.d(TAG, "setTranslationTo: " + To);
         toTranslationSpinner.setSelection(spinnersAdapter.getPosition(To));
     }
 
@@ -257,7 +263,6 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public void setTranslationFrom(Language From) {
-        Log.d(TAG, "setTranslationFrom: " + From);
         fromTranslationSpinner.setSelection(spinnersAdapter.getPosition(From));
     }
 
@@ -323,14 +328,10 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
 
     @Override
-    public void showError(String errorMessage) {
-
+    public void setIsCurrentTranslationFavored(boolean favored) {
+        favoriteToggle.setChecked(favored);
     }
 
-    @Override
-    public void hideError() {
-
-    }
 
     @NonNull
     private TranslationQueryViewModel getTranslationViewModel() {

@@ -32,7 +32,5 @@ public interface TranslateView extends HistoryView {
 
     void setExpandedTranslation(Definition expandedTranslation);
 
-    void showError(String errorMessage);
-
-    void hideError();
+    void setIsCurrentTranslationFavored(boolean favored);
 }

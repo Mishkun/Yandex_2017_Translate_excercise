@@ -2,7 +2,6 @@ package com.mishkun.yandextestexercise.presentation.presenters;
 
 import android.util.Log;
 
-import com.mishkun.yandextestexercise.di.PerActivity;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 import com.mishkun.yandextestexercise.domain.entities.Language;
@@ -17,7 +16,6 @@ import com.mishkun.yandextestexercise.presentation.MutedObserver;
 import com.mishkun.yandextestexercise.presentation.views.TranslateView;
 import com.mishkun.yandextestexercise.presentation.views.TranslationQueryViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -79,7 +77,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         attachedView.reverseText();
     }
 
-    public void getHistory(){
+    public void getHistory() {
         getHistoryInteractor.execute(new HistoryObserver(attachedView));
     }
 
@@ -89,6 +87,10 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
     private void setExpandedTranslationString(Definition expandedTranslationString) {
         attachedView.setExpandedTranslation(expandedTranslationString);
+    }
+
+    private void setFavored(boolean favored) {
+        attachedView.setIsCurrentTranslationFavored(favored);
     }
 
     private void setTranslationTo(Language To) {
@@ -109,6 +111,10 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         addEditHistoryInteractor.execute(new MutedObserver<Void>(), historyItem);
     }
 
+    public void onHistory(HistoryItem historyItem) {
+        addEditHistoryInteractor.execute(new MutedObserver<Void>(), historyItem);
+    }
+
     private final class UserInputObserver extends MutedObserver<TranslationQueryViewModel> {
         private final String TAG = UserInputObserver.class.getSimpleName();
 
@@ -116,11 +122,12 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         public void onNext(TranslationQueryViewModel value) {
             String queryString = value.getQuery();
 
-            TranslationDirection direction = new TranslationDirection(value.getTranslationFrom(),
-                                                                      value.getTranslationTo());
-            TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction,
-                                                                                                      attachedView.getGuessLanguage());
-            translationInteractor.execute(new TranslationObserver(), query);
+                TranslationDirection direction = new TranslationDirection(value.getTranslationFrom(),
+                                                                          value.getTranslationTo());
+                TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction,
+                                                                                                          attachedView.getGuessLanguage());
+                translationInteractor.execute(new TranslationObserver(), query);
+
         }
     }
 
@@ -130,7 +137,6 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onNext(TranslationDirection translationDirection) {
-            Log.d(TAG, "onNext: arrivedTranslationDirections " + translationDirection.getTranslationFrom().getCode() + " " + translationDirection.getTranslationTo().getCode());
             setTranslationTo(translationDirection.getTranslationTo());
             setTranslationFrom(translationDirection.getTranslationFrom());
         }
