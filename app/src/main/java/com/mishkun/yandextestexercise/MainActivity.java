@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, homeFragment).commit();
                     fragment_id = ID_HOME_FRAGMENT;
                     break;
