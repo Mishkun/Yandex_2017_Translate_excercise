@@ -6,6 +6,7 @@ import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
+import com.mishkun.yandextestexercise.domain.entities.TranslationQuery;
 import com.mishkun.yandextestexercise.domain.providers.DictionarySupportedLanguagesProvider;
 import com.mishkun.yandextestexercise.domain.providers.ExpandedTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.ShortTranslationProvider;
@@ -28,7 +29,7 @@ import io.reactivex.functions.Function;
  * Created by Mishkun on 12.04.2017.
  */
 
-public class TranslationInteractor extends Interactor<Translation, TranslationInteractor.TranslationQuery> {
+public class TranslationInteractor extends Interactor<Translation, TranslationQuery> {
 
     private final String oneWordRegex = "\\S+";
     private ShortTranslationProvider shortTranslationProvider;
@@ -94,14 +95,14 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
 
     private Observable<Translation> getTranslation(TranslationQuery params) {
         final TranslationQuery query = params.normalize();
-        if (query.string.matches(oneWordRegex)) {
+        if (query.getString().matches(oneWordRegex)) {
             return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
                                   dictionarySupportedLanguagesProvider.getSupportedLanguages().concatMap(
                                           new Function<List<TranslationDirection>, ObservableSource<Definition>>() {
                                               @Override
                                               public Observable<Definition> apply(List<TranslationDirection> directions) throws Exception {
                                                   for (TranslationDirection supportedDirection : directions) {
-                                                      if (supportedDirection.equals(query.direction)) {
+                                                      if (supportedDirection.equals(query.getDirection())) {
                                                           return expandedTranslationProvider.getExpandedTranslation(query.getString(),
                                                                                                                     query.getDirection());
                                                       }
@@ -133,38 +134,4 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
         }
     }
 
-    public static class TranslationQuery {
-        private String string;
-        private TranslationDirection direction;
-
-        private boolean shouldGuess;
-
-        public TranslationQuery(String query, TranslationDirection direction, boolean shouldGuess) {
-            this.string = query;
-            this.direction = direction;
-            this.shouldGuess = shouldGuess;
-        }
-
-        public boolean shouldGuess() {
-            return shouldGuess;
-        }
-
-        public TranslationDirection getDirection() {
-            return direction;
-        }
-
-        public String getString() {
-            return string;
-        }
-
-        public TranslationQuery normalize() {
-            String newQuery = string.trim();
-            // Yandex Translate can't into empty strings
-            if (!newQuery.equals("")) {
-                return new TranslationQuery(newQuery, direction, shouldGuess);
-            } else {
-                return new TranslationQuery(" ", direction, shouldGuess);
-            }
-        }
-    }
 }

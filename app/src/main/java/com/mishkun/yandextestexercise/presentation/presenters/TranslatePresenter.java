@@ -7,6 +7,7 @@ import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
+import com.mishkun.yandextestexercise.domain.entities.TranslationQuery;
 import com.mishkun.yandextestexercise.domain.interactors.AddEditHistoryInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.DeleteHistoryItemInteractor;
 import com.mishkun.yandextestexercise.domain.interactors.GetHistoryInteractor;
@@ -127,8 +128,8 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
             TranslationDirection direction = new TranslationDirection(value.getTranslationFrom(),
                                                                       value.getTranslationTo());
-            TranslationInteractor.TranslationQuery query = new TranslationInteractor.TranslationQuery(queryString, direction,
-                                                                                                      attachedView.getGuessLanguage());
+            TranslationQuery query = new TranslationQuery(queryString, direction,
+                                                          attachedView.getGuessLanguage());
             translationInteractor.execute(new TranslationObserver(), query);
 
         }
