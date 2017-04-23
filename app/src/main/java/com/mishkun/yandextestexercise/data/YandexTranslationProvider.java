@@ -1,7 +1,6 @@
 package com.mishkun.yandextestexercise.data;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.mishkun.yandextestexercise.InternetConnection;
 import com.mishkun.yandextestexercise.R;
@@ -12,6 +11,7 @@ import com.mishkun.yandextestexercise.data.mappers.TranslationDirectionMapper;
 import com.mishkun.yandextestexercise.data.responses.DetectionResponse;
 import com.mishkun.yandextestexercise.data.responses.SupportedLanguagesResponse;
 import com.mishkun.yandextestexercise.data.responses.TranslationResponse;
+import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
 import com.mishkun.yandextestexercise.domain.providers.ShortTranslationProvider;
@@ -58,21 +58,21 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
     }
 
     @Override
-    public Observable<String> getShortTranslation(String query, TranslationDirection direction) {
+    public Observable<HistoryItem> getShortTranslation(String query, TranslationDirection direction) {
         return Observable.concat(getShortTranslationFromDatabase(query, direction),
                                  getShortTranslationFromApi(query, direction),
-                                 Observable.just(""))
-                         .filter(new Predicate<String>() {
+                                 Observable.just(new HistoryItem(query, "", false)))
+                         .filter(new Predicate<HistoryItem>() {
                              @Override
-                             public boolean test(String translation) throws Exception {
-                                 return translation != null && !translation.equals(" ");
+                             public boolean test(HistoryItem translation) throws Exception {
+                                 return translation != null;
                              }
                          })
                          .firstElement()
                          .toObservable();
     }
 
-    private Observable<String> getShortTranslationFromDatabase(String query, TranslationDirection direction) {
+    private Observable<HistoryItem> getShortTranslationFromDatabase(String query, TranslationDirection direction) {
         return reactiveEntityStore.select(ShortTranslationEntity.class)
                                   .where(ShortTranslationEntity.ORIGINAL.eq(query)
                                                                         .and(ShortTranslationEntity.DIRECTION_FROM
@@ -82,29 +82,30 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
                                                                                                   .eq(direction.getTranslationTo()
                                                                                                                .getCode()))))
                                   .get().observable().map(
-                        new Function<ShortTranslationEntity, String>() {
+                        new Function<ShortTranslationEntity, HistoryItem>() {
                             @Override
-                            public String apply(ShortTranslationEntity shortTranslationEntity) throws Exception {
-                                return shortTranslationEntity.getTranslation();
+                            public HistoryItem apply(ShortTranslationEntity shortTranslationEntity) throws Exception {
+                                return new HistoryItem(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
+                                                       shortTranslationEntity.isFavored());
                             }
                         });
     }
 
 
-    private Observable<String> getShortTranslationFromApi(final String query, final TranslationDirection direction) {
-        return internetConnection.isInternetOnObservable().switchMap(new Function<Boolean, ObservableSource<String>>() {
+    private Observable<HistoryItem> getShortTranslationFromApi(final String query, final TranslationDirection direction) {
+        return internetConnection.isInternetOnObservable().switchMap(new Function<Boolean, ObservableSource<HistoryItem>>() {
             @Override
-            public ObservableSource<String> apply(Boolean isInternetOn) throws Exception {
+            public ObservableSource<HistoryItem> apply(Boolean isInternetOn) throws Exception {
                 if (isInternetOn) {
                     return yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query).map(
-                            new Function<TranslationResponse, String>() {
+                            new Function<TranslationResponse, HistoryItem>() {
                                 @Override
-                                public String apply(TranslationResponse translationResponse) throws Exception {
-                                    return translationResponse.getTranslation().get(0);
+                                public HistoryItem apply(TranslationResponse translationResponse) throws Exception {
+                                    return new HistoryItem(query, translationResponse.getTranslation().get(0), false);
                                 }
-                            }).doOnNext(new Consumer<String>() {
+                            }).doOnNext(new Consumer<HistoryItem>() {
                         @Override
-                        public void accept(String translation) throws Exception {
+                        public void accept(HistoryItem translation) throws Exception {
                             ShortTranslationEntity shortTranslationEntity = reactiveEntityStore.select(
                                     ShortTranslationEntity.class).where(ShortTranslationEntity.ORIGINAL.eq(query)
                                                                                                        .and(ShortTranslationEntity.DIRECTION_FROM
@@ -116,7 +117,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
                                                                                                                                              .getCode()))))
                                                                                                .get()
                                                                                                .firstOr(new ShortTranslationEntity());
-                            shortTranslationEntity.setTranslation(translation);
+                            shortTranslationEntity.setTranslation(translation.getShortTranslation());
                             shortTranslationEntity.setOriginal(query);
                             shortTranslationEntity.setDirectionFrom(direction.getTranslationFrom()
                                                                              .getCode());

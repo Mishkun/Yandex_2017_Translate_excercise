@@ -170,6 +170,7 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onNext(Translation value) {
+            TranslatePresenter.this.setFavored(value.isFavored());
             TranslatePresenter.this.setTranslationString(value.getShortTranslation());
             TranslatePresenter.this.setExpandedTranslationString(value.getExpandedTranslation());
         }

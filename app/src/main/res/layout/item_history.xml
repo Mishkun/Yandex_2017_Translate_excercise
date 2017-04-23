@@ -38,7 +38,7 @@
         android:layout_marginEnd="@dimen/text_margin"
         android:layout_marginStart="8dp"
         android:background="@null"
-        android:button="@drawable/fav_selector"
+        android:button="@drawable/fav_history_selector"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:textOff=""

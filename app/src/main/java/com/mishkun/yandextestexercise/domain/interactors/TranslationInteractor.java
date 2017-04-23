@@ -2,6 +2,7 @@ package com.mishkun.yandextestexercise.domain.interactors;
 
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
+import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.Translation;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
@@ -94,27 +95,34 @@ public class TranslationInteractor extends Interactor<Translation, TranslationIn
                                           new Function<List<TranslationDirection>, ObservableSource<Definition>>() {
                                               @Override
                                               public Observable<Definition> apply(List<TranslationDirection> directions) throws Exception {
-                                                    for (TranslationDirection supportedDirection: directions){
-                                                        if (supportedDirection.equals(query.direction)){
-                                                            return expandedTranslationProvider.getExpandedTranslation(query.getString(), query.getDirection());
-                                                        }
-                                                    }
+                                                  for (TranslationDirection supportedDirection : directions) {
+                                                      if (supportedDirection.equals(query.direction)) {
+                                                          return expandedTranslationProvider.getExpandedTranslation(query.getString(),
+                                                                                                                    query.getDirection());
+                                                      }
+                                                  }
                                                   return Observable.just(new Definition(null, null, null));
                                               }
                                           }),
-                                  new BiFunction<String, Definition, Translation>() {
+                                  new BiFunction<HistoryItem, Definition, Translation>() {
                                       @Override
-                                      public Translation apply(String shortTranslation, Definition expandedTranslation) throws Exception {
-                                          return new Translation(shortTranslation, expandedTranslation, query.getString(), query.getDirection());
+                                      public Translation apply(HistoryItem shortTranslation, Definition expandedTranslation) throws Exception {
+                                          Translation translation = new Translation(shortTranslation.getShortTranslation(), expandedTranslation,
+                                                                                    query.getString(), query.getDirection());
+                                          translation.setFavored(shortTranslation.isFavored());
+                                          return translation;
                                       }
                                   });
         } else {
             return shortTranslationProvider
                     .getShortTranslation(query.getString(), query.getDirection())
-                    .map(new Function<String, Translation>() {
+                    .map(new Function<HistoryItem, Translation>() {
                         @Override
-                        public Translation apply(String shortTranslation) throws Exception {
-                            return new Translation(shortTranslation, new Definition(null, null, null), query.getString(), query.getDirection());
+                        public Translation apply(HistoryItem shortTranslation) throws Exception {
+                            Translation translation = new Translation(shortTranslation.getShortTranslation(), new Definition(null, null, null),
+                                                                      query.getString(), query.getDirection());
+                            translation.setFavored(shortTranslation.isFavored());
+                            return translation;
                         }
                     });
         }

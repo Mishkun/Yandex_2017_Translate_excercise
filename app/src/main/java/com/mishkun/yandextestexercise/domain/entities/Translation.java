@@ -49,4 +49,12 @@ public class Translation {
     public void setDirection(TranslationDirection direction) {
         this.direction = direction;
     }
+
+    public boolean isFavored() {
+        return favored;
+    }
+
+    public void setFavored(boolean favored) {
+        this.favored = favored;
+    }
 }
