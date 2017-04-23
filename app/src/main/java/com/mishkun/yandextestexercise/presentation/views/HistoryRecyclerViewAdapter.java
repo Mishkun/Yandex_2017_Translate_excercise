@@ -2,7 +2,6 @@ package com.mishkun.yandextestexercise.presentation.views;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -26,11 +25,13 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     private static final String TAG = HistoryRecyclerViewAdapter.class.getSimpleName();
     private final List<HistoryItem> values;
 
-    private final FavButtonListener listener;
+    private final FavButtonListener favButtonListener;
+    private final ItemClickListener<HistoryItem> clicksListener;
 
-    public HistoryRecyclerViewAdapter(List<HistoryItem> values, FavButtonListener listener) {
+    public HistoryRecyclerViewAdapter(List<HistoryItem> values, FavButtonListener favButtonListener, ItemClickListener<HistoryItem> clicksListener) {
         this.values = values;
-        this.listener = listener;
+        this.favButtonListener = favButtonListener;
+        this.clicksListener = clicksListener;
     }
 
     public void update(List<HistoryItem> data) {
@@ -52,10 +53,16 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.translation.setText(values.get(position).getShortTranslation());
         holder.favButton.setOnCheckedChangeListener(null);
         holder.favButton.setChecked(values.get(position).isFavored());
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clicksListener.onClicked(holder.definitionItem);
+            }
+        });
         holder.favButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                listener.favButtonChecked(holder.definitionItem, isChecked);
+                favButtonListener.favButtonChecked(holder.definitionItem, isChecked);
             }
         });
     }
@@ -72,9 +79,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
         @BindView(R.id.translation_text_history)
-        public TextView text;
-        @BindView(R.id.original_text_history)
         public TextView translation;
+        @BindView(R.id.original_text_history)
+        public TextView text;
         @BindView(R.id.favorite_button_history)
         public ToggleButton favButton;
 

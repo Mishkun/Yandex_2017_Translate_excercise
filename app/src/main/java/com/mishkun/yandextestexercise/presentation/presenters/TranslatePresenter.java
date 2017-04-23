@@ -153,10 +153,9 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onNext(List<Language> value) {
-            Log.d(TAG, "SupportedLanguagesList arrived");
             setSupportedLanguages(value);
-            translationDirectionInteractor.execute(new TranslationDirectionObserver());
             attachedView.getQueries().distinctUntilChanged().subscribe(new UserInputObserver());
+            translationDirectionInteractor.execute(new TranslationDirectionObserver());
         }
 
         @Override
@@ -176,7 +175,6 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
         @Override
         public void onNext(Translation value) {
-
             attachedView.hideProgressBar();
             TranslatePresenter.this.setFavored(value.isFavored());
             TranslatePresenter.this.setTranslationString(value.getShortTranslation());

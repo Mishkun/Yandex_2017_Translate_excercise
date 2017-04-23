@@ -2,7 +2,8 @@ package com.mishkun.yandextestexercise.data;
 
 import android.util.Log;
 
-import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
+import com.mishkun.yandextestexercise.domain.entities.*;
+import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.providers.HistoryProvider;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class HistoryDatabase implements HistoryProvider {
                         List<HistoryItem> historyItems = new ArrayList<HistoryItem>();
                         for (ShortTranslationEntity shortTranslationEntity : shortTranslationEntities) {
                             historyItems.add(new HistoryItem(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
-                                                             shortTranslationEntity.isFavored()
-                            ));
+                                                             shortTranslationEntity.isFavored(),
+                                                             new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null)));
                         }
                         return historyItems;
                     }
@@ -56,8 +57,8 @@ public class HistoryDatabase implements HistoryProvider {
                         List<HistoryItem> historyItems = new ArrayList<HistoryItem>();
                         for (ShortTranslationEntity shortTranslationEntity : shortTranslationEntities) {
                             historyItems.add(new HistoryItem(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
-                                                             shortTranslationEntity.isFavored()
-                            ));
+                                                             shortTranslationEntity.isFavored(),
+                                                             new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null)));
                         }
                         return historyItems;
                     }
@@ -76,6 +77,8 @@ public class HistoryDatabase implements HistoryProvider {
             itemEntity = new ShortTranslationEntity();
         }
 
+        itemEntity.setDirectionFrom(item.getFrom().getCode());
+        itemEntity.setDirectionTo(item.getTo().getCode());
         itemEntity.setSaved(item.isSaved());
         itemEntity.setTranslation(item.getShortTranslation());
         itemEntity.setOriginal(item.getOriginal());

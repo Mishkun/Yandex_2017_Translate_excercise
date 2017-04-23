@@ -10,11 +10,15 @@ public class HistoryItem {
     private boolean favored;
     private String original;
     private String shortTranslation;
+    private Language from;
+    private Language to;
 
-    public HistoryItem(String original, String shortTranslation, boolean favored) {
+    public HistoryItem(String original, String shortTranslation, boolean favored, Language from, Language to) {
         this.favored = favored;
         this.original = original;
         this.shortTranslation = shortTranslation;
+        this.from = from;
+        this.to = to;
     }
 
     public boolean isFavored() {
@@ -47,5 +51,21 @@ public class HistoryItem {
 
     public void setSaved(boolean saved) {
         this.saved = saved;
+    }
+
+    public Language getFrom() {
+        return from;
+    }
+
+    public void setFrom(Language from) {
+        this.from = from;
+    }
+
+    public Language getTo() {
+        return to;
+    }
+
+    public void setTo(Language to) {
+        this.to = to;
     }
 }

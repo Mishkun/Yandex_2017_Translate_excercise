@@ -11,13 +11,14 @@ import android.view.MenuItem;
 import com.mishkun.yandextestexercise.di.HasComponent;
 import com.mishkun.yandextestexercise.di.components.DaggerMainActivityComponent;
 import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
+import com.mishkun.yandextestexercise.presentation.views.AppNavigator;
 import com.mishkun.yandextestexercise.presentation.views.fragments.BookmarksFragment;
 import com.mishkun.yandextestexercise.presentation.views.fragments.HomeFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements HasComponent<MainActivityComponent> {
+public class MainActivity extends AppCompatActivity implements HasComponent<MainActivityComponent>, AppNavigator {
 
     private static final String KEY_CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
     private static final String KEY_HOME_FRAGMENT_STATE = "HOME_FRAGMENT_STATE";
@@ -105,5 +106,11 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
     @Override
     public MainActivityComponent getComponent() {
         return mainActivityComponent;
+    }
+
+    @Override
+    public void NavigateToTranslationPage(String source, String from, String to) {
+        homeFragment = HomeFragment.newInstance(source, from, to);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, homeFragment).commit();
     }
 }

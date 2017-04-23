@@ -61,7 +61,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
     public Observable<HistoryItem> getShortTranslation(String query, TranslationDirection direction) {
         return Observable.concat(getShortTranslationFromDatabase(query, direction),
                                  getShortTranslationFromApi(query, direction),
-                                 Observable.just(new HistoryItem(query, "", false)))
+                                 Observable.just(new HistoryItem(query, "", false, null, null)))
                          .filter(new Predicate<HistoryItem>() {
                              @Override
                              public boolean test(HistoryItem translation) throws Exception {
@@ -86,7 +86,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
                             @Override
                             public HistoryItem apply(ShortTranslationEntity shortTranslationEntity) throws Exception {
                                 return new HistoryItem(shortTranslationEntity.getOriginal(), shortTranslationEntity.getTranslation(),
-                                                       shortTranslationEntity.isFavored());
+                                                       shortTranslationEntity.isFavored(), new Language(shortTranslationEntity.getDirectionFrom(), null), new Language(shortTranslationEntity.getDirectionTo(), null));
                             }
                         });
     }
@@ -101,7 +101,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
                             new Function<TranslationResponse, HistoryItem>() {
                                 @Override
                                 public HistoryItem apply(TranslationResponse translationResponse) throws Exception {
-                                    return new HistoryItem(query, translationResponse.getTranslation().get(0), false);
+                                    return new HistoryItem(query, translationResponse.getTranslation().get(0), false, direction.getTranslationFrom(), direction.getTranslationTo());
                                 }
                             }).doOnNext(new Consumer<HistoryItem>() {
                         @Override
@@ -137,7 +137,7 @@ public class YandexTranslationProvider implements ShortTranslationProvider, Tran
     public Observable<Language> guessLanguage(String query) {
         return Observable.concat(guessLanguageFromDatabase(query),
                                  getLanguageGuessFromApi(query),
-                                 Observable.just(new Language("ru", null)))
+                                 Observable.just(new Language("", null)))
                          .filter(new Predicate<Language>() {
                              @Override
                              public boolean test(Language language) throws Exception {

@@ -5,8 +5,5 @@ package com.mishkun.yandextestexercise.presentation.views;
  */
 
 public interface AppNavigator {
-    void NavigateToTranslationPage();
-    void NavigateToHistoryPage();
-    void NavigateToFavoritesPage();
-    void NavigateToSettingsPage();
+    void NavigateToTranslationPage(String source, String from, String to);
 }

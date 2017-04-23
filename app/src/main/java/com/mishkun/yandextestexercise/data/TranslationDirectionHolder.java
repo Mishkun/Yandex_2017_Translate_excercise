@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by Mishkun on 16.04.2017.
@@ -20,14 +21,11 @@ import io.reactivex.subjects.BehaviorSubject;
 public class TranslationDirectionHolder implements TranslationDirectionProvider {
     private static final String TAG = TranslationDirectionHolder.class.getSimpleName();
 
-    private BehaviorSubject<TranslationDirection> translationDirectionBehaviorSubject;
+    private PublishSubject<TranslationDirection> translationDirectionBehaviorSubject;
 
     @Inject
-    public TranslationDirectionHolder(Context context) {
-        TranslationDirection defaultTranslationDrection = new TranslationDirection(
-                new Language(context.getResources().getString(R.string.language_from), null),
-                new Language(context.getResources().getString(R.string.language_to), null));
-        translationDirectionBehaviorSubject = BehaviorSubject.createDefault(defaultTranslationDrection);
+    public TranslationDirectionHolder() {
+        translationDirectionBehaviorSubject = PublishSubject.create();
     }
 
     @Override

@@ -14,12 +14,13 @@ import android.widget.RelativeLayout;
 
 import com.mishkun.yandextestexercise.AndroidApplication;
 import com.mishkun.yandextestexercise.R;
-import com.mishkun.yandextestexercise.di.components.MainActivityComponent;
 import com.mishkun.yandextestexercise.domain.entities.HistoryItem;
 import com.mishkun.yandextestexercise.presentation.presenters.BookmarksPresenter;
+import com.mishkun.yandextestexercise.presentation.views.AppNavigator;
 import com.mishkun.yandextestexercise.presentation.views.BookmarksView;
 import com.mishkun.yandextestexercise.presentation.views.FavButtonListener;
 import com.mishkun.yandextestexercise.presentation.views.HistoryRecyclerViewAdapter;
+import com.mishkun.yandextestexercise.presentation.views.ItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,12 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
 
         List<HistoryItem> historyItemsDummy = new ArrayList<>();
 
-        bookmarksRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this);
+        bookmarksRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyItemsDummy, this, new ItemClickListener<HistoryItem>() {
+            @Override
+            public void onClicked(HistoryItem data) {
+                ((AppNavigator)getActivity()).NavigateToTranslationPage(data.getOriginal(), data.getFrom().getCode(), data.getTo().getCode());
+            }
+        });
         bookmarksRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
