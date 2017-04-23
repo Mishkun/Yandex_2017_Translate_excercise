@@ -111,7 +111,6 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     private ArrayAdapter<Language> spinnersAdapter;
 
     public HomeFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -120,7 +119,6 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
      *
      * @return A new instance of fragment HomeFragment.
      */
-
     public static HomeFragment newInstance(Bundle args) {
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
