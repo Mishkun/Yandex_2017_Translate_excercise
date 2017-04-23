@@ -8,6 +8,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -98,6 +101,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     public ToggleButton favoriteToggle;
     @BindView(R.id.loadingBar)
     public ProgressBar loadingBar;
+    @BindView(R.id.credits)
+    public TextView creditsText;
     @Inject
     public TranslatePresenter translatePresenter;
     private PublishSubject<TranslationQueryViewModel> translationQueryViewModelBehaviorSubject;
@@ -159,6 +164,8 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         expandedTranslationCard.setVisibility(View.GONE);
         translationCard.setVisibility(View.GONE);
         historyCard.setVisibility(View.VISIBLE);
+
+        creditsText.setMovementMethod(LinkMovementMethod.getInstance());
 
         DividerItemDecoration horizontalDecoration = new DividerItemDecoration(getContext(),
                                                                                DividerItemDecoration.VERTICAL);
