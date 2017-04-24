@@ -123,6 +123,12 @@ public class BookmarksFragment extends BaseFragment implements FavButtonListener
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        bookMarksPresenter.pause();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
     }

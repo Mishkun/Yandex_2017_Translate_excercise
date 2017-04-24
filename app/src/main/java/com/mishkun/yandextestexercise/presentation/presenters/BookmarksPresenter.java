@@ -37,7 +37,9 @@ public class BookmarksPresenter extends Presenter<BookmarksView> {
 
     @Override
     public void pause() {
-
+        getFavoritesInteractor.dispose();
+        addEditHistoryInteractor.dispose();
+        clearFavoritesInteractor.dispose();
     }
 
     public void onFavored(ShortTranslationModel item, boolean favored) {

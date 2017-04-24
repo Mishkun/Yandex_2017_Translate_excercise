@@ -335,7 +335,7 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
 
     @Override
     public Observable<TranslationQuery> getQueries() {
-        return translationQueryViewModelBehaviorSubject.debounce(100, TimeUnit.MILLISECONDS).distinctUntilChanged().observeOn(
+        return translationQueryViewModelBehaviorSubject.debounce(200, TimeUnit.MILLISECONDS).distinctUntilChanged().observeOn(
                 AndroidSchedulers.mainThread());
     }
 

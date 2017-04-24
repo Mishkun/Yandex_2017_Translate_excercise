@@ -1,5 +1,7 @@
 package com.mishkun.yandextestexercise.domain.interactors;
 
+import android.util.Log;
+
 import com.mishkun.yandextestexercise.di.modules.DomainModule;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Language;
@@ -27,6 +29,7 @@ import io.reactivex.functions.Function;
  * Main Interactor of the app. Collects data from all sorts of sources and gives it back in form of Translation
  */
 public class TranslationInteractor extends Interactor<Translation, TranslationQuery> {
+    private static final String TAG = TranslationInteractor.class.getSimpleName();
 
     private ShortTranslationProvider shortTranslationProvider;
     private ExpandedTranslationProvider expandedTranslationProvider;
@@ -47,12 +50,13 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
 
     @Override
     Observable<Translation> buildUseCaseObservable(final TranslationQuery params) {
-        if (params.shouldGuess()) {
+                if (params.shouldGuess()) {
             // Yandex Translate can't into empty strings
             return translationDirectionGuessProvider.guessLanguage(params.getString())
                                                     .map(new Function<Language, TranslationDirection>() {
                                                         @Override
                                                         public TranslationDirection apply(Language language) throws Exception {
+                                                            Log.d(TAG, "getdirection");
                                                             if (!language.getCode().equals("")) {
                                                                 if (language.equals(params.getDirection().getTranslationTo())) {
                                                                     return new TranslationDirection(language,
@@ -73,7 +77,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
                                                             translationDirectionProvider.setTranslationDirection(direction);
                                                         }
                                                     })
-                                                    .concatMap(new Function<TranslationDirection, ObservableSource<? extends Translation>>() {
+                                                    .switchMap(new Function<TranslationDirection, ObservableSource<? extends Translation>>() {
                                                         @Override
                                                         public ObservableSource<Translation> apply(
                                                                 TranslationDirection direction) throws Exception {
@@ -88,6 +92,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
     }
 
     private Observable<Translation> getTranslation(TranslationQuery params) {
+        Log.d(TAG, "getTranslation: ");
         final TranslationQuery query = params.normalize();
         return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
                               expandedTranslationProvider.getExpandedTranslation(query.getString(), query.getDirection()), new TranslationMapper());

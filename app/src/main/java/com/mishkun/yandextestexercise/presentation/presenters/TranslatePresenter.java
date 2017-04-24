@@ -71,6 +71,10 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         deleteHistoryItemInteractor.dispose();
     }
 
+    @Override
+    public void detachView() {
+        super.detachView();
+    }
 
     private void setSupportedLanguages(List<Language> supportedLanguages) {
 
