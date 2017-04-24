@@ -27,6 +27,9 @@ import io.reactivex.functions.BiConsumer;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.requery.Persistable;
+import io.requery.query.Condition;
+import io.requery.query.Expression;
+import io.requery.query.LogicalCondition;
 import io.requery.reactivex.ReactiveEntityStore;
 
 /**
@@ -59,35 +62,25 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
 
     private Observable<Definition> getDefinitionFromDatabase(final String query, final TranslationDirection direction) {
         return reactiveEntityStore.select(ExpandedTranslationEntity.class)
-                                  .where(ExpandedTranslationEntity.ORIGINAL.eq(query)
-                                                                           .and(ExpandedTranslationEntity.TRANSLATION_FROM
-                                                                                        .eq(direction.getTranslationFrom().getCode())
-                                                                                        .and(ExpandedTranslationEntity.TRANSLATION_TO
-                                                                                                     .eq(direction.getTranslationTo().getCode()))))
+                                  .where(getExpandedTranslationEntityPredicate(query, direction))
                                   .get()
                                   .observable()
-                                  .map(new Function<ExpandedTranslationEntity, Definition>() {
-                                      @Override
-                                      public Definition apply(ExpandedTranslationEntity expandedTranslationEntity) throws Exception {
-                                          List<Definition.DefinitionItem> definitionItems = new ArrayList<Definition.DefinitionItem>();
-                                          for (DefinitionItemEntity entity : expandedTranslationEntity.getDefinitions()) {
-                                              definitionItems.add(new Definition.DefinitionItem(entity.getSynonyms(), entity.getMeanings()));
-                                          }
-                                          return new Definition(query, direction, expandedTranslationEntity.getOriginal(), expandedTranslationEntity.getTranscription(),
-                                                                definitionItems);
-                                      }
-                                  });
+                                  .map(new ExpandedTranslationEntityMapper());
     }
 
     private Observable<Definition> getDefinitionFromApi(final String query, final TranslationDirection direction) {
-        return getIfInternet(yandexDictionaryRetrofitApi.getDictionaryTranslation(API_KEY, TranslationDirectionResponseMapper.transform(direction), query)
+        return getIfInternet(yandexDictionaryRetrofitApi.getDictionaryTranslation(API_KEY, TranslationDirectionResponseMapper.transform(direction),
+                                                                                  query)
                                                         .map(
                                                                 new Function<DictionaryResponse, Definition>() {
                                                                     @Override
                                                                     public Definition apply(DictionaryResponse dictionaryResponse) throws Exception {
-                                                                        return DictionaryResponseMapper.transform(dictionaryResponse, query, direction);
+                                                                        return DictionaryResponseMapper.transform(dictionaryResponse, query,
+                                                                                                                  direction);
                                                                     }
-                                                                }).onErrorResumeNext(Observable.<Definition>empty()).doOnNext(new DefinitionConsumer(query, direction)));
+                                                                })
+                                                        .onErrorResumeNext(Observable.<Definition>empty())
+                                                        .doOnNext(new DefinitionCacher()));
     }
 
     @Override
@@ -134,7 +127,7 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
                 }
                 return translationDirections;
             }
-        }).doOnNext(new SupportedLanguagesConsumer()));
+        }).doOnNext(new SupportedLanguagesCacher()));
     }
 
     private Observable<List<TranslationDirection>> getDefaultDirections() {
@@ -147,7 +140,32 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
         return Observable.just(languages);
     }
 
-    private class SupportedLanguagesConsumer implements Consumer<List<TranslationDirection>> {
+    private LogicalCondition<? extends LogicalCondition<? extends Expression<String>, ?>, Condition<?, ?>> getExpandedTranslationEntityPredicate(
+            String query, TranslationDirection direction) {
+        return ExpandedTranslationEntity.ORIGINAL.eq(query)
+                                                 .and(ExpandedTranslationEntity.TRANSLATION_FROM
+                                                              .eq(direction.getTranslationFrom().getCode())
+                                                              .and(ExpandedTranslationEntity.TRANSLATION_TO
+                                                                           .eq(direction.getTranslationTo().getCode())));
+    }
+
+    private static class ExpandedTranslationEntityMapper implements Function<ExpandedTranslationEntity, Definition> {
+        @Override
+        public Definition apply(ExpandedTranslationEntity expandedTranslationEntity) throws Exception {
+            List<Definition.DefinitionItem> definitionItems = new ArrayList<Definition.DefinitionItem>();
+            for (DefinitionItemEntity entity : expandedTranslationEntity.getDefinitions()) {
+                definitionItems.add(new Definition.DefinitionItem(entity.getSynonyms(), entity.getMeanings()));
+            }
+            return new Definition(expandedTranslationEntity.getOriginal(), new TranslationDirection(
+                    new Language(expandedTranslationEntity.getTranslationFrom(), null),
+                    new Language(expandedTranslationEntity.getTranslationTo(), null)),
+                                  expandedTranslationEntity.getTranslation(),
+                                  expandedTranslationEntity.getTranscription(),
+                                  definitionItems);
+        }
+    }
+
+    private class SupportedLanguagesCacher implements Consumer<List<TranslationDirection>> {
         @Override
         public void accept(List<TranslationDirection> directions) throws Exception {
             List<TranslationDirectionEntity> translationDirectionEntities = new ArrayList<TranslationDirectionEntity>();
@@ -162,36 +180,20 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
         }
     }
 
-    private class DefinitionConsumer implements Consumer<Definition> {
-        private final String query;
-        private final TranslationDirection direction;
-
-        public DefinitionConsumer(String query, TranslationDirection direction) {
-            this.query = query;
-            this.direction = direction;
-        }
-
+    private class DefinitionCacher implements Consumer<Definition> {
         @Override
         public void accept(Definition definition) throws Exception {
             ExpandedTranslationEntity expandedTranslationEntity = reactiveEntityStore.select(ExpandedTranslationEntity.class)
-                                                                                     .where(ExpandedTranslationEntity.ORIGINAL
-                                                                                                    .eq(query)
-                                                                                                    .and(ExpandedTranslationEntity.TRANSLATION_FROM
-                                                                                                                 .eq(direction
-                                                                                                                             .getTranslationFrom()
-                                                                                                                             .getCode())
-                                                                                                                 .and(ExpandedTranslationEntity.TRANSLATION_TO
-                                                                                                                              .eq(direction
-                                                                                                                                          .getTranslationTo()
-                                                                                                                                          .getCode()))))
+                                                                                     .where(getExpandedTranslationEntityPredicate(
+                                                                                             definition.getOriginal(), definition.getDirection()))
                                                                                      .get().firstOr(new ExpandedTranslationEntity());
             expandedTranslationEntity.setTranslation(definition.getTranslation());
-            expandedTranslationEntity.setOriginal(query);
-            expandedTranslationEntity.setTranslationTo(direction.getTranslationTo().getCode());
-            expandedTranslationEntity.setTranslationFrom(direction.getTranslationFrom().getCode());
+            expandedTranslationEntity.setOriginal(definition.getOriginal());
+            expandedTranslationEntity.setTranslationTo(definition.getDirection().getTranslationTo().getCode());
+            expandedTranslationEntity.setTranslationFrom(definition.getDirection().getTranslationFrom().getCode());
             List<DefinitionItemEntity> definitionItems = expandedTranslationEntity.getDefinitions();
             if (definitionItems.isEmpty()) {
-                definitionItems = new ArrayList<DefinitionItemEntity>();
+                definitionItems = new ArrayList<>();
                 if (definition.getDefinitionItems() != null) {
                     for (Definition.DefinitionItem definitionItem : definition.getDefinitionItems()) {
                         DefinitionItemEntity definitionItemEntity = new DefinitionItemEntity();
