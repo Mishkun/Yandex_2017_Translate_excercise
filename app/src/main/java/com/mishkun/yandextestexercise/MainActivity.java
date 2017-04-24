@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements HasComponent<Main
 
     @Override
     public void NavigateToTranslationPage(String source, String from, String to) {
+        navigation.setSelectedItemId(R.id.navigation_home);
         homeFragment = HomeFragment.newInstance(source, from, to);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, homeFragment).commit();
     }
