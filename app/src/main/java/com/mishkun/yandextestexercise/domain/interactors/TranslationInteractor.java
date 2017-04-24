@@ -79,15 +79,14 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
                                                             translationDirectionProvider.setTranslationDirection(direction);
                                                         }
                                                     })
-                                                    .concatMap(
-                                                            new Function<TranslationDirection, ObservableSource<? extends Translation>>() {
-                                                                @Override
-                                                                public ObservableSource<Translation> apply(
-                                                                        TranslationDirection direction) throws Exception {
-                                                                    return getTranslation(new TranslationQuery(params.getString(), direction,
-                                                                                                               params.shouldGuess()));
-                                                                }
-                                                            });
+                                                    .concatMap(new Function<TranslationDirection, ObservableSource<? extends Translation>>() {
+                                                        @Override
+                                                        public ObservableSource<Translation> apply(
+                                                                TranslationDirection direction) throws Exception {
+                                                            return getTranslation(new TranslationQuery(params.getString(), direction,
+                                                                                                       params.shouldGuess()));
+                                                        }
+                                                    });
         } else {
             translationDirectionProvider.setTranslationDirection(params.getDirection());
             return getTranslation(params);
@@ -96,45 +95,31 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
 
     private Observable<Translation> getTranslation(TranslationQuery params) {
         final TranslationQuery query = params.normalize();
-        if (query.getString().matches(oneWordRegex)) {
-            return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
-                                  dictionarySupportedLanguagesProvider.getSupportedLanguages().concatMap(
-                                          new Function<List<TranslationDirection>, ObservableSource<Definition>>() {
-                                              @Override
-                                              public Observable<Definition> apply(List<TranslationDirection> directions) throws Exception {
-                                                  for (TranslationDirection supportedDirection : directions) {
-                                                      if (supportedDirection.equals(query.getDirection())) {
-                                                          return expandedTranslationProvider.getExpandedTranslation(query.getString(),
-                                                                                                                    query.getDirection());
-                                                      }
+        return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
+                              dictionarySupportedLanguagesProvider.getSupportedLanguages().concatMap(
+                                      new Function<List<TranslationDirection>, ObservableSource<Definition>>() {
+                                          @Override
+                                          public Observable<Definition> apply(List<TranslationDirection> directions) throws Exception {
+                                              for (TranslationDirection supportedDirection : directions) {
+                                                  if (supportedDirection.equals(query.getDirection())) {
+                                                      return expandedTranslationProvider.getExpandedTranslation(query.getString(),
+                                                                                                                query.getDirection());
                                                   }
-                                                  return Observable.just(new Definition(query.getString(), query.getDirection(), null, null, null));
                                               }
-                                          }),
-                                  new BiFunction<ShortTranslationModel, Definition, Translation>() {
-                                      @Override
-                                      public Translation apply(ShortTranslationModel shortTranslation,
-                                                               Definition expandedTranslation) throws Exception {
-                                          Translation translation = new Translation(shortTranslation.getTranslation(), expandedTranslation,
-                                                                                    query.getString(), query.getDirection());
-                                          translation.setFavored(shortTranslation.isFavored());
-                                          return translation;
-                                      }
-                                  });
-        } else {
-            return shortTranslationProvider
-                    .getShortTranslation(query.getString(), query.getDirection())
-                    .map(new Function<ShortTranslationModel, Translation>() {
-                        @Override
-                        public Translation apply(ShortTranslationModel shortTranslation) throws Exception {
-                            Translation translation = new Translation(shortTranslation.getTranslation(),
-                                                                      new Definition(query.getString(), query.getDirection(), null, null, null),
-                                                                      query.getString(), query.getDirection());
-                            translation.setFavored(shortTranslation.isFavored());
-                            return translation;
-                        }
-                    });
-        }
+                                              return Observable.just(new Definition(query.getString(), query.getDirection(), null, null, null));
+                                          }
+                                      }), new TranslationMapper());
     }
 
+    private static class TranslationMapper implements BiFunction<ShortTranslationModel, Definition, Translation> {
+        @Override
+        public Translation apply(ShortTranslationModel shortTranslation,
+                                 Definition expandedTranslation) throws Exception {
+            Translation translation = new Translation(shortTranslation.getTranslation(), expandedTranslation,
+                                                      shortTranslation.getOriginal(), shortTranslation.getDirection());
+            translation.setFavored(shortTranslation.isFavored());
+            return translation;
+        }
+    }
 }
+

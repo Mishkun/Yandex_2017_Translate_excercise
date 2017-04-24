@@ -9,6 +9,15 @@ public class ShortTranslationModel {
     private boolean favored;
     private String original;
     private String translation;
+
+    public TranslationDirection getDirection() {
+        return direction;
+    }
+
+    public void setDirection(TranslationDirection direction) {
+        this.direction = direction;
+    }
+
     private TranslationDirection direction;
 
     public ShortTranslationModel(String original, String translation, boolean favored, Language from, Language to) {
@@ -41,6 +50,8 @@ public class ShortTranslationModel {
     public void setOriginal(String original) {
         this.original = original;
     }
+
+
 
     public Language getFrom() {
         return direction.getTranslationFrom();
