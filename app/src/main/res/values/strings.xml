@@ -11,6 +11,6 @@
     <string name="no_bookmarks">No bookmarks</string>
     <string name="no_bookmarks_hint">You can add bookmarks\non the main screen</string>
     <string name="snackbar_text">You are not connected to the internet</string>
-    <string name="translated_using_yandex_translate">Translated using <a href="https://translate.yandex.ru/">Yandex Translate</a></string>
+    <string name="translated_using_yandex_translate">Translated using <a href="https://translate.yandex.ru/">Yandex Translate</a>\nMade with <a href="https://tech.yandex.ru/dictionary/">Yandex.Dictionary</a></string>
     <string name="ui">en</string>
 </resources>

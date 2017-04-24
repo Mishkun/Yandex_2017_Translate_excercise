@@ -13,6 +13,6 @@
     <string name="title_bookmarks">Закладки</string>
     <string name="title_home">Переводчик</string>
     <string name="title_translate">Яндекс.Переводчик</string>
-    <string name="translated_using_yandex_translate">Переведено сервисом  <a href="https://translate.yandex.ru/">«Яндекс.Переводчик»</a></string>
+    <string name="translated_using_yandex_translate">Переведено сервисом  <a href="https://translate.yandex.ru/">«Яндекс.Переводчик»</a>\nРеализовано с помощью сервиса <a href="https://tech.yandex.ru/dictionary/">«Яндекс.Словарь»</a></string>
     <string name="ui">ru</string>
 </resources>
