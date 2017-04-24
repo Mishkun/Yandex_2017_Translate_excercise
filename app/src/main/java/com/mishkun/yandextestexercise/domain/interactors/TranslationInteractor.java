@@ -28,32 +28,28 @@ import io.reactivex.functions.Function;
  */
 public class TranslationInteractor extends Interactor<Translation, TranslationQuery> {
 
-    private final String oneWordRegex = "\\S+";
     private ShortTranslationProvider shortTranslationProvider;
     private ExpandedTranslationProvider expandedTranslationProvider;
     private TranslationDirectionProvider translationDirectionProvider;
     private TranslationDirectionGuessProvider translationDirectionGuessProvider;
-    private DictionarySupportedLanguagesProvider dictionarySupportedLanguagesProvider;
 
     @Inject
     TranslationInteractor(@Named(DomainModule.JOB) Scheduler threadExecutor, @Named(DomainModule.UI) Scheduler postExecutionThread,
                           ShortTranslationProvider shortTranslationProvider, ExpandedTranslationProvider expandedTranslationProvider,
                           TranslationDirectionProvider translationDirectionProvider,
-                          TranslationDirectionGuessProvider translationDirectionGuessProvider,
-                          DictionarySupportedLanguagesProvider dictionarySupportedLanguagesProvider) {
+                          TranslationDirectionGuessProvider translationDirectionGuessProvider) {
         super(threadExecutor, postExecutionThread);
         this.shortTranslationProvider = shortTranslationProvider;
         this.expandedTranslationProvider = expandedTranslationProvider;
         this.translationDirectionProvider = translationDirectionProvider;
         this.translationDirectionGuessProvider = translationDirectionGuessProvider;
-        this.dictionarySupportedLanguagesProvider = dictionarySupportedLanguagesProvider;
     }
 
     @Override
     Observable<Translation> buildUseCaseObservable(final TranslationQuery params) {
         if (params.shouldGuess()) {
             // Yandex Translate can't into empty strings
-            return translationDirectionGuessProvider.guessLanguage(params.getString().length() > 0 ? params.getString() : " ")
+            return translationDirectionGuessProvider.guessLanguage(params.getString())
                                                     .map(new Function<Language, TranslationDirection>() {
                                                         @Override
                                                         public TranslationDirection apply(Language language) throws Exception {

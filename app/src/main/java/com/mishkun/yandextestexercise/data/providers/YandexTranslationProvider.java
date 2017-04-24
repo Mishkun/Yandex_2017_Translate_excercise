@@ -123,7 +123,7 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
                                                         public Language apply(DetectionResponse detectionResponse) throws Exception {
                                                             return DetectionResponseMapper.transform(detectionResponse);
                                                         }
-                                                    }).doOnNext(new Consumer<Language>() {
+                                                    }).onErrorResumeNext(Observable.<Language>empty()).doOnNext(new Consumer<Language>() {
                     @Override
                     public void accept(Language language) throws Exception {
                         LanguageGuessEntity guessEntity = new LanguageGuessEntity();
