@@ -92,8 +92,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
         public ViewHolder(View itemView) {
             super(itemView);
-
-            Log.d(TAG, "onCreateViewHolder: ");
             this.view = itemView;
             ButterKnife.bind(this, view);
         }

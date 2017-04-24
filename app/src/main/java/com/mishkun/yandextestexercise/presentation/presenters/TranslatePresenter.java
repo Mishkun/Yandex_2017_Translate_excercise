@@ -62,7 +62,13 @@ public class TranslatePresenter extends Presenter<TranslateView> {
 
     @Override
     public void pause() {
-
+        Log.d(TAG, "pause called");
+        translationInteractor.dispose();
+        translationDirectionInteractor.dispose();
+        supportedLanguagesInteractor.dispose();
+        addEditHistoryInteractor.dispose();
+        getHistoryInteractor.dispose();
+        deleteHistoryItemInteractor.dispose();
     }
 
 

@@ -237,10 +237,11 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
             @Override
             public void onClick(View v) {
                 sourceTextView.setText("");
+                translationTextView.setText("");
             }
         });
-        initializeReverseButton();
 
+        initializeReverseButton();
 
         translatePresenter.attachView(this);
         return view;
@@ -428,6 +429,18 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         outState.putString(KEY_SOURCE_TEXT, sourceTextView.getText().toString());
         outState.putString(KEY_FROM_DIRECTION, ((Language) fromTranslationSpinner.getSelectedItem()).getCode());
         outState.putString(KEY_TO_DIRECTION, ((Language) toTranslationSpinner.getSelectedItem()).getCode());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        translatePresenter.pause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        translatePresenter.detachView();
     }
 
     /**
