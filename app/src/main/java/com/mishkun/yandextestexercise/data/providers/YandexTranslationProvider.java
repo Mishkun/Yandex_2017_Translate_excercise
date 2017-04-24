@@ -8,9 +8,10 @@ import com.mishkun.yandextestexercise.data.LanguageEntity;
 import com.mishkun.yandextestexercise.data.LanguageGuessEntity;
 import com.mishkun.yandextestexercise.data.ShortTranslationEntity;
 import com.mishkun.yandextestexercise.data.api.YandexTranslationRetrofitApi;
-import com.mishkun.yandextestexercise.data.mappers.DetectionResponseMapper;
-import com.mishkun.yandextestexercise.data.mappers.SupportedLanguagesMapper;
-import com.mishkun.yandextestexercise.data.mappers.TranslationDirectionMapper;
+import com.mishkun.yandextestexercise.data.mappers.entity.SupportedLanguagesEntityMapper;
+import com.mishkun.yandextestexercise.data.mappers.response.DetectionResponseMapper;
+import com.mishkun.yandextestexercise.data.mappers.response.SupportedLanguagesResponseMapper;
+import com.mishkun.yandextestexercise.data.mappers.response.TranslationDirectionResponseMapper;
 import com.mishkun.yandextestexercise.data.responses.DetectionResponse;
 import com.mishkun.yandextestexercise.data.responses.SupportedLanguagesResponse;
 import com.mishkun.yandextestexercise.data.responses.TranslationResponse;
@@ -89,7 +90,7 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
 
 
     private Observable<ShortTranslationModel> getShortTranslationFromApi(final String query, final TranslationDirection direction) {
-        return getIfInternet(yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionMapper.transform(direction), query)
+        return getIfInternet(yandexTranslateRetrofit.translate(API_KEY, TranslationDirectionResponseMapper.transform(direction), query)
                                                     .map(new Function<TranslationResponse, ShortTranslationModel>() {
                                                         @Override
                                                         public ShortTranslationModel apply(TranslationResponse translationResponse) throws Exception {
@@ -145,7 +146,7 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
         return reactiveEntityStore.select(LanguageEntity.class).get().observable().map(new Function<LanguageEntity, Language>() {
             @Override
             public Language apply(LanguageEntity languageEntity) throws Exception {
-                return SupportedLanguagesMapper.transform(languageEntity);
+                return SupportedLanguagesEntityMapper.transform(languageEntity);
             }
         }).collectInto(supportedLanguages, new BiConsumer<List<Language>, Language>() {
             @Override
@@ -170,13 +171,13 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
                                                         @Override
                                                         public List<Language> apply(
                                                                 SupportedLanguagesResponse supportedLanguagesResponse) throws Exception {
-                                                            return SupportedLanguagesMapper.transform(supportedLanguagesResponse);
+                                                            return SupportedLanguagesResponseMapper.transform(supportedLanguagesResponse);
                                                         }
                                                     }).doOnNext(new Consumer<List<Language>>() {
                     @Override
                     public void accept(List<Language> languages) throws Exception {
                         reactiveEntityStore.delete(LanguageEntity.class).get().single().subscribe();
-                        reactiveEntityStore.upsert(SupportedLanguagesMapper.transform(languages)).subscribe();
+                        reactiveEntityStore.upsert(SupportedLanguagesEntityMapper.transform(languages)).subscribe();
                     }
                 }));
 

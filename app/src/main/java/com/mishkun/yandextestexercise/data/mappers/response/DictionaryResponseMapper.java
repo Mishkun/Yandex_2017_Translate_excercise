@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.data.mappers;
+package com.mishkun.yandextestexercise.data.mappers.response;
 
 import com.mishkun.yandextestexercise.data.responses.DictionaryResponse;
 import com.mishkun.yandextestexercise.domain.entities.Definition;

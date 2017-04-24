@@ -8,8 +8,8 @@ import com.mishkun.yandextestexercise.data.DefinitionItemEntity;
 import com.mishkun.yandextestexercise.data.ExpandedTranslationEntity;
 import com.mishkun.yandextestexercise.data.TranslationDirectionEntity;
 import com.mishkun.yandextestexercise.data.api.YandexDictionaryRetrofitApi;
-import com.mishkun.yandextestexercise.data.mappers.DictionaryResponseMapper;
-import com.mishkun.yandextestexercise.data.mappers.TranslationDirectionMapper;
+import com.mishkun.yandextestexercise.data.mappers.response.DictionaryResponseMapper;
+import com.mishkun.yandextestexercise.data.mappers.response.TranslationDirectionResponseMapper;
 import com.mishkun.yandextestexercise.data.responses.DictionaryResponse;
 import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Language;
@@ -80,7 +80,7 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
     }
 
     private Observable<Definition> getDefinitionFromApi(final String query, final TranslationDirection direction) {
-        return getIfInternet(yandexDictionaryRetrofitApi.getDictionaryTranslation(API_KEY, TranslationDirectionMapper.transform(direction), query)
+        return getIfInternet(yandexDictionaryRetrofitApi.getDictionaryTranslation(API_KEY, TranslationDirectionResponseMapper.transform(direction), query)
                                                         .map(
                                                                 new Function<DictionaryResponse, Definition>() {
                                                                     @Override
@@ -130,7 +130,7 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
             public List<TranslationDirection> apply(List<String> directions) throws Exception {
                 List<TranslationDirection> translationDirections = new ArrayList<TranslationDirection>(directions.size());
                 for (String direction : directions) {
-                    translationDirections.add(TranslationDirectionMapper.transform(direction));
+                    translationDirections.add(TranslationDirectionResponseMapper.transform(direction));
                 }
                 return translationDirections;
             }

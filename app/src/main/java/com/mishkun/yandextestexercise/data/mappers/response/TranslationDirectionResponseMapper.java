@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.data.mappers;
+package com.mishkun.yandextestexercise.data.mappers.response;
 
 import com.mishkun.yandextestexercise.domain.entities.Language;
 import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
@@ -7,7 +7,7 @@ import com.mishkun.yandextestexercise.domain.entities.TranslationDirection;
  * Created by Mishkun on 17.04.2017.
  */
 
-public class TranslationDirectionMapper {
+public class TranslationDirectionResponseMapper {
     public static String transform(TranslationDirection translationDirection) {
         return translationDirection.getTranslationFrom().getCode() + "-" + translationDirection.getTranslationTo().getCode();
     }

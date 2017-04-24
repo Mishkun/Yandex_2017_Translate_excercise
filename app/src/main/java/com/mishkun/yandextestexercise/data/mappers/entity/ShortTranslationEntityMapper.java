@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.data.mappers;
+package com.mishkun.yandextestexercise.data.mappers.entity;
 
 import com.mishkun.yandextestexercise.data.ShortTranslationEntity;
 import com.mishkun.yandextestexercise.domain.entities.ShortTranslationModel;

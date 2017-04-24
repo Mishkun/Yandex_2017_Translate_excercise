@@ -1,4 +1,4 @@
-package com.mishkun.yandextestexercise.data.mappers;
+package com.mishkun.yandextestexercise.data.mappers.entity;
 
 import java.util.ArrayList;
 import java.util.List;

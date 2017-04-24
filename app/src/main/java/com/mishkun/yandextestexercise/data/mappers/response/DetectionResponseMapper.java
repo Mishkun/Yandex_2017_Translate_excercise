@@ -1,7 +1,6 @@
-package com.mishkun.yandextestexercise.data.mappers;
+package com.mishkun.yandextestexercise.data.mappers.response;
 
 import com.mishkun.yandextestexercise.data.responses.DetectionResponse;
-import com.mishkun.yandextestexercise.domain.entities.Definition;
 import com.mishkun.yandextestexercise.domain.entities.Language;
 
 /**

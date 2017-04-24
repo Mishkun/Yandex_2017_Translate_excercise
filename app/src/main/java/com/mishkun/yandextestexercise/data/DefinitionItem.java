@@ -1,6 +1,6 @@
 package com.mishkun.yandextestexercise.data;
 
-import com.mishkun.yandextestexercise.data.mappers.ListStringsConverter;
+import com.mishkun.yandextestexercise.data.mappers.entity.ListStringsConverter;
 
 import java.util.ArrayList;
 
