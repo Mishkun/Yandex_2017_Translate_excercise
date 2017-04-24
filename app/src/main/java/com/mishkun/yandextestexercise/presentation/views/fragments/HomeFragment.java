@@ -243,6 +243,9 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
             public void onClick(View v) {
                 sourceTextView.setText("");
                 translationTextView.setText("");
+                translationCard.setVisibility(View.GONE);
+                expandedTranslationCard.setVisibility(View.GONE);
+                creditsText.setVisibility(View.GONE);
             }
         });
 
