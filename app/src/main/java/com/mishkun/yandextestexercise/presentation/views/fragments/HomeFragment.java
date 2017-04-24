@@ -1,6 +1,7 @@
 package com.mishkun.yandextestexercise.presentation.views.fragments;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -181,15 +183,18 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
         creditsText.setMovementMethod(LinkMovementMethod.getInstance());
         creditsText.setVisibility(View.GONE);
 
-        ArrayList<String> fakeSpinnersList = new ArrayList<>();
-        fakeSpinnersList.add(getContext().getResources().getString(R.string.language_from_value));
-        fakeSpinnersList.add(getContext().getResources().getString(R.string.language_to_value));
-        ArrayAdapter<String> fakeSpinnersAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, fakeSpinnersList);
+        ArrayList<Language> fakeSpinnersList = new ArrayList<>();
+        Resources resources = getContext().getResources();
+        fakeSpinnersList.add(new Language(resources.getString(R.string.language_from), resources.getString(R.string.language_from_value)));
+        fakeSpinnersList.add(new Language(resources.getString(R.string.language_to), resources.getString(R.string.language_to_value)));
+        ArrayAdapter<Language> fakeSpinnersAdapter = new ArrayAdapter<Language>(getContext(), android.R.layout.simple_spinner_item, fakeSpinnersList);
         fakeSpinnersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         toTranslationSpinner.setAdapter(fakeSpinnersAdapter);
         fromTranslationSpinner.setAdapter(fakeSpinnersAdapter);
-        fromTranslationSpinner.setSelection(fakeSpinnersAdapter.getPosition(getContext().getResources().getString(R.string.language_from_value)));
-        toTranslationSpinner.setSelection(fakeSpinnersAdapter.getPosition(getContext().getResources().getString(R.string.language_to_value)));
+        fromTranslationSpinner.setSelection(fakeSpinnersAdapter.getPosition(
+                new Language(resources.getString(R.string.language_from), resources.getString(R.string.language_from_value))));
+        toTranslationSpinner.setSelection(fakeSpinnersAdapter.getPosition(
+                new Language(resources.getString(R.string.language_to), resources.getString(R.string.language_to_value))));
 
         DividerItemDecoration horizontalDecoration = new DividerItemDecoration(getContext(),
                                                                                DividerItemDecoration.VERTICAL);
@@ -420,11 +425,13 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     public void onDestroyView() {
         super.onDestroyView();
         saved = new Bundle();
+        Log.d(TAG, "onDestroyView: ");
         onSaveInstanceState(saved);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState: ");
         super.onSaveInstanceState(outState);
         outState.putString(KEY_SOURCE_TEXT, sourceTextView.getText().toString());
         outState.putString(KEY_FROM_DIRECTION, ((Language) fromTranslationSpinner.getSelectedItem()).getCode());
@@ -434,12 +441,14 @@ public class HomeFragment extends BaseFragment implements TranslateView, FavButt
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause: ");
         translatePresenter.pause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
         translatePresenter.detachView();
     }
 

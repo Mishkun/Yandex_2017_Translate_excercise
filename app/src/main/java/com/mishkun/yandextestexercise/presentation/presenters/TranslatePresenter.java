@@ -173,7 +173,9 @@ public class TranslatePresenter extends Presenter<TranslateView> {
         @Override
         protected void onStart() {
             super.onStart();
-            attachedView.showProgressBar();
+            if (attachedView != null) {
+                attachedView.showProgressBar();
+            }
         }
 
         @Override
