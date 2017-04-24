@@ -8,6 +8,7 @@ import com.mishkun.yandextestexercise.data.LanguageEntity;
 import com.mishkun.yandextestexercise.data.LanguageGuessEntity;
 import com.mishkun.yandextestexercise.data.ShortTranslationEntity;
 import com.mishkun.yandextestexercise.data.api.YandexTranslationRetrofitApi;
+import com.mishkun.yandextestexercise.data.mappers.entity.ShortTranslationEntityMapper;
 import com.mishkun.yandextestexercise.data.mappers.entity.SupportedLanguagesEntityMapper;
 import com.mishkun.yandextestexercise.data.mappers.response.DetectionResponseMapper;
 import com.mishkun.yandextestexercise.data.mappers.response.SupportedLanguagesResponseMapper;
@@ -76,16 +77,7 @@ public class YandexTranslationProvider extends ConnectedDataSource implements Sh
                                                                                                                          .getCode()))))
                                   .get()
                                   .observable()
-                                  .map(new Function<ShortTranslationEntity, ShortTranslationModel>() {
-                                      @Override
-                                      public ShortTranslationModel apply(ShortTranslationEntity shortTranslationEntity) throws Exception {
-                                          return new ShortTranslationModel(shortTranslationEntity.getOriginal(),
-                                                                           shortTranslationEntity.getTranslation(),
-                                                                           shortTranslationEntity.isFavored(),
-                                                                           new Language(shortTranslationEntity.getDirectionFrom(), null),
-                                                                           new Language(shortTranslationEntity.getDirectionTo(), null));
-                                      }
-                                  });
+                                  .map(new ShortTranslationEntityMapper());
     }
 
 
