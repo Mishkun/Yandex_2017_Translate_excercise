@@ -13,8 +13,6 @@ import com.mishkun.yandextestexercise.domain.providers.ShortTranslationProvider;
 import com.mishkun.yandextestexercise.domain.providers.TranslationDirectionGuessProvider;
 import com.mishkun.yandextestexercise.domain.providers.TranslationDirectionProvider;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -96,19 +94,7 @@ public class TranslationInteractor extends Interactor<Translation, TranslationQu
     private Observable<Translation> getTranslation(TranslationQuery params) {
         final TranslationQuery query = params.normalize();
         return Observable.zip(shortTranslationProvider.getShortTranslation(query.getString(), query.getDirection()),
-                              dictionarySupportedLanguagesProvider.getSupportedLanguages().concatMap(
-                                      new Function<List<TranslationDirection>, ObservableSource<Definition>>() {
-                                          @Override
-                                          public Observable<Definition> apply(List<TranslationDirection> directions) throws Exception {
-                                              for (TranslationDirection supportedDirection : directions) {
-                                                  if (supportedDirection.equals(query.getDirection())) {
-                                                      return expandedTranslationProvider.getExpandedTranslation(query.getString(),
-                                                                                                                query.getDirection());
-                                                  }
-                                              }
-                                              return Observable.just(new Definition(query.getString(), query.getDirection(), null, null, null));
-                                          }
-                                      }), new TranslationMapper());
+                              expandedTranslationProvider.getExpandedTranslation(query.getString(), query.getDirection()), new TranslationMapper());
     }
 
     private static class TranslationMapper implements BiFunction<ShortTranslationModel, Definition, Translation> {

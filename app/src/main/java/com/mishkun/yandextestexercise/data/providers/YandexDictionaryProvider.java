@@ -87,7 +87,7 @@ public class YandexDictionaryProvider extends ConnectedDataSource implements Exp
                                                                     public Definition apply(DictionaryResponse dictionaryResponse) throws Exception {
                                                                         return DictionaryResponseMapper.transform(dictionaryResponse, query, direction);
                                                                     }
-                                                                }).doOnNext(new DefinitionConsumer(query, direction)));
+                                                                }).onErrorResumeNext(Observable.<Definition>empty()).doOnNext(new DefinitionConsumer(query, direction)));
     }
 
     @Override
